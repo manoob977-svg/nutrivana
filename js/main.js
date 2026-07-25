@@ -929,6 +929,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initMobileMenu();
   initSearch();
   renderCartPage();
+  // Init floating widgets immediately & on ready
   initFloatingWidgets();
 
   // Track Order URL parameter check
@@ -946,6 +947,11 @@ document.addEventListener('DOMContentLoaded', () => {
   const contactForm = document.getElementById('contactForm');
   contactForm?.addEventListener('submit', handleContactForm);
 });
+
+// Run floating widgets immediately if script executes after DOMReady
+if (document.readyState !== 'loading') {
+  initFloatingWidgets();
+}
 
 
 

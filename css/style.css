@@ -2124,110 +2124,117 @@ button { cursor: pointer; border: none; background: none; }
    FLOATING WIDGETS GROUP (WHATSAPP & BACK TO TOP - RIGHT SIDE)
 ====================================================== */
 .floating-widgets-group {
-  position: fixed;
-  bottom: 24px;
-  right: 24px;
-  z-index: 9999;
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  align-items: flex-end;
-  pointer-events: none;
+  position: fixed !important;
+  bottom: 24px !important;
+  right: 24px !important;
+  z-index: 999999 !important;
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 12px !important;
+  align-items: flex-end !important;
+  pointer-events: none !important;
 }
 
 .floating-widgets-group > * {
-  pointer-events: auto;
+  pointer-events: auto !important;
 }
 
 /* Floating WhatsApp Button */
-.whatsapp-float-btn {
-  width: 56px;
-  height: 56px;
-  background: #25D366;
-  color: white;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  box-shadow: 0 6px 20px rgba(37, 211, 102, 0.45);
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  text-decoration: none;
-  position: relative;
+.whatsapp-float-btn, .whatsapp-float {
+  width: 58px !important;
+  height: 58px !important;
+  background: #25D366 !important;
+  color: white !important;
+  border-radius: 50% !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  box-shadow: 0 6px 22px rgba(37, 211, 102, 0.55) !important;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+  text-decoration: none !important;
+  position: relative !important;
+  animation: pulseWhatsApp 2s infinite !important;
 }
 
-.whatsapp-float-btn:hover {
-  transform: scale(1.12);
-  box-shadow: 0 8px 24px rgba(37, 211, 102, 0.65);
+@keyframes pulseWhatsApp {
+  0% { box-shadow: 0 0 0 0 rgba(37, 211, 102, 0.7); }
+  70% { box-shadow: 0 0 0 14px rgba(37, 211, 102, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(37, 211, 102, 0); }
 }
 
-.whatsapp-float-btn svg {
-  width: 30px;
-  height: 30px;
-  fill: currentColor;
+.whatsapp-float-btn:hover, .whatsapp-float:hover {
+  transform: scale(1.14) !important;
+  box-shadow: 0 8px 28px rgba(37, 211, 102, 0.75) !important;
+}
+
+.whatsapp-float-btn svg, .whatsapp-float svg {
+  width: 32px !important;
+  height: 32px !important;
+  fill: currentColor !important;
 }
 
 /* Minimalist Arrow-Only Back To Top Button */
 .back-to-top-btn {
-  width: 44px;
-  height: 44px;
-  background: var(--green-dark);
-  color: var(--gold-light);
-  border: 1.5px solid var(--gold);
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  box-shadow: var(--shadow-md);
-  cursor: pointer;
+  width: 46px !important;
+  height: 46px !important;
+  background: var(--green-dark) !important;
+  color: var(--gold-light) !important;
+  border: 1.5px solid var(--gold) !important;
+  border-radius: 50% !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  box-shadow: var(--shadow-md) !important;
+  cursor: pointer !important;
   opacity: 0;
   visibility: hidden;
   transform: translateY(15px);
-  transition: all 0.35s ease;
+  transition: all 0.35s ease !important;
 }
 
 .back-to-top-btn.visible {
-  opacity: 1;
-  visibility: visible;
-  transform: translateY(0);
+  opacity: 1 !important;
+  visibility: visible !important;
+  transform: translateY(0) !important;
 }
 
 .back-to-top-btn:hover {
-  background: var(--gold);
-  color: var(--green-dark);
-  transform: translateY(-4px);
-  box-shadow: var(--shadow-lg);
+  background: var(--gold) !important;
+  color: var(--green-dark) !important;
+  transform: translateY(-4px) !important;
+  box-shadow: var(--shadow-lg) !important;
 }
 
 /* ======================================================
    LIVE CHAT WIDGET (LEFT SIDE FLOATING)
 ====================================================== */
 .live-chat-left-group {
-  position: fixed;
-  bottom: 24px;
-  left: 24px;
-  z-index: 9999;
-  pointer-events: auto;
+  position: fixed !important;
+  bottom: 24px !important;
+  left: 24px !important;
+  z-index: 999999 !important;
+  pointer-events: auto !important;
 }
 
 .live-chat-trigger {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  background: linear-gradient(135deg, var(--green-dark), #1a3c26);
-  color: var(--white);
-  padding: 10px 18px 10px 14px;
-  border-radius: 50px;
-  box-shadow: var(--shadow-lg);
-  border: 1px solid var(--gold);
-  cursor: pointer;
-  transition: var(--transition);
-  font-size: 14px;
-  font-weight: 600;
+  display: flex !important;
+  align-items: center !important;
+  gap: 10px !important;
+  background: linear-gradient(135deg, var(--green-dark), #1a3c26) !important;
+  color: var(--white) !important;
+  padding: 12px 20px 12px 16px !important;
+  border-radius: 50px !important;
+  box-shadow: 0 8px 24px rgba(18, 48, 27, 0.45) !important;
+  border: 1.5px solid var(--gold) !important;
+  cursor: pointer !important;
+  transition: var(--transition) !important;
+  font-size: 14px !important;
+  font-weight: 600 !important;
 }
 
 .live-chat-trigger:hover {
-  transform: scale(1.05);
-  box-shadow: 0 8px 24px rgba(18, 48, 27, 0.4);
+  transform: scale(1.08) !important;
+  box-shadow: 0 10px 30px rgba(18, 48, 27, 0.6) !important;
 }
 
 .chat-bubble-icon {
