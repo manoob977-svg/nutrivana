@@ -217,7 +217,8 @@ function getSiteData() {
     return {
       products: parsed.products || DEFAULT_SITE_DATA.products,
       banners: parsed.banners || DEFAULT_SITE_DATA.banners,
-      settings: { ...DEFAULT_SITE_DATA.settings, ...(parsed.settings || {}) }
+      settings: { ...DEFAULT_SITE_DATA.settings, ...(parsed.settings || {}) },
+      orders: parsed.orders || DEFAULT_SITE_DATA.orders || []
     };
   } catch (e) {
     return DEFAULT_SITE_DATA;
@@ -225,7 +226,14 @@ function getSiteData() {
 }
 
 function saveSiteData(data) {
-  localStorage.setItem('nutrivanaSiteData', JSON.stringify(data));
+  try {
+    localStorage.setItem('nutrivanaSiteData', JSON.stringify(data));
+  } catch (e) {
+    console.error("localStorage save failed:", e);
+    if (typeof showToast === 'function') {
+      showToast('⚠️ Storage limit reached! Uploaded images are compressed automatically.');
+    }
+  }
 }
 
 // ---- CART DATA (localStorage) ----
