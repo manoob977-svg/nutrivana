@@ -1,0 +1,573 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin Portal – Nutrivana</title>
+  <link rel="icon" href="Image/Favicon.png" type="image/png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body style="background: var(--cream);">
+
+  <!-- Login Modal Overlay -->
+  <div class="admin-login-overlay" id="loginOverlay">
+    <div class="admin-login-card">
+      <img src="Image/Logo.svg" alt="Nutrivana Logo" class="admin-login-logo" />
+      <h2>Admin Portal</h2>
+      <p>Log in to edit products, banners, instructions, prices & settings.</p>
+
+      <form id="adminLoginForm" onsubmit="handleAdminLogin(event)">
+        <div class="form-group" style="text-align: left;">
+          <label class="form-label" for="adminUsername">Username *</label>
+          <input type="text" id="adminUsername" class="form-input" placeholder="Enter username (Admin)" required />
+        </div>
+        <div class="form-group" style="text-align: left; margin-bottom: 24px;">
+          <label class="form-label" for="adminPassword">Password *</label>
+          <input type="password" id="adminPassword" class="form-input" placeholder="Enter password (Admin123)" required />
+        </div>
+        <div id="loginError" style="color: #d90429; font-size: 13px; margin-bottom: 16px; display: none;">
+          ❌ Invalid username or password. Please try again.
+        </div>
+        <button type="submit" class="btn btn-primary" style="width: 100%; padding: 14px; font-size: 15px;">
+          Log In →
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Admin Main Portal -->
+  <div id="adminPortal" style="display: none;">
+
+    <!-- Site Header -->
+    <header class="site-header" style="position: sticky; top: 0; z-index: 100;">
+      <div class="header-inner">
+        <a href="index.html" class="logo-link">
+          <img src="Image/Logo.svg" alt="Nutrivana Logo" class="site-logo" />
+        </a>
+        <div style="display: flex; align-items: center; gap: 16px;">
+          <span class="theme-lock-badge">🔒 Theme Locked</span>
+          <span style="font-size: 14px; font-weight: 600; color: var(--green-dark);">👤 Admin</span>
+          <a href="index.html" target="_blank" class="btn btn-outline btn-sm">👁️ View Live Site</a>
+          <button onclick="handleAdminLogout()" class="btn btn-sm" style="background: rgba(0,0,0,0.06); color: var(--dark);">Logout</button>
+        </div>
+      </div>
+    </header>
+
+    <div class="admin-layout">
+      <!-- Sidebar Navigation -->
+      <aside class="admin-sidebar">
+        <div class="admin-sidebar-header">
+          <h3>⚙️ Management</h3>
+        </div>
+        <nav class="admin-nav">
+          <button class="admin-nav-item active" onclick="switchTab('productsTab', this)">
+            📦 Products Editor
+          </button>
+          <button class="admin-nav-item" onclick="switchTab('bannersTab', this)">
+            🖼️ Hero Banners
+          </button>
+          <button class="admin-nav-item" onclick="switchTab('settingsTab', this)">
+            ⚙️ Site Settings
+          </button>
+          <button class="admin-nav-item" onclick="switchTab('actionsTab', this)">
+            🔄 Data & Actions
+          </button>
+        </nav>
+
+        <div style="margin-top: auto; padding-top: 24px; border-top: 1px solid rgba(255,255,255,0.1); font-size: 12px; opacity: 0.7; line-height: 1.5;">
+          🔒 <strong>Theme Guard Active:</strong><br />Theme colors and design rules remain preserved.
+        </div>
+      </aside>
+
+      <!-- Main Content Area -->
+      <main class="admin-content">
+
+        <!-- TAB 1: PRODUCTS EDITOR -->
+        <section id="productsTab" class="admin-tab-content">
+          <div class="admin-page-header">
+            <div class="admin-page-title">
+              <h1>📦 Edit Products</h1>
+              <p>Modify images, sizes/weights, banners, instructions, descriptions & prices for all items.</p>
+            </div>
+            <button onclick="saveAllChanges()" class="btn btn-primary">💾 Save All Changes</button>
+          </div>
+
+          <!-- Product Selector -->
+          <div class="admin-card" style="margin-bottom: 24px;">
+            <label class="form-label" style="font-size: 15px; font-weight: 700;">Select Product to Edit:</label>
+            <div style="display: flex; gap: 12px; flex-wrap: wrap; margin-top: 12px;" id="productSelectorGroup">
+              <button class="btn btn-primary" onclick="loadProductForm('talbina', this)">Premium Talbina</button>
+              <button class="btn btn-outline" onclick="loadProductForm('honey', this)">Pure Natural Honey</button>
+              <button class="btn btn-outline" onclick="loadProductForm('ghee', this)">Desi Ghee (Bilona)</button>
+              <button class="btn btn-outline" onclick="loadProductForm('oatmeal', this)">Whole Grain Oatmeal</button>
+            </div>
+          </div>
+
+          <!-- Active Product Form -->
+          <div class="admin-card">
+            <div class="admin-card-header">
+              <div class="admin-card-title" id="formProductTitle">✏️ Editing: Premium Talbina</div>
+              <span id="formProductBadge" class="sale-tag">BESTSELLER</span>
+            </div>
+
+            <form id="productEditForm" onsubmit="event.preventDefault();">
+              <input type="hidden" id="editProductId" value="talbina" />
+
+              <div class="admin-grid-2">
+                <div class="form-group">
+                  <label class="form-label">Product Name *</label>
+                  <input type="text" id="editProductName" class="form-input" required />
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Product Tag / Badge *</label>
+                  <input type="text" id="editProductTag" class="form-input" placeholder="e.g. BESTSELLER, 100% RAW" required />
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label">Product Image Path / URL *</label>
+                <input type="text" id="editProductImage" class="form-input" oninput="updateImagePreview(this.value, 'productImgPreview')" required />
+                <img id="productImgPreview" class="admin-img-preview" src="" alt="Preview" />
+              </div>
+
+              <div class="admin-grid-2">
+                <div class="form-group">
+                  <label class="form-label">Base Price (Rs.) *</label>
+                  <input type="number" id="editProductPrice" class="form-input" required />
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Customer Reviews Rating (1-5)</label>
+                  <input type="number" id="editProductRating" class="form-input" min="1" max="5" required />
+                </div>
+              </div>
+
+              <!-- Weights & Rate Options Builder -->
+              <div class="form-group" style="background: var(--cream); border: 1px solid var(--cream-dark); padding: 20px; border-radius: var(--radius-sm); margin-bottom: 24px;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+                  <label class="form-label" style="margin: 0; font-size: 15px; font-weight: 700; color: var(--dark);">⚖️ Weight Options & Rate / Price Columns *</label>
+                  <button type="button" onclick="addWeightRow()" class="btn btn-outline btn-sm">+ Add Weight Option</button>
+                </div>
+                <p style="font-size: 12px; color: var(--gray); margin-bottom: 16px;">Set separate weight label and rate box for each size (e.g. Weight: 250g | Rate: Rs. 850).</p>
+                
+                <div id="weightsTableContainer">
+                  <div style="display: grid; grid-template-columns: 1fr 1fr 40px; gap: 12px; font-size: 12px; font-weight: 700; color: var(--dark); text-transform: uppercase; margin-bottom: 8px; padding-bottom: 4px; border-bottom: 1px solid var(--cream-dark);">
+                    <span>Weight Label Box</span>
+                    <span>Rate / Price Box (Rs.)</span>
+                    <span></span>
+                  </div>
+                  <div id="weightsListRows"></div>
+                </div>
+              </div>
+
+              <!-- Re-writable Description -->
+              <div class="form-group">
+                <label class="form-label">Product Description (Re-writable) *</label>
+                <textarea id="editProductDesc" class="form-textarea" rows="4" required></textarea>
+              </div>
+
+              <!-- Preparation Instructions -->
+              <div class="form-group">
+                <label class="form-label">Preparation Instructions / Usage Guide (Re-writable) *</label>
+                <textarea id="editProductInstructions" class="form-textarea" rows="4" placeholder="How to cook / prepare or use..." required></textarea>
+              </div>
+
+              <!-- Details & Highlights -->
+              <div class="form-group">
+                <label class="form-label">Key Highlights & Specifications (One per line)</label>
+                <textarea id="editProductDetails" class="form-textarea" rows="4" placeholder="100% Organic Barley&#10;Zero preservatives..."></textarea>
+              </div>
+
+              <div style="display: flex; gap: 12px; justify-content: flex-end; margin-top: 24px;">
+                <button type="button" onclick="saveActiveProduct()" class="btn btn-primary">💾 Save This Product</button>
+              </div>
+            </form>
+          </div>
+        </section>
+
+        <!-- TAB 2: HERO BANNERS EDITOR -->
+        <section id="bannersTab" class="admin-tab-content" style="display: none;">
+          <div class="admin-page-header">
+            <div class="admin-page-title">
+              <h1>🖼️ Hero Banners Manager</h1>
+              <p>Manage the 4 full-width Hero Slider graphic banners displayed on the homepage.</p>
+            </div>
+            <button onclick="saveAllChanges()" class="btn btn-primary">💾 Save All Changes</button>
+          </div>
+
+          <div id="bannersContainer"></div>
+        </section>
+
+        <!-- TAB 3: SITE SETTINGS EDITOR -->
+        <section id="settingsTab" class="admin-tab-content" style="display: none;">
+          <div class="admin-page-header">
+            <div class="admin-page-title">
+              <h1>⚙️ Site & Contact Settings</h1>
+              <p>Update announcement bar, phone/WhatsApp, email, and social media links.</p>
+            </div>
+            <button onclick="saveAllChanges()" class="btn btn-primary">💾 Save All Changes</button>
+          </div>
+
+          <!-- Locked Theme Notice -->
+          <div class="admin-card" style="background: #fffdf5; border-color: #f0e6c5;">
+            <div style="display: flex; align-items: center; gap: 14px;">
+              <span style="font-size: 28px;">🔒</span>
+              <div>
+                <h4 style="font-weight: 700; color: var(--dark); margin-bottom: 4px;">Theme Settings Locked</h4>
+                <p style="font-size: 13px; color: var(--gray);">Theme colors, fonts, and layout CSS are locked per system settings to maintain brand consistency.</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="admin-card">
+            <div class="admin-card-header">
+              <div class="admin-card-title">📢 Announcement Bar</div>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Ticker Message Text *</label>
+              <textarea id="settingAnnouncement" class="form-textarea" rows="2"></textarea>
+            </div>
+          </div>
+
+          <div class="admin-card">
+            <div class="admin-card-header">
+              <div class="admin-card-title">📞 Contact & Social Details</div>
+            </div>
+            <div class="admin-grid-2">
+              <div class="form-group">
+                <label class="form-label">Phone / WhatsApp Number *</label>
+                <input type="text" id="settingPhone" class="form-input" />
+              </div>
+              <div class="form-group">
+                <label class="form-label">Email Address *</label>
+                <input type="email" id="settingEmail" class="form-input" />
+              </div>
+            </div>
+            <div class="admin-grid-2">
+              <div class="form-group">
+                <label class="form-label">Facebook Page Link *</label>
+                <input type="url" id="settingFacebook" class="form-input" />
+              </div>
+              <div class="form-group">
+                <label class="form-label">Instagram Link *</label>
+                <input type="url" id="settingInstagram" class="form-input" />
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="form-label">WhatsApp Direct Chat Link *</label>
+              <input type="url" id="settingWhatsapp" class="form-input" />
+            </div>
+          </div>
+
+          <div class="admin-card">
+            <div class="admin-card-header">
+              <div class="admin-card-title">🚚 Delivery Rules</div>
+            </div>
+            <div class="admin-grid-2">
+              <div class="form-group">
+                <label class="form-label">Free Delivery Threshold (Rs.) *</label>
+                <input type="number" id="settingThreshold" class="form-input" />
+              </div>
+              <div class="form-group">
+                <label class="form-label">Standard Shipping Fee (Rs.) *</label>
+                <input type="number" id="settingFee" class="form-input" />
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- TAB 4: DATA ACTIONS -->
+        <section id="actionsTab" class="admin-tab-content" style="display: none;">
+          <div class="admin-page-header">
+            <div class="admin-page-title">
+              <h1>🔄 Data Management & Reset</h1>
+              <p>Control live site state or restore original default contents.</p>
+            </div>
+          </div>
+
+          <div class="admin-card">
+            <div class="admin-card-header">
+              <div class="admin-card-title">💾 Save & Reset Options</div>
+            </div>
+            <p style="font-size: 14px; color: var(--gray); margin-bottom: 20px;">
+              All edits are stored instantly in browser storage (`nutrivanaSiteData`) and reflected across all live store pages.
+            </p>
+            <div style="display: flex; gap: 16px; flex-wrap: wrap;">
+              <button onclick="saveAllChanges()" class="btn btn-primary">💾 Save All Site Changes</button>
+              <button onclick="resetDefaultData()" class="btn btn-outline" style="border-color: #d90429; color: #d90429;">⚠️ Reset to Default Content</button>
+            </div>
+          </div>
+        </section>
+
+      </main>
+    </div>
+  </div>
+
+  <div class="toast" id="toast"></div>
+
+  <script src="js/main.js"></script>
+  <script>
+    // ---- AUTHENTICATION LOGIC ----
+    function checkAuth() {
+      const isLogged = sessionStorage.getItem('nutrivanaAdminLogged');
+      if (isLogged === 'true') {
+        document.getElementById('loginOverlay').style.display = 'none';
+        document.getElementById('adminPortal').style.display = 'block';
+        initAdminData();
+      } else {
+        document.getElementById('loginOverlay').style.display = 'flex';
+        document.getElementById('adminPortal').style.display = 'none';
+      }
+    }
+
+    function handleAdminLogin(e) {
+      e.preventDefault();
+      const user = document.getElementById('adminUsername').value.trim();
+      const pass = document.getElementById('adminPassword').value.trim();
+
+      if (user === 'Admin' && pass === 'Admin123') {
+        sessionStorage.setItem('nutrivanaAdminLogged', 'true');
+        document.getElementById('loginError').style.display = 'none';
+        checkAuth();
+        showToast('🔓 Welcome, Admin! Login successful.');
+      } else {
+        document.getElementById('loginError').style.display = 'block';
+      }
+    }
+
+    function handleAdminLogout() {
+      sessionStorage.removeItem('nutrivanaAdminLogged');
+      checkAuth();
+      showToast('🔒 Logged out successfully.');
+    }
+
+    // ---- TAB SWITCHING ----
+    function switchTab(tabId, btnEl) {
+      document.querySelectorAll('.admin-tab-content').forEach(el => el.style.display = 'none');
+      document.querySelectorAll('.admin-nav-item').forEach(el => el.classList.remove('active'));
+      document.getElementById(tabId).style.display = 'block';
+      btnEl.classList.add('active');
+    }
+
+    // ---- INITIALIZE ADMIN DATA ----
+    let currentSiteData = null;
+
+    function initAdminData() {
+      currentSiteData = getSiteData();
+      loadProductForm('talbina');
+      renderBannersEditor();
+      renderSettingsEditor();
+    }
+
+    // ---- WEIGHT & RATE ROWS BUILDER ----
+    function renderWeightRows(weights) {
+      const container = document.getElementById('weightsListRows');
+      if (!container) return;
+
+      container.innerHTML = weights.map(w => `
+        <div class="weight-row-item" style="display: grid; grid-template-columns: 1fr 1fr 40px; gap: 12px; align-items: center; margin-bottom: 10px;">
+          <input type="text" class="form-input weight-label-input" value="${w.label || ''}" placeholder="e.g. 250g" required />
+          <input type="number" class="form-input weight-price-input" value="${w.price || 0}" placeholder="Rate (Rs.)" required />
+          <button type="button" onclick="removeWeightRow(this)" style="background: rgba(217,4,41,0.1); color: #d90429; border: none; border-radius: 6px; width: 36px; height: 38px; font-size: 16px; cursor: pointer; display: flex; align-items: center; justify-content: center;" title="Remove Option">🗑️</button>
+        </div>
+      `).join('');
+    }
+
+    function addWeightRow(label = '', price = 0) {
+      const container = document.getElementById('weightsListRows');
+      if (!container) return;
+
+      const div = document.createElement('div');
+      div.className = 'weight-row-item';
+      div.style.cssText = 'display: grid; grid-template-columns: 1fr 1fr 40px; gap: 12px; align-items: center; margin-bottom: 10px;';
+      div.innerHTML = `
+        <input type="text" class="form-input weight-label-input" value="${label}" placeholder="e.g. 500g" required />
+        <input type="number" class="form-input weight-price-input" value="${price}" placeholder="Rate (Rs.)" required />
+        <button type="button" onclick="removeWeightRow(this)" style="background: rgba(217,4,41,0.1); color: #d90429; border: none; border-radius: 6px; width: 36px; height: 38px; font-size: 16px; cursor: pointer; display: flex; align-items: center; justify-content: center;" title="Remove Option">🗑️</button>
+      `;
+      container.appendChild(div);
+    }
+
+    function removeWeightRow(btn) {
+      const row = btn.closest('.weight-row-item');
+      if (row) row.remove();
+    }
+
+    // ---- PRODUCT FORM LOAD & SAVE ----
+    function loadProductForm(productId, btnEl) {
+      if (btnEl) {
+        document.querySelectorAll('#productSelectorGroup .btn').forEach(b => {
+          b.className = 'btn btn-outline';
+        });
+        btnEl.className = 'btn btn-primary';
+      }
+
+      const p = currentSiteData.products.find(item => item.id === productId) || currentSiteData.products[0];
+      
+      document.getElementById('editProductId').value = p.id;
+      document.getElementById('editProductName').value = p.name || '';
+      document.getElementById('editProductTag').value = p.tag || '';
+      document.getElementById('editProductImage').value = p.image || '';
+      document.getElementById('editProductPrice').value = p.price || 0;
+      document.getElementById('editProductRating').value = p.rating || 5;
+      document.getElementById('editProductDesc').value = p.description || '';
+      document.getElementById('editProductInstructions').value = p.instructions || '';
+      
+      // Render Weight & Rate rows
+      renderWeightRows(p.weights || []);
+
+      // Details format
+      const detailsStr = (p.details || []).join('\n');
+      document.getElementById('editProductDetails').value = detailsStr;
+
+      // Header preview
+      document.getElementById('formProductTitle').textContent = `✏️ Editing: ${p.name}`;
+      document.getElementById('formProductBadge').textContent = p.tag || 'PRODUCT';
+      updateImagePreview(p.image, 'productImgPreview');
+    }
+
+    function updateImagePreview(src, imgId) {
+      const img = document.getElementById(imgId);
+      if (img) img.src = src || 'Image/Favicon.png';
+    }
+
+    function saveActiveProduct() {
+      const id = document.getElementById('editProductId').value;
+      const idx = currentSiteData.products.findIndex(p => p.id === id);
+      if (idx === -1) return;
+
+      const weightRows = document.querySelectorAll('#weightsListRows .weight-row-item');
+      const parsedWeights = [];
+      weightRows.forEach(row => {
+        const label = row.querySelector('.weight-label-input').value.trim();
+        const price = parseInt(row.querySelector('.weight-price-input').value) || 0;
+        if (label) {
+          parsedWeights.push({ label, price });
+        }
+      });
+
+      const detailsText = document.getElementById('editProductDetails').value.trim();
+      const parsedDetails = detailsText ? detailsText.split('\n').map(l => l.trim()).filter(Boolean) : [];
+
+      const basePrice = parsedWeights.length ? parsedWeights[0].price : (parseInt(document.getElementById('editProductPrice').value) || 0);
+
+      currentSiteData.products[idx] = {
+        ...currentSiteData.products[idx],
+        name: document.getElementById('editProductName').value.trim(),
+        tag: document.getElementById('editProductTag').value.trim(),
+        image: document.getElementById('editProductImage').value.trim(),
+        price: basePrice,
+        rating: parseInt(document.getElementById('editProductRating').value) || 5,
+        description: document.getElementById('editProductDesc').value.trim(),
+        instructions: document.getElementById('editProductInstructions').value.trim(),
+        weights: parsedWeights.length ? parsedWeights : currentSiteData.products[idx].weights,
+        details: parsedDetails
+      };
+
+      saveSiteData(currentSiteData);
+      showToast(`✅ Saved ${currentSiteData.products[idx].name}!`);
+    }
+
+    // ---- HERO BANNERS EDITOR ----
+    function renderBannersEditor() {
+      const container = document.getElementById('bannersContainer');
+      if (!container) return;
+
+      container.innerHTML = (currentSiteData.banners || []).map((b, i) => `
+        <div class="admin-card">
+          <div class="admin-card-header">
+            <div class="admin-card-title">🖼️ Hero Banner Slide #${i + 1}</div>
+          </div>
+          <div class="admin-grid-2">
+            <div class="form-group">
+              <label class="form-label">Banner Image Path / URL *</label>
+              <input type="text" id="bannerImg_${i}" class="form-input" value="${b.image}" oninput="updateImagePreview(this.value, 'bannerPreview_${i}')" />
+            </div>
+            <div class="form-group">
+              <label class="form-label">Banner Title *</label>
+              <input type="text" id="bannerTitle_${i}" class="form-input" value="${b.title}" />
+            </div>
+          </div>
+          <div class="admin-grid-2">
+            <div class="form-group">
+              <label class="form-label">Button Target Link *</label>
+              <input type="text" id="bannerLink_${i}" class="form-input" value="${b.link}" />
+            </div>
+            <div class="form-group">
+              <label class="form-label">Button Label Text *</label>
+              <input type="text" id="bannerBtnText_${i}" class="form-input" value="${b.btnText || 'Shop Now →'}" />
+            </div>
+          </div>
+          <img id="bannerPreview_${i}" class="admin-img-preview" src="${b.image}" alt="Banner Preview" style="height: 180px;" />
+        </div>
+      `).join('');
+    }
+
+    function saveBannersData() {
+      (currentSiteData.banners || []).forEach((b, i) => {
+        const imgEl = document.getElementById(`bannerImg_${i}`);
+        const titleEl = document.getElementById(`bannerTitle_${i}`);
+        const linkEl = document.getElementById(`bannerLink_${i}`);
+        const btnTextEl = document.getElementById(`bannerBtnText_${i}`);
+
+        if (imgEl && titleEl && linkEl) {
+          b.image = imgEl.value.trim();
+          b.title = titleEl.value.trim();
+          b.link = linkEl.value.trim();
+          b.btnText = btnTextEl ? btnTextEl.value.trim() : 'Shop Now →';
+        }
+      });
+    }
+
+    // ---- SETTINGS EDITOR ----
+    function renderSettingsEditor() {
+      const s = currentSiteData.settings;
+      document.getElementById('settingAnnouncement').value = s.announcementBar || '';
+      document.getElementById('settingPhone').value = s.phone || '';
+      document.getElementById('settingEmail').value = s.email || '';
+      document.getElementById('settingFacebook').value = s.facebook || '';
+      document.getElementById('settingInstagram').value = s.instagram || '';
+      document.getElementById('settingWhatsapp').value = s.whatsapp || '';
+      document.getElementById('settingThreshold').value = s.freeDeliveryThreshold || 2000;
+      document.getElementById('settingFee').value = s.deliveryFee || 200;
+    }
+
+    function saveSettingsData() {
+      currentSiteData.settings = {
+        announcementBar: document.getElementById('settingAnnouncement').value.trim(),
+        phone: document.getElementById('settingPhone').value.trim(),
+        email: document.getElementById('settingEmail').value.trim(),
+        facebook: document.getElementById('settingFacebook').value.trim(),
+        instagram: document.getElementById('settingInstagram').value.trim(),
+        whatsapp: document.getElementById('settingWhatsapp').value.trim(),
+        freeDeliveryThreshold: parseInt(document.getElementById('settingThreshold').value) || 2000,
+        deliveryFee: parseInt(document.getElementById('settingFee').value) || 200,
+        currency: 'Rs.'
+      };
+    }
+
+    // ---- SAVE ALL CHANGES ----
+    function saveAllChanges() {
+      saveActiveProduct();
+      saveBannersData();
+      saveSettingsData();
+      saveSiteData(currentSiteData);
+      showToast('🎉 All site changes saved live successfully!');
+    }
+
+    // ---- RESET TO DEFAULT DATA ----
+    function resetDefaultData() {
+      if (confirm('⚠️ Are you sure you want to reset all content back to original defaults?')) {
+        localStorage.removeItem('nutrivanaSiteData');
+        initAdminData();
+        showToast('🔄 Reset to default site content!');
+      }
+    }
+
+    // Init on DOM load
+    document.addEventListener('DOMContentLoaded', checkAuth);
+  </script>
+</body>
+</html>

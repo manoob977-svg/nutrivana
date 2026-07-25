@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Cart – Nutrivana | Your Wellness Basket</title>
+  <meta name="description" content="View and manage your Nutrivana cart. Secure checkout with JazzCash, EasyPaisa, and Cash on Delivery." />
+  <link rel="icon" href="Image/Favicon.png" type="image/png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+  <!-- Announcement Bar -->
+  <div class="announcement-bar" id="announcementBar">
+    <div class="announcement-track">
+      <span>🌿 FREE DELIVERY on orders above Rs. 2000 &nbsp;&nbsp;|&nbsp;&nbsp; 🍯 100% Pure &amp; Natural &nbsp;&nbsp;|&nbsp;&nbsp; ⭐ 500+ Happy Customers &nbsp;&nbsp;|&nbsp;&nbsp; 🌿 FREE DELIVERY on orders above Rs. 2000 &nbsp;&nbsp;|&nbsp;&nbsp; 🍯 100% Pure &amp; Natural &nbsp;&nbsp;|&nbsp;&nbsp; ⭐ 500+ Happy Customers</span>
+    </div>
+  </div>
+
+  <!-- Header -->
+  <header class="site-header" id="siteHeader">
+    <div class="header-inner">
+      <nav class="header-nav left-nav">
+        <a href="index.html" class="nav-link">Home</a>
+        <a href="products.html" class="nav-link">Products</a>
+        <a href="contact.html" class="nav-link">Contact Us</a>
+      </nav>
+      <a href="index.html" class="logo-link">
+        <img src="Image/Logo.svg" alt="Nutrivana Logo" class="site-logo" />
+      </a>
+      <div class="header-actions">
+        <button class="icon-btn" id="searchBtn" aria-label="Search">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        </button>
+        <a href="cart.html" class="icon-btn cart-btn" aria-label="Cart">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg>
+          <span class="cart-count" id="cartCount">0</span>
+        </a>
+        <button class="mobile-menu-btn" id="mobileMenuBtn" aria-label="Menu">
+          <span></span><span></span><span></span>
+        </button>
+      </div>
+    </div>
+    <nav class="mobile-nav" id="mobileNav">
+      <a href="index.html" class="mobile-nav-link">Home</a>
+      <a href="products.html" class="mobile-nav-link">Products</a>
+      <a href="contact.html" class="mobile-nav-link">Contact Us</a>
+      <a href="cart.html" class="mobile-nav-link">Cart</a>
+    </nav>
+  </header>
+
+  <!-- Search Overlay -->
+  <div class="search-overlay" id="searchOverlay">
+    <div class="search-box">
+      <input type="text" placeholder="Search products..." id="searchInput" class="search-input" />
+      <button class="search-close" id="searchClose">✕</button>
+    </div>
+  </div>
+
+  <main>
+    <!-- Page Hero -->
+    <section class="page-hero" style="padding: 50px 0 40px;">
+      <div class="container">
+        <h1 class="page-hero-title" style="font-size: 40px;">Your Cart</h1>
+        <p class="page-hero-subtitle" id="cartItemCount">0 items</p>
+      </div>
+    </section>
+
+    <!-- Cart Content -->
+    <section class="cart-section">
+      <div class="container">
+        <div class="cart-layout">
+          <!-- Cart Items -->
+          <div>
+            <div id="cartContainer">
+              <!-- Rendered by JS -->
+            </div>
+
+            <!-- Continue Shopping -->
+            <div style="margin-top: 24px;">
+              <a href="products.html" class="btn btn-outline" style="gap: 8px;">
+                ← Continue Shopping
+              </a>
+            </div>
+          </div>
+
+          <!-- Order Summary -->
+          <div class="cart-summary">
+            <h3>Order Summary</h3>
+
+            <div class="summary-row">
+              <span>Subtotal</span>
+              <span id="summarySubtotal">Rs. 0</span>
+            </div>
+            <div class="summary-row discount">
+              <span>Discount</span>
+              <span>— Rs. 0</span>
+            </div>
+            <div class="summary-row">
+              <span>Delivery</span>
+              <span id="summaryDelivery">Rs. 200</span>
+            </div>
+            <div class="summary-row total">
+              <span>Total</span>
+              <span id="summaryTotal">Rs. 0</span>
+            </div>
+
+            <!-- Promo Code -->
+            <div class="promo-form">
+              <input type="text" id="promoInput" class="promo-input" placeholder="Promo code (NUTRI10)" />
+              <button class="btn btn-outline btn-sm" onclick="applyPromo()">Apply</button>
+            </div>
+
+            <!-- Free delivery notice -->
+            <div style="background: rgba(45,106,79,0.07); border-radius: var(--radius-sm); padding: 12px 16px; font-size: 13px; color: var(--green); font-weight: 500; margin-bottom: 4px;">
+              🚚 Free delivery on orders above Rs. 2,000!
+            </div>
+
+            <!-- Checkout -->
+            <button class="btn btn-primary checkout-btn" onclick="handleCheckout()">
+              Proceed to Checkout →
+            </button>
+
+            <!-- Secure Badges -->
+            <div class="secure-badges">
+              🔒 Secure & Encrypted Checkout
+            </div>
+
+            <!-- Payment Methods -->
+            <div style="margin-top: 16px; text-align: center;">
+              <p style="font-size: 12px; color: var(--gray); margin-bottom: 10px;">Accepted Payment Methods</p>
+              <div class="payment-methods" style="justify-content: center; flex-wrap: wrap;">
+                <span class="payment-tag" style="background: var(--cream); border-color: var(--cream-dark); color: var(--dark);">💳 JazzCash</span>
+                <span class="payment-tag" style="background: var(--cream); border-color: var(--cream-dark); color: var(--dark);">📱 EasyPaisa</span>
+                <span class="payment-tag" style="background: var(--cream); border-color: var(--cream-dark); color: var(--dark);">💵 Cash on Delivery</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- You May Also Like -->
+    <section style="padding: 60px 0; background: var(--white);">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-tag">Complete Your Order</span>
+          <h2 class="section-title">You May Also Like</h2>
+        </div>
+        <div class="products-grid">
+          <div class="product-card">
+            <div class="product-image-wrap">
+              <span class="sale-tag">BESTSELLER</span>
+              <img src="Image/Talbina/Talbina02.png" alt="Talbina" class="product-img" loading="lazy" />
+              <div class="product-overlay">
+                <button class="btn btn-primary btn-sm" onclick="addToCart('Premium Talbina', 1800, 'Image/Talbina/Talbina02.png')">Add to Cart</button>
+              </div>
+            </div>
+            <div class="product-info">
+              <div class="product-rating"><span class="stars">★★★★★</span><span class="rating-count">(128)</span></div>
+              <h3 class="product-name">Premium Talbina</h3>
+              <div class="product-price"><span class="price-sale">Rs. 1,800</span><span class="price-original">Rs. 2,200</span></div>
+            </div>
+          </div>
+          <div class="product-card">
+            <div class="product-image-wrap">
+              <span class="sale-tag">SALE</span>
+              <img src="Image/Honey/Honey01.png" alt="Pure Honey" class="product-img" loading="lazy" />
+              <div class="product-overlay">
+                <button class="btn btn-primary btn-sm" onclick="addToCart('Pure Wild Honey', 2500, 'Image/Honey/Honey01.png')">Add to Cart</button>
+              </div>
+            </div>
+            <div class="product-info">
+              <div class="product-rating"><span class="stars">★★★★★</span><span class="rating-count">(95)</span></div>
+              <h3 class="product-name">Pure Wild Honey</h3>
+              <div class="product-price"><span class="price-sale">Rs. 2,500</span><span class="price-original">Rs. 3,000</span></div>
+            </div>
+          </div>
+          <div class="product-card">
+            <div class="product-image-wrap">
+              <span class="sale-tag">NEW</span>
+              <img src="Image/DesiGhee/Desi Ghee.png" alt="Desi Ghee" class="product-img" loading="lazy" />
+              <div class="product-overlay">
+                <button class="btn btn-primary btn-sm" onclick="addToCart('Bilona Desi Ghee', 3200, 'Image/DesiGhee/Desi Ghee.png')">Add to Cart</button>
+              </div>
+            </div>
+            <div class="product-info">
+              <div class="product-rating"><span class="stars">★★★★☆</span><span class="rating-count">(72)</span></div>
+              <h3 class="product-name">Bilona Desi Ghee</h3>
+              <div class="product-price"><span class="price-sale">Rs. 3,200</span><span class="price-original">Rs. 3,800</span></div>
+            </div>
+          </div>
+          <div class="product-card">
+            <div class="product-image-wrap">
+              <span class="sale-tag">POPULAR</span>
+              <img src="Image/Oatmeal/Oatmeal01.png" alt="Oatmeal" class="product-img" loading="lazy" />
+              <div class="product-overlay">
+                <button class="btn btn-primary btn-sm" onclick="addToCart('Organic Oatmeal', 1200, 'Image/Oatmeal/Oatmeal01.png')">Add to Cart</button>
+              </div>
+            </div>
+            <div class="product-info">
+              <div class="product-rating"><span class="stars">★★★★★</span><span class="rating-count">(54)</span></div>
+              <h3 class="product-name">Organic Oatmeal</h3>
+              <div class="product-price"><span class="price-sale">Rs. 1,200</span><span class="price-original">Rs. 1,500</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Footer -->
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <img src="Image/Logo.svg" alt="Nutrivana" class="footer-logo" />
+          <p>Pure. Natural. Nourishing. — Your trusted source for premium organic superfoods.</p>
+          <div class="social-links">
+            <a href="https://www.facebook.com/share/14dvm677pu6/" target="_blank" rel="noopener noreferrer" class="social-link" aria-label="Facebook">
+              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M18 2h-3a5 5 0 00-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 011-1h3z"/></svg>
+            </a>
+            <a href="https://www.instagram.com/nutrivanaa.official?igsh=MWJiY3F4MHZkcW9oaw==" target="_blank" rel="noopener noreferrer" class="social-link" aria-label="Instagram">
+              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1112.63 8 4 4 0 0116 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
+            </a>
+            <a href="https://wa.me/923347000322" target="_blank" rel="noopener noreferrer" class="social-link" aria-label="WhatsApp">
+              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+            </a>
+          </div>
+        </div>
+        <div class="footer-links">
+          <h4>Quick Links</h4>
+          <ul>
+            <li><a href="index.html">Home</a></li>
+            <li><a href="products.html">Products</a></li>
+            <li><a href="cart.html">Cart</a></li>
+            <li><a href="contact.html">Contact Us</a></li>
+            <li><a href="admin.html" style="color: var(--gold-light); font-weight: 600;">⚙️ Admin Portal</a></li>
+          </ul>
+        </div>
+        <div class="footer-links">
+          <h4>Policies</h4>
+          <ul>
+            <li><a href="#">Terms of Service</a></li>
+            <li><a href="#">Privacy Policy</a></li>
+            <li><a href="#">Refund Policy</a></li>
+            <li><a href="#">Shipping Policy</a></li>
+          </ul>
+        </div>
+        <div class="footer-links">
+          <h4>Contact</h4>
+          <ul>
+            <li>📍 Pakistan</li>
+            <li>📞 <a href="tel:+923347000322" style="color: inherit; text-decoration: none;">+92 334 7000322</a></li>
+            <li>✉️ <a href="mailto:nutrivanaa.official@gmail.com" style="color: inherit; text-decoration: none;">nutrivanaa.official@gmail.com</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>© 2026 Nutrivana. All rights reserved.</p>
+        <div class="payment-methods">
+          <span class="payment-tag">JazzCash</span>
+          <span class="payment-tag">EasyPaisa</span>
+          <span class="payment-tag">COD</span>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Floating WhatsApp Button -->
+  <a href="https://wa.me/923347000322" class="whatsapp-float" target="_blank" rel="noopener noreferrer" aria-label="Chat on WhatsApp">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+  </a>
+
+  <div class="toast" id="toast"></div>
+  <script src="js/main.js"></script>
+</body>
+</html>

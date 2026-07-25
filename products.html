@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Products – Nutrivana | Shop Pure Natural Superfoods</title>
+  <meta name="description" content="Shop Nutrivana's premium organic products — Talbina, Pure Honey, Desi Ghee, and Oatmeal. Free delivery on orders above Rs. 2000." />
+  <link rel="icon" href="Image/Favicon.png" type="image/png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+  <!-- Announcement Bar -->
+  <div class="announcement-bar" id="announcementBar">
+    <div class="announcement-track">
+      <span>🌿 FREE DELIVERY on orders above Rs. 2000 &nbsp;&nbsp;|&nbsp;&nbsp; 🍯 100% Pure &amp; Natural &nbsp;&nbsp;|&nbsp;&nbsp; ⭐ 500+ Happy Customers &nbsp;&nbsp;|&nbsp;&nbsp; 🌿 FREE DELIVERY on orders above Rs. 2000 &nbsp;&nbsp;|&nbsp;&nbsp; 🍯 100% Pure &amp; Natural &nbsp;&nbsp;|&nbsp;&nbsp; ⭐ 500+ Happy Customers</span>
+    </div>
+  </div>
+
+  <!-- Header -->
+  <header class="site-header" id="siteHeader">
+    <div class="header-inner">
+      <nav class="header-nav left-nav">
+        <a href="index.html" class="nav-link">Home</a>
+        <a href="products.html" class="nav-link active">Products</a>
+        <a href="contact.html" class="nav-link">Contact Us</a>
+      </nav>
+      <a href="index.html" class="logo-link">
+        <img src="Image/Logo.svg" alt="Nutrivana Logo" class="site-logo" />
+      </a>
+      <div class="header-actions">
+        <button class="icon-btn" id="searchBtn" aria-label="Search">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        </button>
+        <a href="cart.html" class="icon-btn cart-btn" aria-label="Cart">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg>
+          <span class="cart-count" id="cartCount">0</span>
+        </a>
+        <button class="mobile-menu-btn" id="mobileMenuBtn" aria-label="Menu">
+          <span></span><span></span><span></span>
+        </button>
+      </div>
+    </div>
+    <nav class="mobile-nav" id="mobileNav">
+      <a href="index.html" class="mobile-nav-link">Home</a>
+      <a href="products.html" class="mobile-nav-link">Products</a>
+      <a href="contact.html" class="mobile-nav-link">Contact Us</a>
+      <a href="cart.html" class="mobile-nav-link">Cart</a>
+    </nav>
+  </header>
+
+  <!-- Search Overlay -->
+  <div class="search-overlay" id="searchOverlay">
+    <div class="search-box">
+      <input type="text" placeholder="Search products..." id="searchInput" class="search-input" />
+      <button class="search-close" id="searchClose">✕</button>
+    </div>
+  </div>
+
+  <main>
+    <!-- Page Hero -->
+    <section class="page-hero">
+      <div class="container">
+        <span class="section-tag" style="background: rgba(201,168,76,0.15); border-color: rgba(201,168,76,0.4);">Our Collection</span>
+        <h1 class="page-hero-title">Pure Wellness, Delivered</h1>
+        <p class="page-hero-subtitle">Explore our complete range of handpicked organic superfoods</p>
+      </div>
+    </section>
+
+    <!-- Products -->
+    <section class="products-page-section">
+      <div class="container" id="dynamicProductsContainer">
+
+        <!-- Talbina -->
+        <div class="product-detail-card reveal" id="talbina" style="margin-bottom: 40px;">
+          <div style="display: grid; grid-template-columns: 1.2fr 1fr; gap: 0;">
+            <div class="product-detail-image" style="border-radius: var(--radius-lg) 0 0 var(--radius-lg);">
+              <img src="Image/Talbina/Talbina02.png" alt="Premium Talbina" />
+              <span class="sale-tag">BESTSELLER</span>
+            </div>
+            <div class="product-detail-body" style="padding: 48px 40px; display: flex; flex-direction: column; justify-content: center;">
+              <div class="product-rating" style="margin-bottom: 10px;">
+                <span class="stars">★★★★★</span>
+                <span class="rating-count">(128 reviews)</span>
+              </div>
+              <h2 class="product-name" style="font-size: 30px; margin-bottom: 12px;">Premium Talbina</h2>
+              <div class="product-tags">
+                <span class="product-tag-item">🌾 Organic Barley</span>
+                <span class="product-tag-item">☀️ Sunnah Superfood</span>
+                <span class="product-tag-item">💚 Gut Health</span>
+                <span class="product-tag-item">⚡ Energy Boost</span>
+              </div>
+              <p class="product-desc" style="font-size: 15px; line-height: 1.8; margin-bottom: 24px;">
+                Our Premium Talbina is crafted from 100% organic barley — the beloved Sunnah superfood recommended by Prophet Muhammad ﷺ. Rich in beta-glucan fiber, vitamins, and minerals, it supports gut health, boosts energy, and calms the nervous system. A perfect daily ritual for the whole family.
+              </p>
+              <div class="product-weight" style="margin-bottom: 20px;">
+                <button class="weight-btn selected" data-weight-group="talbina" onclick="selectWeight(this, 'talbina')">250g</button>
+                <button class="weight-btn" data-weight-group="talbina" onclick="selectWeight(this, 'talbina')">500g</button>
+                <button class="weight-btn" data-weight-group="talbina" onclick="selectWeight(this, 'talbina')">1kg</button>
+              </div>
+              <div class="product-price" style="margin-bottom: 20px;">
+                <span class="price-sale">Rs. 1,800</span>
+                <span class="price-original">Rs. 2,200</span>
+                <span style="background: rgba(45,106,79,0.1); color: var(--green); padding: 3px 10px; border-radius: 50px; font-size: 12px; font-weight: 700; margin-left: 8px;">Save 18%</span>
+              </div>
+              <div style="display: flex; align-items: center; gap: 16px; margin-bottom: 24px;">
+                <div class="quantity-selector">
+                  <button class="qty-btn" onclick="changeQty('talbina', -1)">−</button>
+                  <span class="qty-display" id="qty-talbina">1</span>
+                  <button class="qty-btn" onclick="changeQty('talbina', 1)">+</button>
+                </div>
+              </div>
+              <div class="product-actions">
+                <button class="btn btn-primary btn-lg" onclick="addProductToCart('Premium Talbina', 1800, 'Image/Talbina/Talbina02.png', 'talbina')">Add to Cart 🛒</button>
+                <button class="btn btn-gold btn-lg" onclick="addProductToCart('Premium Talbina', 1800, 'Image/Talbina/Talbina02.png', 'talbina'); window.location='cart.html'">Buy Now</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Honey -->
+        <div class="product-detail-card reveal" id="honey" style="margin-bottom: 40px;">
+          <div style="display: grid; grid-template-columns: 1fr 1.2fr; gap: 0;">
+            <div class="product-detail-body" style="padding: 48px 40px; display: flex; flex-direction: column; justify-content: center;">
+              <div class="product-rating" style="margin-bottom: 10px;">
+                <span class="stars">★★★★★</span>
+                <span class="rating-count">(95 reviews)</span>
+              </div>
+              <h2 class="product-name" style="font-size: 30px; margin-bottom: 12px;">Pure Wild Honey</h2>
+              <div class="product-tags">
+                <span class="product-tag-item">🍯 Raw & Unfiltered</span>
+                <span class="product-tag-item">🏔️ Mountain Sourced</span>
+                <span class="product-tag-item">🌸 Antioxidant Rich</span>
+                <span class="product-tag-item">💪 Immunity Boost</span>
+              </div>
+              <p class="product-desc" style="font-size: 15px; line-height: 1.8; margin-bottom: 24px;">
+                Straight from the pristine mountains of Pakistan, our Pure Wild Honey is 100% raw and unfiltered — preserving all natural enzymes, pollen, and antioxidants. No heating, no processing. Just pure liquid gold in every jar.
+              </p>
+              <div class="product-weight" style="margin-bottom: 20px;">
+                <button class="weight-btn selected" data-weight-group="honey" onclick="selectWeight(this, 'honey')">250g</button>
+                <button class="weight-btn" data-weight-group="honey" onclick="selectWeight(this, 'honey')">500g</button>
+                <button class="weight-btn" data-weight-group="honey" onclick="selectWeight(this, 'honey')">1kg</button>
+              </div>
+              <div class="product-price" style="margin-bottom: 20px;">
+                <span class="price-sale">Rs. 2,500</span>
+                <span class="price-original">Rs. 3,000</span>
+                <span style="background: rgba(45,106,79,0.1); color: var(--green); padding: 3px 10px; border-radius: 50px; font-size: 12px; font-weight: 700; margin-left: 8px;">Save 17%</span>
+              </div>
+              <div style="display: flex; align-items: center; gap: 16px; margin-bottom: 24px;">
+                <div class="quantity-selector">
+                  <button class="qty-btn" onclick="changeQty('honey', -1)">−</button>
+                  <span class="qty-display" id="qty-honey">1</span>
+                  <button class="qty-btn" onclick="changeQty('honey', 1)">+</button>
+                </div>
+              </div>
+              <div class="product-actions">
+                <button class="btn btn-primary btn-lg" onclick="addProductToCart('Pure Wild Honey', 2500, 'Image/Honey/Honey01.png', 'honey')">Add to Cart 🛒</button>
+                <button class="btn btn-gold btn-lg" onclick="addProductToCart('Pure Wild Honey', 2500, 'Image/Honey/Honey01.png', 'honey'); window.location='cart.html'">Buy Now</button>
+              </div>
+            </div>
+            <div class="product-detail-image" style="border-radius: 0 var(--radius-lg) var(--radius-lg) 0;">
+              <img src="Image/Honey/Honey01.png" alt="Pure Wild Honey" />
+              <span class="sale-tag">SALE</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Desi Ghee -->
+        <div class="product-detail-card reveal" id="ghee" style="margin-bottom: 40px;">
+          <div style="display: grid; grid-template-columns: 1.2fr 1fr; gap: 0;">
+            <div class="product-detail-image" style="border-radius: var(--radius-lg) 0 0 var(--radius-lg);">
+              <img src="Image/DesiGhee/Desighi01.png" alt="Bilona Desi Ghee" />
+              <span class="sale-tag">NEW</span>
+            </div>
+            <div class="product-detail-body" style="padding: 48px 40px; display: flex; flex-direction: column; justify-content: center;">
+              <div class="product-rating" style="margin-bottom: 10px;">
+                <span class="stars">★★★★☆</span>
+                <span class="rating-count">(72 reviews)</span>
+              </div>
+              <h2 class="product-name" style="font-size: 30px; margin-bottom: 12px;">Bilona Desi Ghee</h2>
+              <div class="product-tags">
+                <span class="product-tag-item">🥛 A2 Cow Milk</span>
+                <span class="product-tag-item">🔥 Bilona Method</span>
+                <span class="product-tag-item">🧠 Brain Health</span>
+                <span class="product-tag-item">🫀 Heart Healthy</span>
+              </div>
+              <p class="product-desc" style="font-size: 15px; line-height: 1.8; margin-bottom: 24px;">
+                Made using the ancient Bilona churning method from pure A2 cow milk. Our Desi Ghee is slow-cooked to perfection, rich in healthy fats, fat-soluble vitamins (A, D, E, K), and butyric acid for gut health. The taste of tradition in every spoon.
+              </p>
+              <div class="product-weight" style="margin-bottom: 20px;">
+                <button class="weight-btn selected" data-weight-group="ghee" onclick="selectWeight(this, 'ghee')">250ml</button>
+                <button class="weight-btn" data-weight-group="ghee" onclick="selectWeight(this, 'ghee')">500ml</button>
+                <button class="weight-btn" data-weight-group="ghee" onclick="selectWeight(this, 'ghee')">1L</button>
+              </div>
+              <div class="product-price" style="margin-bottom: 20px;">
+                <span class="price-sale">Rs. 3,200</span>
+                <span class="price-original">Rs. 3,800</span>
+                <span style="background: rgba(45,106,79,0.1); color: var(--green); padding: 3px 10px; border-radius: 50px; font-size: 12px; font-weight: 700; margin-left: 8px;">Save 16%</span>
+              </div>
+              <div style="display: flex; align-items: center; gap: 16px; margin-bottom: 24px;">
+                <div class="quantity-selector">
+                  <button class="qty-btn" onclick="changeQty('ghee', -1)">−</button>
+                  <span class="qty-display" id="qty-ghee">1</span>
+                  <button class="qty-btn" onclick="changeQty('ghee', 1)">+</button>
+                </div>
+              </div>
+              <div class="product-actions">
+                <button class="btn btn-primary btn-lg" onclick="addProductToCart('Bilona Desi Ghee', 3200, 'Image/DesiGhee/Desighi01.png', 'ghee')">Add to Cart 🛒</button>
+                <button class="btn btn-gold btn-lg" onclick="addProductToCart('Bilona Desi Ghee', 3200, 'Image/DesiGhee/Desighi01.png', 'ghee'); window.location='cart.html'">Buy Now</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Oatmeal -->
+        <div class="product-detail-card reveal" id="oatmeal" style="margin-bottom: 40px;">
+          <div style="display: grid; grid-template-columns: 1fr 1.2fr; gap: 0;">
+            <div class="product-detail-body" style="padding: 48px 40px; display: flex; flex-direction: column; justify-content: center;">
+              <div class="product-rating" style="margin-bottom: 10px;">
+                <span class="stars">★★★★★</span>
+                <span class="rating-count">(54 reviews)</span>
+              </div>
+              <h2 class="product-name" style="font-size: 30px; margin-bottom: 12px;">Organic Oatmeal</h2>
+              <div class="product-tags">
+                <span class="product-tag-item">🌾 Whole Grain</span>
+                <span class="product-tag-item">❤️ Heart Healthy</span>
+                <span class="product-tag-item">⚖️ Weight Management</span>
+                <span class="product-tag-item">🌅 Perfect Breakfast</span>
+              </div>
+              <p class="product-desc" style="font-size: 15px; line-height: 1.8; margin-bottom: 24px;">
+                Start every morning right with our Organic Whole Grain Oatmeal. Slow-cooked oats packed with fiber, protein, and complex carbohydrates to keep you full and energized. No added sugar, no artificial flavors — just pure wholesome goodness.
+              </p>
+              <div class="product-weight" style="margin-bottom: 20px;">
+                <button class="weight-btn selected" data-weight-group="oatmeal" onclick="selectWeight(this, 'oatmeal')">500g</button>
+                <button class="weight-btn" data-weight-group="oatmeal" onclick="selectWeight(this, 'oatmeal')">1kg</button>
+                <button class="weight-btn" data-weight-group="oatmeal" onclick="selectWeight(this, 'oatmeal')">2kg</button>
+              </div>
+              <div class="product-price" style="margin-bottom: 20px;">
+                <span class="price-sale">Rs. 1,200</span>
+                <span class="price-original">Rs. 1,500</span>
+                <span style="background: rgba(45,106,79,0.1); color: var(--green); padding: 3px 10px; border-radius: 50px; font-size: 12px; font-weight: 700; margin-left: 8px;">Save 20%</span>
+              </div>
+              <div style="display: flex; align-items: center; gap: 16px; margin-bottom: 24px;">
+                <div class="quantity-selector">
+                  <button class="qty-btn" onclick="changeQty('oatmeal', -1)">−</button>
+                  <span class="qty-display" id="qty-oatmeal">1</span>
+                  <button class="qty-btn" onclick="changeQty('oatmeal', 1)">+</button>
+                </div>
+              </div>
+              <div class="product-actions">
+                <button class="btn btn-primary btn-lg" onclick="addProductToCart('Organic Oatmeal', 1200, 'Image/Oatmeal/Oatmeal01.png', 'oatmeal')">Add to Cart 🛒</button>
+                <button class="btn btn-gold btn-lg" onclick="addProductToCart('Organic Oatmeal', 1200, 'Image/Oatmeal/Oatmeal01.png', 'oatmeal'); window.location='cart.html'">Buy Now</button>
+              </div>
+            </div>
+            <div class="product-detail-image" style="border-radius: 0 var(--radius-lg) var(--radius-lg) 0;">
+              <img src="Image/Oatmeal/Oatmeal01.png" alt="Organic Oatmeal" />
+              <span class="sale-tag">POPULAR</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- Guarantee Section -->
+    <section style="padding: 80px 0; background: var(--green-dark);">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-tag" style="background: rgba(201,168,76,0.15); border-color: rgba(201,168,76,0.4);">Our Promise</span>
+          <h2 class="section-title" style="color: var(--white);">The Nutrivana Guarantee</h2>
+          <p class="section-subtitle" style="color: rgba(255,255,255,0.65);">We stand behind every product we sell</p>
+        </div>
+        <div class="steps-grid">
+          <div class="step-card reveal">
+            <div class="step-icon">🌿</div>
+            <h3>100% Natural</h3>
+            <p>No artificial ingredients, preservatives, or additives. Ever.</p>
+          </div>
+          <div class="step-card reveal">
+            <div class="step-icon">🔬</div>
+            <h3>Lab Tested</h3>
+            <p>Every batch is tested for purity, potency, and safety before shipping.</p>
+          </div>
+          <div class="step-card reveal">
+            <div class="step-icon">💸</div>
+            <h3>Money Back</h3>
+            <p>Not satisfied? We offer a full refund within 7 days — no questions asked.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Footer -->
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <img src="Image/Logo.svg" alt="Nutrivana" class="footer-logo" />
+          <p>Pure. Natural. Nourishing. — Your trusted source for premium organic superfoods.</p>
+          <div class="social-links">
+            <a href="https://www.facebook.com/share/14dvm677pu6/" target="_blank" rel="noopener noreferrer" class="social-link" aria-label="Facebook">
+              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M18 2h-3a5 5 0 00-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 011-1h3z"/></svg>
+            </a>
+            <a href="https://www.instagram.com/nutrivanaa.official?igsh=MWJiY3F4MHZkcW9oaw==" target="_blank" rel="noopener noreferrer" class="social-link" aria-label="Instagram">
+              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1112.63 8 4 4 0 0116 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
+            </a>
+            <a href="https://wa.me/923347000322" target="_blank" rel="noopener noreferrer" class="social-link" aria-label="WhatsApp">
+              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+            </a>
+          </div>
+        </div>
+        <div class="footer-links">
+          <h4>Quick Links</h4>
+          <ul>
+            <li><a href="index.html">Home</a></li>
+            <li><a href="products.html">Products</a></li>
+            <li><a href="cart.html">Cart</a></li>
+            <li><a href="contact.html">Contact Us</a></li>
+            <li><a href="admin.html" style="color: var(--gold-light); font-weight: 600;">⚙️ Admin Portal</a></li>
+          </ul>
+        </div>
+        <div class="footer-links">
+          <h4>Policies</h4>
+          <ul>
+            <li><a href="#">Terms of Service</a></li>
+            <li><a href="#">Privacy Policy</a></li>
+            <li><a href="#">Refund Policy</a></li>
+            <li><a href="#">Shipping Policy</a></li>
+          </ul>
+        </div>
+        <div class="footer-links">
+          <h4>Contact</h4>
+          <ul>
+            <li>📍 Pakistan</li>
+            <li>📞 <a href="tel:+923347000322" style="color: inherit; text-decoration: none;">+92 334 7000322</a></li>
+            <li>✉️ <a href="mailto:nutrivanaa.official@gmail.com" style="color: inherit; text-decoration: none;">nutrivanaa.official@gmail.com</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>© 2026 Nutrivana. All rights reserved.</p>
+        <div class="payment-methods">
+          <span class="payment-tag">JazzCash</span>
+          <span class="payment-tag">EasyPaisa</span>
+          <span class="payment-tag">COD</span>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Floating WhatsApp Button -->
+  <a href="https://wa.me/923347000322" class="whatsapp-float" target="_blank" rel="noopener noreferrer" aria-label="Chat on WhatsApp">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+  </a>
+
+  <div class="toast" id="toast"></div>
+  <script src="js/main.js"></script>
+</body>
+</html>

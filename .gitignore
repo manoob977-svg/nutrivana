@@ -1,0 +1,23 @@
+# GitHub Ignore File for Nutrivana Project
+# Excludes heavy ad video files and unused draft folders
+
+*.mp4
+Image/**/*.mp4
+Image/**/Ad*
+Image/DesiGhee/Desi Ghee Ad1/
+Image/Honey/Honey Ad1/
+Image/Oatmeal/Oatmeal Ad1/
+Image/Talbina/Talbina Ad1/
+Image/Website/
+Image/Desi Ghee.png
+Image/Honey.png
+Image/Pur Honey.png
+Image/PurHoney.png
+Image/Post.png
+Image/Honey02.png
+Image/Contanier.png
+Image/Daily Essentials.png
+Image/Eco-Conscious Living.png
+Image/Premium Gifting.png
+Image/Starter Kits.png
+Image/Superfoods.png
