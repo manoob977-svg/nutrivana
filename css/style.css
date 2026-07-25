@@ -1817,4 +1817,115 @@ button { cursor: pointer; border: none; background: none; }
   .admin-grid-2 { grid-template-columns: 1fr; }
 }
 
+/* ======================================================
+   PRODUCT HOVER IMAGE SWAP & MULTI-IMAGE GALLERY STYLES
+====================================================== */
+.product-img-wrap {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  overflow: hidden;
+  border-radius: var(--radius-md);
+  background: var(--cream);
+  cursor: pointer;
+}
+
+.product-img-wrap img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: all 0.45s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.product-img-wrap .primary-img {
+  position: relative;
+  z-index: 1;
+  opacity: 1;
+}
+
+.product-img-wrap .hover-img {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  opacity: 0;
+  transform: scale(1.06);
+}
+
+.product-card:hover .primary-img,
+.product-detail-card:hover .primary-img {
+  opacity: 0;
+}
+
+.product-card:hover .hover-img,
+.product-detail-card:hover .hover-img {
+  opacity: 1;
+  transform: scale(1);
+}
+
+/* Gallery Thumbnails Row */
+.product-gallery-thumbs {
+  display: flex;
+  gap: 10px;
+  margin-top: 14px;
+  overflow-x: auto;
+  padding-bottom: 6px;
+}
+
+.thumb-btn {
+  width: 60px;
+  height: 60px;
+  border-radius: 8px;
+  border: 2px solid var(--cream-dark);
+  overflow: hidden;
+  cursor: pointer;
+  background: var(--white);
+  padding: 0;
+  flex-shrink: 0;
+  transition: var(--transition);
+}
+
+.thumb-btn:hover, .thumb-btn.active {
+  border-color: var(--green);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-sm);
+}
+
+.thumb-btn img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Admin Multi-Image Grid Preview */
+.admin-images-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+  gap: 14px;
+  margin-top: 12px;
+}
+
+.admin-img-box {
+  background: var(--cream);
+  border: 1px solid var(--cream-dark);
+  border-radius: var(--radius-sm);
+  padding: 8px;
+  text-align: center;
+}
+
+.admin-img-box img {
+  width: 100%;
+  height: 80px;
+  object-fit: cover;
+  border-radius: 4px;
+  margin-bottom: 6px;
+}
+
+.admin-img-box span {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--gray);
+  display: block;
+}
+
+
 

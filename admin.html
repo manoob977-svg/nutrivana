@@ -95,22 +95,25 @@
             <button onclick="saveAllChanges()" class="btn btn-primary">💾 Save All Changes</button>
           </div>
 
-          <!-- Product Selector -->
+          <!-- Product Selector & Management Header -->
           <div class="admin-card" style="margin-bottom: 24px;">
-            <label class="form-label" style="font-size: 15px; font-weight: 700;">Select Product to Edit:</label>
-            <div style="display: flex; gap: 12px; flex-wrap: wrap; margin-top: 12px;" id="productSelectorGroup">
-              <button class="btn btn-primary" onclick="loadProductForm('talbina', this)">Premium Talbina</button>
-              <button class="btn btn-outline" onclick="loadProductForm('honey', this)">Pure Natural Honey</button>
-              <button class="btn btn-outline" onclick="loadProductForm('ghee', this)">Desi Ghee (Bilona)</button>
-              <button class="btn btn-outline" onclick="loadProductForm('oatmeal', this)">Whole Grain Oatmeal</button>
+            <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; margin-bottom: 12px;">
+              <label class="form-label" style="font-size: 15px; font-weight: 700; margin: 0;">Select Product to Edit:</label>
+              <button onclick="addNewProduct()" class="btn btn-gold btn-sm">+ Add New Product</button>
+            </div>
+            <div style="display: flex; gap: 12px; flex-wrap: wrap;" id="productSelectorGroup">
+              <!-- Dynamically populated product buttons -->
             </div>
           </div>
 
           <!-- Active Product Form -->
           <div class="admin-card">
             <div class="admin-card-header">
-              <div class="admin-card-title" id="formProductTitle">✏️ Editing: Premium Talbina</div>
-              <span id="formProductBadge" class="sale-tag">BESTSELLER</span>
+              <div style="display: flex; align-items: center; gap: 12px;">
+                <div class="admin-card-title" id="formProductTitle">✏️ Editing: Premium Talbina</div>
+                <span id="formProductBadge" class="sale-tag">BESTSELLER</span>
+              </div>
+              <button type="button" onclick="deleteActiveProduct()" class="btn btn-outline btn-sm" style="color: #d90429; border-color: rgba(217,4,41,0.3); background: rgba(217,4,41,0.05);" title="Delete Product">🗑️ Delete Product</button>
             </div>
 
             <form id="productEditForm" onsubmit="event.preventDefault();">
@@ -127,10 +130,49 @@
                 </div>
               </div>
 
-              <div class="form-group">
-                <label class="form-label">Product Image Path / URL *</label>
-                <input type="text" id="editProductImage" class="form-input" oninput="updateImagePreview(this.value, 'productImgPreview')" required />
-                <img id="productImgPreview" class="admin-img-preview" src="" alt="Preview" />
+              <!-- Multi-Image Manager (4-6 Images) -->
+              <div class="form-group" style="background: var(--cream); border: 1px solid var(--cream-dark); padding: 20px; border-radius: var(--radius-sm); margin-bottom: 24px;">
+                <label class="form-label" style="font-size: 15px; font-weight: 700; color: var(--dark); margin-bottom: 6px;">📸 Product Images (Up to 6 Images) *</label>
+                <p style="font-size: 12px; color: var(--gray); margin-bottom: 16px;">Set primary image, hover image (swaps on mouse cursor hover), and gallery thumbnail images.</p>
+                
+                <div class="admin-grid-2" style="margin-bottom: 12px;">
+                  <div>
+                    <label class="form-label" style="font-size: 12px; font-weight: 600;">Image 1 (Primary / Default) *</label>
+                    <input type="text" id="editProductImg1" class="form-input" oninput="updateMultiImagePreviews()" placeholder="Image/Talbina/Talbina02.png" required />
+                  </div>
+                  <div>
+                    <label class="form-label" style="font-size: 12px; font-weight: 600;">Image 2 (Hover Image Swap) *</label>
+                    <input type="text" id="editProductImg2" class="form-input" oninput="updateMultiImagePreviews()" placeholder="Image/Brackfast.png" />
+                  </div>
+                </div>
+
+                <div class="admin-grid-2" style="margin-bottom: 12px;">
+                  <div>
+                    <label class="form-label" style="font-size: 12px; font-weight: 600;">Image 3 (Gallery Thumbnail)</label>
+                    <input type="text" id="editProductImg3" class="form-input" oninput="updateMultiImagePreviews()" placeholder="Image/Banner_Talbina.png" />
+                  </div>
+                  <div>
+                    <label class="form-label" style="font-size: 12px; font-weight: 600;">Image 4 (Gallery Thumbnail)</label>
+                    <input type="text" id="editProductImg4" class="form-input" oninput="updateMultiImagePreviews()" placeholder="Image/Talbina/Talbina02.png" />
+                  </div>
+                </div>
+
+                <div class="admin-grid-2">
+                  <div>
+                    <label class="form-label" style="font-size: 12px; font-weight: 600;">Image 5 (Gallery Thumbnail)</label>
+                    <input type="text" id="editProductImg5" class="form-input" oninput="updateMultiImagePreviews()" placeholder="Optional..." />
+                  </div>
+                  <div>
+                    <label class="form-label" style="font-size: 12px; font-weight: 600;">Image 6 (Gallery Thumbnail)</label>
+                    <input type="text" id="editProductImg6" class="form-input" oninput="updateMultiImagePreviews()" placeholder="Optional..." />
+                  </div>
+                </div>
+
+                <!-- Live Image Previews Grid -->
+                <div style="margin-top: 16px;">
+                  <span style="font-size: 12px; font-weight: 700; color: var(--dark); display: block; margin-bottom: 6px;">Live Image Previews:</span>
+                  <div id="adminImagesPreviewGrid" class="admin-images-grid"></div>
+                </div>
               </div>
 
               <div class="admin-grid-2">
@@ -356,9 +398,72 @@
 
     function initAdminData() {
       currentSiteData = getSiteData();
-      loadProductForm('talbina');
+      renderProductSelector();
+      loadProductForm(currentSiteData.products[0] ? currentSiteData.products[0].id : 'talbina');
       renderBannersEditor();
       renderSettingsEditor();
+    }
+
+    function renderProductSelector() {
+      const container = document.getElementById('productSelectorGroup');
+      if (!container) return;
+
+      const activeId = document.getElementById('editProductId') ? document.getElementById('editProductId').value : '';
+
+      container.innerHTML = (currentSiteData.products || []).map(p => `
+        <button type="button" class="btn ${p.id === activeId ? 'btn-primary' : 'btn-outline'}" onclick="loadProductForm('${p.id}', this)">${p.name}</button>
+      `).join('');
+    }
+
+    function addNewProduct() {
+      const newId = 'product_' + Date.now();
+      const newProduct = {
+        id: newId,
+        name: "New Product Title",
+        tag: "NEW",
+        badgeItems: ["🌿 100% Natural", "✨ Premium Quality"],
+        image: "Image/Favicon.png",
+        images: ["Image/Favicon.png", "Image/Favicon.png"],
+        rating: 5,
+        reviewsCount: 10,
+        price: 1000,
+        weights: [
+          { label: "500g", price: 1000 },
+          { label: "1kg", price: 1800 }
+        ],
+        description: "Enter product description here...",
+        instructions: "Enter preparation guide or usage instructions here...",
+        details: [
+          "100% Natural Quality",
+          "No preservatives added"
+        ]
+      };
+
+      currentSiteData.products.push(newProduct);
+      saveSiteData(currentSiteData);
+      renderProductSelector();
+      loadProductForm(newId);
+      showToast('🎉 New Product Created! Edit its details below.');
+    }
+
+    function deleteActiveProduct() {
+      const id = document.getElementById('editProductId').value;
+      const idx = currentSiteData.products.findIndex(p => p.id === id);
+      if (idx === -1) return;
+
+      if (currentSiteData.products.length <= 1) {
+        showToast('⚠️ Cannot delete the last remaining product!');
+        return;
+      }
+
+      const pName = currentSiteData.products[idx].name;
+      if (confirm(`Are you sure you want to delete "${pName}"?`)) {
+        currentSiteData.products.splice(idx, 1);
+        saveSiteData(currentSiteData);
+        renderProductSelector();
+        loadProductForm(currentSiteData.products[0].id);
+        showToast(`🗑️ Deleted ${pName}!`);
+      }
     }
 
     // ---- WEIGHT & RATE ROWS BUILDER ----
@@ -395,26 +500,53 @@
       if (row) row.remove();
     }
 
+    // ---- MULTI-IMAGE PREVIEW ----
+    function updateMultiImagePreviews() {
+      const grid = document.getElementById('adminImagesPreviewGrid');
+      if (!grid) return;
+
+      const imgUrls = [
+        document.getElementById('editProductImg1')?.value.trim(),
+        document.getElementById('editProductImg2')?.value.trim(),
+        document.getElementById('editProductImg3')?.value.trim(),
+        document.getElementById('editProductImg4')?.value.trim(),
+        document.getElementById('editProductImg5')?.value.trim(),
+        document.getElementById('editProductImg6')?.value.trim()
+      ].filter(Boolean);
+
+      const labels = ['1. Primary', '2. Hover Swap', '3. Gallery 3', '4. Gallery 4', '5. Gallery 5', '6. Gallery 6'];
+
+      grid.innerHTML = imgUrls.length ? imgUrls.map((url, i) => `
+        <div class="admin-img-box">
+          <img src="${url}" onerror="this.src='Image/Favicon.png'" alt="Img ${i+1}" />
+          <span>${labels[i] || 'Gallery'}</span>
+        </div>
+      `).join('') : '<p style="font-size:12px; color:var(--gray);">No images entered yet.</p>';
+    }
+
     // ---- PRODUCT FORM LOAD & SAVE ----
     function loadProductForm(productId, btnEl) {
-      if (btnEl) {
-        document.querySelectorAll('#productSelectorGroup .btn').forEach(b => {
-          b.className = 'btn btn-outline';
-        });
-        btnEl.className = 'btn btn-primary';
-      }
-
       const p = currentSiteData.products.find(item => item.id === productId) || currentSiteData.products[0];
+      if (!p) return;
       
       document.getElementById('editProductId').value = p.id;
       document.getElementById('editProductName').value = p.name || '';
       document.getElementById('editProductTag').value = p.tag || '';
-      document.getElementById('editProductImage').value = p.image || '';
       document.getElementById('editProductPrice').value = p.price || 0;
       document.getElementById('editProductRating').value = p.rating || 5;
       document.getElementById('editProductDesc').value = p.description || '';
       document.getElementById('editProductInstructions').value = p.instructions || '';
       
+      // Load 4-6 Images
+      const pImages = p.images && p.images.length ? p.images : [p.image || 'Image/Favicon.png'];
+      document.getElementById('editProductImg1').value = pImages[0] || '';
+      document.getElementById('editProductImg2').value = pImages[1] || '';
+      document.getElementById('editProductImg3').value = pImages[2] || '';
+      document.getElementById('editProductImg4').value = pImages[3] || '';
+      document.getElementById('editProductImg5').value = pImages[4] || '';
+      document.getElementById('editProductImg6').value = pImages[5] || '';
+      updateMultiImagePreviews();
+
       // Render Weight & Rate rows
       renderWeightRows(p.weights || []);
 
@@ -425,18 +557,23 @@
       // Header preview
       document.getElementById('formProductTitle').textContent = `✏️ Editing: ${p.name}`;
       document.getElementById('formProductBadge').textContent = p.tag || 'PRODUCT';
-      updateImagePreview(p.image, 'productImgPreview');
-    }
 
-    function updateImagePreview(src, imgId) {
-      const img = document.getElementById(imgId);
-      if (img) img.src = src || 'Image/Favicon.png';
+      renderProductSelector();
     }
 
     function saveActiveProduct() {
       const id = document.getElementById('editProductId').value;
       const idx = currentSiteData.products.findIndex(p => p.id === id);
       if (idx === -1) return;
+
+      const imgUrls = [
+        document.getElementById('editProductImg1')?.value.trim(),
+        document.getElementById('editProductImg2')?.value.trim(),
+        document.getElementById('editProductImg3')?.value.trim(),
+        document.getElementById('editProductImg4')?.value.trim(),
+        document.getElementById('editProductImg5')?.value.trim(),
+        document.getElementById('editProductImg6')?.value.trim()
+      ].filter(Boolean);
 
       const weightRows = document.querySelectorAll('#weightsListRows .weight-row-item');
       const parsedWeights = [];
@@ -457,7 +594,8 @@
         ...currentSiteData.products[idx],
         name: document.getElementById('editProductName').value.trim(),
         tag: document.getElementById('editProductTag').value.trim(),
-        image: document.getElementById('editProductImage').value.trim(),
+        image: imgUrls[0] || 'Image/Favicon.png',
+        images: imgUrls.length ? imgUrls : [currentSiteData.products[idx].image],
         price: basePrice,
         rating: parseInt(document.getElementById('editProductRating').value) || 5,
         description: document.getElementById('editProductDesc').value.trim(),
@@ -467,6 +605,7 @@
       };
 
       saveSiteData(currentSiteData);
+      renderProductSelector();
       showToast(`✅ Saved ${currentSiteData.products[idx].name}!`);
     }
 

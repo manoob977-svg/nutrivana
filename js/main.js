@@ -10,6 +10,12 @@ const DEFAULT_SITE_DATA = {
       tag: "BESTSELLER",
       badgeItems: ["🌾 Organic Barley", "☀️ Sunnah Superfood", "💚 Gut Health", "⚡ Energy Boost"],
       image: "Image/Talbina/Talbina02.png",
+      images: [
+        "Image/Talbina/Talbina02.png",
+        "Image/Brackfast.png",
+        "Image/Banner_Talbina.png",
+        "Image/Talbina/Talbina02.png"
+      ],
       rating: 5,
       reviewsCount: 128,
       price: 850,
@@ -33,6 +39,12 @@ const DEFAULT_SITE_DATA = {
       tag: "100% RAW",
       badgeItems: ["🍯 100% Raw & Unfiltered", "🐝 Direct From Hives", "🛡️ Immunity Booster", "✨ Pure Taste"],
       image: "Image/Honey/Honey01.png",
+      images: [
+        "Image/Honey/Honey01.png",
+        "Image/Banner_Honey.png",
+        "Image/Gemini_Generated_Image_n8363mn8363mn836.png",
+        "Image/Honey/Honey01.png"
+      ],
       rating: 5,
       reviewsCount: 96,
       price: 1250,
@@ -56,6 +68,12 @@ const DEFAULT_SITE_DATA = {
       tag: "HANDCHURNED",
       badgeItems: ["🥛 100% Cow Milk", "🧈 Bilona Method", "🌿 A2 Goodness", "🍲 Rich Aroma"],
       image: "Image/DesiGhee/Desighi01.png",
+      images: [
+        "Image/DesiGhee/Desighi01.png",
+        "Image/Banner_Collection.png",
+        "Image/Brackfast.png",
+        "Image/DesiGhee/Desighi01.png"
+      ],
       rating: 5,
       reviewsCount: 142,
       price: 1800,
@@ -78,6 +96,12 @@ const DEFAULT_SITE_DATA = {
       tag: "HIGH FIBER",
       badgeItems: ["🥣 Rolled Whole Oats", "❤️ Heart Healthy", "🌱 100% Natural", "⏱️ Quick 5-Min Meal"],
       image: "Image/Oatmeal/Oatmeal01.png",
+      images: [
+        "Image/Oatmeal/Oatmeal01.png",
+        "Image/Banner_Oatmeal.png",
+        "Image/Brackfast.png",
+        "Image/Oatmeal/Oatmeal01.png"
+      ],
       rating: 5,
       reviewsCount: 84,
       price: 650,
@@ -137,6 +161,20 @@ const DEFAULT_SITE_DATA = {
     currency: "Rs."
   }
 };
+
+function switchGalleryImage(imgUrl, productId, btn) {
+  const primaryImg = document.getElementById(`mainImg-${productId}`);
+  if (primaryImg) {
+    primaryImg.src = imgUrl;
+  }
+  if (btn) {
+    const parent = btn.closest('.product-gallery-thumbs');
+    if (parent) {
+      parent.querySelectorAll('.thumb-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+    }
+  }
+}
 
 function getSiteData() {
   const data = localStorage.getItem('nutrivanaSiteData');
