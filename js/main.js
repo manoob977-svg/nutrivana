@@ -597,6 +597,131 @@ function toggleFaq(btn) {
   }
 }
 
+// ---- FLOATING WIDGETS (WHATSAPP, BACK TO TOP, LIVE CHAT) ----
+function initFloatingWidgets() {
+  if (document.getElementById('floatingWidgetsGroup')) return;
+
+  const container = document.createElement('div');
+  container.className = 'floating-widgets-group';
+  container.id = 'floatingWidgetsGroup';
+
+  container.innerHTML = `
+    <!-- Back to Top Button -->
+    <button class="back-to-top-btn" id="backToTopBtn" onclick="scrollToTop()" title="Back to top" aria-label="Back to Top">↑</button>
+
+    <!-- Live Chat Trigger -->
+    <button class="live-chat-trigger" onclick="toggleLiveChat()" aria-label="Open Live Chat">
+      <div class="chat-bubble-icon">💬</div>
+      <span>Live Chat</span>
+    </button>
+
+    <!-- Floating WhatsApp Button -->
+    <a href="https://wa.me/923347000322" class="whatsapp-float-btn" target="_blank" rel="noopener noreferrer" aria-label="Chat on WhatsApp" title="Chat on WhatsApp">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+    </a>
+
+    <!-- Live Chat Modal Window -->
+    <div class="live-chat-window" id="liveChatWindow">
+      <div class="chat-header">
+        <div class="chat-header-info">
+          <div class="chat-avatar">🌿</div>
+          <div class="chat-title">
+            <h4>Nutrivana Live Support</h4>
+            <div class="chat-status"><span class="status-dot"></span> Online | Instant Reply</div>
+          </div>
+        </div>
+        <button class="chat-close-btn" onclick="toggleLiveChat()">✕</button>
+      </div>
+      <div class="chat-body" id="chatBody">
+        <div class="chat-msg bot">
+          👋 Assalam-o-Alaikum! Welcome to <strong>Nutrivana</strong>. How can we help you today?
+          <div class="chat-quick-options">
+            <button class="chat-quick-btn" onclick="selectQuickChatTopic('🛒 How do I place an order?')">🛒 How do I place an order?</button>
+            <button class="chat-quick-btn" onclick="selectQuickChatTopic('🚚 Delivery times &amp; rates?')">🚚 Delivery times &amp; rates?</button>
+            <button class="chat-quick-btn" onclick="selectQuickChatTopic('🌾 Are products 100% organic?')">🌾 Are products 100% organic?</button>
+            <button class="chat-quick-btn" onclick="selectQuickChatTopic('💬 Connect directly on WhatsApp')">💬 Chat directly on WhatsApp</button>
+          </div>
+        </div>
+      </div>
+      <form class="chat-footer" onsubmit="handleLiveChatSend(event)">
+        <input type="text" id="liveChatInput" class="chat-input" placeholder="Type your question..." required />
+        <button type="submit" class="chat-send-btn" title="Send message">➤</button>
+      </form>
+    </div>
+  `;
+
+  document.body.appendChild(container);
+
+  // Window scroll event for Back to Top
+  window.addEventListener('scroll', () => {
+    const btn = document.getElementById('backToTopBtn');
+    if (btn) {
+      btn.classList.toggle('visible', window.scrollY > 350);
+    }
+  });
+}
+
+function scrollToTop() {
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function toggleLiveChat() {
+  const win = document.getElementById('liveChatWindow');
+  if (win) {
+    win.classList.toggle('open');
+  }
+}
+
+function handleLiveChatSend(e) {
+  e.preventDefault();
+  const input = document.getElementById('liveChatInput');
+  const body = document.getElementById('chatBody');
+  if (!input || !body) return;
+
+  const text = input.value.trim();
+  if (!text) return;
+
+  // Append User message
+  body.innerHTML += `<div class="chat-msg user">${escapeHtml(text)}</div>`;
+  input.value = '';
+  body.scrollTop = body.scrollHeight;
+
+  // Bot Response simulation
+  setTimeout(() => {
+    let reply = "Thank you for reaching out! 🌿 Our team will assist you shortly. For instant priority response, feel free to WhatsApp us directly at +92 334 7000322.";
+    body.innerHTML += `<div class="chat-msg bot">${reply}</div>`;
+    body.scrollTop = body.scrollHeight;
+  }, 800);
+}
+
+function selectQuickChatTopic(topicText) {
+  const body = document.getElementById('chatBody');
+  if (!body) return;
+
+  body.innerHTML += `<div class="chat-msg user">${topicText}</div>`;
+  body.scrollTop = body.scrollHeight;
+
+  setTimeout(() => {
+    let reply = "";
+    if (topicText.includes('order')) {
+      reply = "🛒 Simply browse our <a href='products.html' style='color:var(--green-dark); font-weight:700;'>Products Page</a>, select your preferred weight option, click 'Add to Cart', and proceed to Checkout!";
+    } else if (topicText.includes('Delivery')) {
+      reply = "🚚 We deliver across Pakistan in 3-5 business days. Free Delivery applies on orders above Rs. 2000! Standard shipping fee is Rs. 200.";
+    } else if (topicText.includes('organic')) {
+      reply = "🌾 Yes! All Nutrivana products (Talbina, Wild Honey, Bilona Desi Ghee, Oatmeal) are 100% raw, pure, unadulterated, and preservative-free.";
+    } else {
+      reply = "💬 Opening WhatsApp chat... <a href='https://wa.me/923347000322' target='_blank' style='color:var(--green-dark); font-weight:700;'>Click here to chat on WhatsApp (+92 334 7000322)</a>";
+      window.open('https://wa.me/923347000322', '_blank');
+    }
+    body.innerHTML += `<div class="chat-msg bot">${reply}</div>`;
+    body.scrollTop = body.scrollHeight;
+  }, 600);
+}
+
+function escapeHtml(str) {
+  return str.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+}
+
 // ---- INIT ----
 document.addEventListener('DOMContentLoaded', () => {
   syncDynamicContent();
@@ -607,10 +732,12 @@ document.addEventListener('DOMContentLoaded', () => {
   initMobileMenu();
   initSearch();
   renderCartPage();
+  initFloatingWidgets();
 
   // Contact form
   const contactForm = document.getElementById('contactForm');
   contactForm?.addEventListener('submit', handleContactForm);
 });
+
 
 
