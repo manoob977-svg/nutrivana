@@ -1556,29 +1556,36 @@ button { cursor: pointer; border: none; background: none; }
   .mobile-menu-btn { display: flex; }
   .mobile-nav { position: relative; }
 
-  .hero-section { height: 80vh; min-height: 500px; }
+  .hero-section { height: 60vh; min-height: 400px; }
+  .hero-slide { min-height: 400px; }
 
   .trust-grid { grid-template-columns: repeat(2, 1fr); gap: 0; }
-  .trust-item { border-right: none; border-bottom: 1px solid var(--cream-dark); }
+  .trust-item { border-right: none; border-bottom: 1px solid var(--cream-dark); padding: 20px 14px; }
 
-  .products-grid { grid-template-columns: repeat(2, 1fr); gap: 16px; }
+  .products-grid { grid-template-columns: repeat(2, 1fr); gap: 12px; }
   .products-full-grid { grid-template-columns: 1fr; }
+  .product-card { padding: 14px; }
 
-  .benefit-row, .benefit-row.reverse { grid-template-columns: 1fr; gap: 32px; }
+  .benefit-row, .benefit-row.reverse { grid-template-columns: 1fr; gap: 28px; }
   .benefit-row.reverse .benefit-image, .benefit-row.reverse .benefit-content { order: unset; }
 
   .steps-grid { grid-template-columns: 1fr; gap: 20px; }
-  .ingredients-inner { grid-template-columns: 1fr; gap: 32px; }
+  .ingredients-inner { grid-template-columns: 1fr; gap: 28px; }
   .testimonials-grid { grid-template-columns: 1fr; }
 
   .cart-layout { grid-template-columns: 1fr; }
   .cart-item { grid-template-columns: 70px 1fr; }
   .cart-item-right { grid-column: 1/-1; display: flex; justify-content: space-between; align-items: center; }
 
-  .contact-grid { grid-template-columns: 1fr; }
+  .contact-grid { grid-template-columns: 1fr; gap: 36px; }
   .form-row { grid-template-columns: 1fr; }
+  
+  /* Prevent iOS Safari auto-zoom on inputs */
+  .form-input, .form-textarea, .form-select, input[type="text"], input[type="email"], input[type="tel"] {
+    font-size: 16px !important;
+  }
 
-  .footer-grid { grid-template-columns: 1fr; gap: 32px; }
+  .footer-grid { grid-template-columns: 1fr; gap: 28px; }
   .footer-bottom { flex-direction: column; gap: 14px; text-align: center; }
 
   .slider-btn { display: none; }
@@ -1587,9 +1594,22 @@ button { cursor: pointer; border: none; background: none; }
 }
 
 @media (max-width: 480px) {
+  .hero-section { height: 50vh; min-height: 350px; }
+  .hero-slide { min-height: 350px; }
+  .page-hero { padding: 40px 0; }
+  .page-hero-title { font-size: 28px; }
   .products-grid { grid-template-columns: 1fr; }
   .trust-grid { grid-template-columns: 1fr; }
   .trust-item { border-right: none; }
+  
+  .floating-widgets-group { bottom: 16px; right: 16px; gap: 10px; }
+  .whatsapp-float-btn { width: 50px; height: 50px; }
+  .whatsapp-float-btn svg { width: 26px; height: 26px; }
+  .back-to-top-btn { width: 40px; height: 40px; }
+  
+  .live-chat-left-group { bottom: 16px; left: 16px; }
+  .live-chat-trigger { padding: 8px 14px 8px 10px; font-size: 13px; }
+  .live-chat-window { bottom: 75px; left: 12px; width: calc(100vw - 24px); height: 75vh; }
 }
 
 /* Floating WhatsApp Button */
