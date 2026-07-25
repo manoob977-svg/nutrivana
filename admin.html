@@ -130,47 +130,21 @@
                 </div>
               </div>
 
-              <!-- Multi-Image Manager (4-6 Images) -->
+              <!-- Multi-Image Manager with Direct File Picker & Add/Delete Options -->
               <div class="form-group" style="background: var(--cream); border: 1px solid var(--cream-dark); padding: 20px; border-radius: var(--radius-sm); margin-bottom: 24px;">
-                <label class="form-label" style="font-size: 15px; font-weight: 700; color: var(--dark); margin-bottom: 6px;">📸 Product Images (Up to 6 Images) *</label>
-                <p style="font-size: 12px; color: var(--gray); margin-bottom: 16px;">Set primary image, hover image (swaps on mouse cursor hover), and gallery thumbnail images.</p>
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+                  <label class="form-label" style="margin: 0; font-size: 15px; font-weight: 700; color: var(--dark);">📸 Product Images (Direct File Upload &amp; URLs) *</label>
+                  <button type="button" onclick="addImageRow()" class="btn btn-outline btn-sm">+ Add Image Slot</button>
+                </div>
+                <p style="font-size: 12px; color: var(--gray); margin-bottom: 16px;">
+                  Click 📁 <strong>Browse File...</strong> to pick an image directly from your folder/computer, or type an image URL/path. Image 1 is Primary, Image 2 is Hover Swap.
+                </p>
                 
-                <div class="admin-grid-2" style="margin-bottom: 12px;">
-                  <div>
-                    <label class="form-label" style="font-size: 12px; font-weight: 600;">Image 1 (Primary / Default) *</label>
-                    <input type="text" id="editProductImg1" class="form-input" oninput="updateMultiImagePreviews()" placeholder="Image/Talbina/Talbina02.png" required />
-                  </div>
-                  <div>
-                    <label class="form-label" style="font-size: 12px; font-weight: 600;">Image 2 (Hover Image Swap) *</label>
-                    <input type="text" id="editProductImg2" class="form-input" oninput="updateMultiImagePreviews()" placeholder="Image/Brackfast.png" />
-                  </div>
-                </div>
-
-                <div class="admin-grid-2" style="margin-bottom: 12px;">
-                  <div>
-                    <label class="form-label" style="font-size: 12px; font-weight: 600;">Image 3 (Gallery Thumbnail)</label>
-                    <input type="text" id="editProductImg3" class="form-input" oninput="updateMultiImagePreviews()" placeholder="Image/Banner_Talbina.png" />
-                  </div>
-                  <div>
-                    <label class="form-label" style="font-size: 12px; font-weight: 600;">Image 4 (Gallery Thumbnail)</label>
-                    <input type="text" id="editProductImg4" class="form-input" oninput="updateMultiImagePreviews()" placeholder="Image/Talbina/Talbina02.png" />
-                  </div>
-                </div>
-
-                <div class="admin-grid-2">
-                  <div>
-                    <label class="form-label" style="font-size: 12px; font-weight: 600;">Image 5 (Gallery Thumbnail)</label>
-                    <input type="text" id="editProductImg5" class="form-input" oninput="updateMultiImagePreviews()" placeholder="Optional..." />
-                  </div>
-                  <div>
-                    <label class="form-label" style="font-size: 12px; font-weight: 600;">Image 6 (Gallery Thumbnail)</label>
-                    <input type="text" id="editProductImg6" class="form-input" oninput="updateMultiImagePreviews()" placeholder="Optional..." />
-                  </div>
-                </div>
+                <div id="productImagesListRows"></div>
 
                 <!-- Live Image Previews Grid -->
-                <div style="margin-top: 16px;">
-                  <span style="font-size: 12px; font-weight: 700; color: var(--dark); display: block; margin-bottom: 6px;">Live Image Previews:</span>
+                <div style="margin-top: 18px; padding-top: 14px; border-top: 1px solid var(--cream-dark);">
+                  <span style="font-size: 12px; font-weight: 700; color: var(--dark); display: block; margin-bottom: 8px;">Live Gallery Previews:</span>
                   <div id="adminImagesPreviewGrid" class="admin-images-grid"></div>
                 </div>
               </div>
@@ -524,6 +498,98 @@
       `).join('') : '<p style="font-size:12px; color:var(--gray);">No images entered yet.</p>';
     }
 
+    // ---- DYNAMIC DEDICATED IMAGE ROWS BUILDER WITH FILE PICKER ----
+    function renderImageRows(images) {
+      const container = document.getElementById('productImagesListRows');
+      if (!container) return;
+
+      const imgList = images && images.length ? images : ['Image/Favicon.png'];
+
+      container.innerHTML = imgList.map((url, idx) => `
+        <div class="image-row-item" style="display: grid; grid-template-columns: 110px 1fr auto auto; gap: 10px; align-items: center; margin-bottom: 12px; background: var(--white); padding: 10px; border-radius: 6px; border: 1px solid var(--cream-dark);">
+          <span style="font-size: 11px; font-weight: 700; color: var(--green-dark); text-transform: uppercase;">
+            ${idx === 0 ? '1. Primary' : (idx === 1 ? '2. Hover Swap' : `Slot #${idx + 1}`)}
+          </span>
+          <input type="text" class="form-input product-image-url-input" value="${url}" placeholder="Image URL / Path or pick file" oninput="updateMultiImagePreviews()" id="imgUrlInput_${idx}" required />
+          <div>
+            <input type="file" accept="image/*" style="display: none;" id="filePicker_${idx}" onchange="handleFileSelect(this, 'imgUrlInput_${idx}')" />
+            <button type="button" class="btn btn-outline btn-sm" onclick="document.getElementById('filePicker_${idx}').click()" title="Pick image file from folder">📁 Browse File...</button>
+          </div>
+          <button type="button" onclick="removeImageRow(this)" style="background: rgba(217,4,41,0.1); color: #d90429; border: none; border-radius: 6px; width: 36px; height: 36px; font-size: 16px; cursor: pointer; display: flex; align-items: center; justify-content: center;" title="Delete Image Slot">🗑️</button>
+        </div>
+      `).join('');
+
+      updateMultiImagePreviews();
+    }
+
+    function addImageRow(initialUrl = '') {
+      const container = document.getElementById('productImagesListRows');
+      if (!container) return;
+
+      const idx = container.children.length;
+      const div = document.createElement('div');
+      div.className = 'image-row-item';
+      div.style.cssText = 'display: grid; grid-template-columns: 110px 1fr auto auto; gap: 10px; align-items: center; margin-bottom: 12px; background: var(--white); padding: 10px; border-radius: 6px; border: 1px solid var(--cream-dark);';
+      div.innerHTML = `
+        <span style="font-size: 11px; font-weight: 700; color: var(--green-dark); text-transform: uppercase;">
+          ${idx === 0 ? '1. Primary' : (idx === 1 ? '2. Hover Swap' : `Slot #${idx + 1}`)}
+        </span>
+        <input type="text" class="form-input product-image-url-input" value="${initialUrl}" placeholder="Image URL / Path or pick file" oninput="updateMultiImagePreviews()" id="imgUrlInput_${idx}" required />
+        <div>
+          <input type="file" accept="image/*" style="display: none;" id="filePicker_${idx}" onchange="handleFileSelect(this, 'imgUrlInput_${idx}')" />
+          <button type="button" class="btn btn-outline btn-sm" onclick="document.getElementById('filePicker_${idx}').click()" title="Pick image file from folder">📁 Browse File...</button>
+        </div>
+        <button type="button" onclick="removeImageRow(this)" style="background: rgba(217,4,41,0.1); color: #d90429; border: none; border-radius: 6px; width: 36px; height: 36px; font-size: 16px; cursor: pointer; display: flex; align-items: center; justify-content: center;" title="Delete Image Slot">🗑️</button>
+      `;
+      container.appendChild(div);
+      updateMultiImagePreviews();
+    }
+
+    function removeImageRow(btn) {
+      const row = btn.closest('.image-row-item');
+      if (row) {
+        row.remove();
+        updateMultiImagePreviews();
+      }
+    }
+
+    function handleFileSelect(fileInput, targetTextInputId) {
+      if (fileInput.files && fileInput.files[0]) {
+        const file = fileInput.files[0];
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          const textInput = document.getElementById(targetTextInputId);
+          if (textInput) {
+            textInput.value = e.target.result;
+            updateMultiImagePreviews();
+            showToast(`📁 Picked image: ${file.name}`);
+          }
+        };
+        reader.readAsDataURL(file);
+      }
+    }
+
+    function updateMultiImagePreviews() {
+      const grid = document.getElementById('adminImagesPreviewGrid');
+      if (!grid) return;
+
+      const urlInputs = document.querySelectorAll('#productImagesListRows .product-image-url-input');
+      const imgUrls = [];
+      urlInputs.forEach(input => {
+        const val = input.value.trim();
+        if (val) imgUrls.push(val);
+      });
+
+      const labels = ['1. Primary', '2. Hover Swap', '3. Gallery 3', '4. Gallery 4', '5. Gallery 5', '6. Gallery 6'];
+
+      grid.innerHTML = imgUrls.length ? imgUrls.map((url, i) => `
+        <div class="admin-img-box">
+          <img src="${url}" onerror="this.src='Image/Favicon.png'" alt="Img ${i+1}" />
+          <span>${labels[i] || `Gallery #${i+1}`}</span>
+        </div>
+      `).join('') : '<p style="font-size:12px; color:var(--gray);">No images added yet. Click "+ Add Image Slot".</p>';
+    }
+
     // ---- PRODUCT FORM LOAD & SAVE ----
     function loadProductForm(productId, btnEl) {
       const p = currentSiteData.products.find(item => item.id === productId) || currentSiteData.products[0];
@@ -537,15 +603,9 @@
       document.getElementById('editProductDesc').value = p.description || '';
       document.getElementById('editProductInstructions').value = p.instructions || '';
       
-      // Load 4-6 Images
+      // Render dynamic Image Rows with File Picker
       const pImages = p.images && p.images.length ? p.images : [p.image || 'Image/Favicon.png'];
-      document.getElementById('editProductImg1').value = pImages[0] || '';
-      document.getElementById('editProductImg2').value = pImages[1] || '';
-      document.getElementById('editProductImg3').value = pImages[2] || '';
-      document.getElementById('editProductImg4').value = pImages[3] || '';
-      document.getElementById('editProductImg5').value = pImages[4] || '';
-      document.getElementById('editProductImg6').value = pImages[5] || '';
-      updateMultiImagePreviews();
+      renderImageRows(pImages);
 
       // Render Weight & Rate rows
       renderWeightRows(p.weights || []);
@@ -566,14 +626,12 @@
       const idx = currentSiteData.products.findIndex(p => p.id === id);
       if (idx === -1) return;
 
-      const imgUrls = [
-        document.getElementById('editProductImg1')?.value.trim(),
-        document.getElementById('editProductImg2')?.value.trim(),
-        document.getElementById('editProductImg3')?.value.trim(),
-        document.getElementById('editProductImg4')?.value.trim(),
-        document.getElementById('editProductImg5')?.value.trim(),
-        document.getElementById('editProductImg6')?.value.trim()
-      ].filter(Boolean);
+      const urlInputs = document.querySelectorAll('#productImagesListRows .product-image-url-input');
+      const imgUrls = [];
+      urlInputs.forEach(input => {
+        const val = input.value.trim();
+        if (val) imgUrls.push(val);
+      });
 
       const weightRows = document.querySelectorAll('#weightsListRows .weight-row-item');
       const parsedWeights = [];
