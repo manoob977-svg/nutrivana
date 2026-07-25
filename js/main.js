@@ -159,7 +159,40 @@ const DEFAULT_SITE_DATA = {
     freeDeliveryThreshold: 2000,
     deliveryFee: 200,
     currency: "Rs."
-  }
+  },
+  orders: [
+    {
+      orderId: "NV-10842",
+      customerName: "Sikander Hayat",
+      phone: "+92 334 7000322",
+      city: "Lahore",
+      address: "House #14, Main Boulevard, Model Town",
+      items: [
+        { name: "Premium Talbina", weight: "500g", qty: 2, price: 1600 },
+        { name: "Pure Natural Honey", weight: "250g", qty: 1, price: 1250 }
+      ],
+      total: 4450,
+      date: "2026-07-25 14:30",
+      status: "Shipped",
+      courier: "TCS Express",
+      trackingNum: "TCS-98471203"
+    },
+    {
+      orderId: "NV-10843",
+      customerName: "Fatima Ali",
+      phone: "+92 300 1234567",
+      city: "Karachi",
+      address: "Flat 4B, Clifton Block 5",
+      items: [
+        { name: "Bilona Desi Ghee", weight: "1kg", qty: 1, price: 2800 }
+      ],
+      total: 2800,
+      date: "2026-07-25 16:15",
+      status: "Preparing",
+      courier: "Leopard Courier",
+      trackingNum: "LEO-55109283"
+    }
+  ]
 };
 
 function switchGalleryImage(imgUrl, productId, btn) {
@@ -433,15 +466,160 @@ function applyPromo() {
   }
 }
 
-function handleCheckout() {
+function handleCheckout(event) {
+  if (event) event.preventDefault();
   if (cart.length === 0) {
     showToast('Your cart is empty!');
     return;
   }
-  showToast('🎉 Order placed successfully! We will call you shortly.');
+
+  const orderId = `NV-${Math.floor(10000 + Math.random() * 90000)}`;
+  const siteData = getSiteData();
+  if (!siteData.orders) siteData.orders = [];
+
+  const fullName = document.getElementById('checkoutName')?.value.trim() || 'Valued Customer';
+  const phone = document.getElementById('checkoutPhone')?.value.trim() || '+92 3XX XXXXXXX';
+  const city = document.getElementById('checkoutCity')?.value.trim() || 'Pakistan';
+  const address = document.getElementById('checkoutAddress')?.value.trim() || 'Delivery Address';
+
+  const subtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+  const deliveryFee = subtotal >= (siteData.settings.freeDeliveryThreshold || 2000) ? 0 : (siteData.settings.deliveryFee || 200);
+  const total = subtotal + deliveryFee;
+
+  const now = new Date();
+  const dateStr = `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}-${String(now.getDate()).padStart(2,'0')} ${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}`;
+
+  const newOrder = {
+    orderId: orderId,
+    customerName: fullName,
+    phone: phone,
+    city: city,
+    address: address,
+    items: cart.map(i => ({ name: i.name, weight: i.weight || '', qty: i.quantity, price: i.price })),
+    total: total,
+    date: dateStr,
+    status: "Order Received",
+    courier: "TCS Express",
+    trackingNum: `TCS-${Math.floor(10000000 + Math.random() * 90000000)}`
+  };
+
+  siteData.orders.unshift(newOrder);
+  saveSiteData(siteData);
+
   cart = [];
   saveCart();
-  setTimeout(() => renderCartPage(), 500);
+  
+  showToast(`🎉 Order Placed! Your Order ID is ${orderId}`);
+
+  setTimeout(() => {
+    window.location.href = `track-order.html?id=${orderId}`;
+  }, 1200);
+}
+
+// ---- ORDER TRACKING SEARCH & TIMELINE STEPPER ----
+function handleOrderTrackSearch(e) {
+  if (e) e.preventDefault();
+  const input = document.getElementById('orderIdSearchInput');
+  const container = document.getElementById('orderTrackingResultContainer');
+  if (!input || !container) return;
+
+  const query = input.value.trim().toUpperCase();
+  if (!query) {
+    showToast('Please enter your Order ID!');
+    return;
+  }
+
+  const siteData = getSiteData();
+  const orders = siteData.orders || [];
+  const found = orders.find(o => o.orderId.toUpperCase() === query);
+
+  if (!found) {
+    container.style.display = 'block';
+    container.innerHTML = `
+      <div class="tracker-card text-center" style="padding: 40px 20px;">
+        <span style="font-size: 48px;">🔍</span>
+        <h3 style="color: #d90429; margin-top: 10px;">Order ID "${escapeHtml(query)}" Not Found</h3>
+        <p style="color: var(--gray); margin: 8px 0 20px;">Please check the Order ID on your receipt or SMS and try again.</p>
+        <p style="font-size: 13px;">Need assistance? <a href="https://wa.me/923347000322?text=Hi%20Nutrivana,%20I%20need%20help%20tracking%20Order%20${escapeHtml(query)}" target="_blank" style="color: var(--green-dark); font-weight: 700;">Chat with Us on WhatsApp (+92 334 7000322)</a></p>
+      </div>
+    `;
+    return;
+  }
+
+  container.style.display = 'block';
+  container.innerHTML = renderOrderTrackingTimeline(found);
+}
+
+function renderOrderTrackingTimeline(order) {
+  const steps = [
+    { title: "Order Received", icon: "📥" },
+    { title: "Confirmed", icon: "✅" },
+    { title: "Preparing", icon: "🥣" },
+    { title: "Packed", icon: "📦" },
+    { title: "Shipped", icon: "🚚" },
+    { title: "Out for Delivery", icon: "🛵" },
+    { title: "Delivered", icon: "🎉" }
+  ];
+
+  const currentIdx = steps.findIndex(s => s.title.toLowerCase() === (order.status || '').toLowerCase());
+  const activeIdx = currentIdx !== -1 ? currentIdx : 0;
+  const progressPercent = (activeIdx / (steps.length - 1)) * 100;
+
+  return `
+    <div class="tracker-card reveal" style="animation: fadeIn 0.4s ease;">
+      <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--cream-dark); padding-bottom: 16px; margin-bottom: 24px; flex-wrap: wrap; gap: 12px;">
+        <div>
+          <span class="section-tag" style="background: rgba(201,168,76,0.15); border-color: rgba(201,168,76,0.4);">Verified Shipment</span>
+          <h2 style="font-size: 24px; color: var(--green-dark); margin-top: 4px;">Order ID: ${order.orderId}</h2>
+          <span style="font-size: 13px; color: var(--gray);">Placed on ${order.date || 'Recent'}</span>
+        </div>
+        <div>
+          <span style="background: var(--green-dark); color: var(--gold-light); font-weight: 700; padding: 8px 18px; border-radius: 50px; font-size: 14px; border: 1px solid var(--gold); display: inline-block;">
+            Status: ${order.status}
+          </span>
+        </div>
+      </div>
+
+      <!-- 7-Step Stepper -->
+      <div class="tracking-stepper">
+        <div class="tracking-progress-bar" style="width: ${progressPercent}%;"></div>
+        ${steps.map((step, idx) => {
+          let stateClass = '';
+          if (idx < activeIdx) stateClass = 'completed';
+          else if (idx === activeIdx) stateClass = 'active';
+
+          return `
+            <div class="step-item ${stateClass}">
+              <div class="step-node">${step.icon}</div>
+              <span class="step-title">${step.title}</span>
+            </div>
+          `;
+        }).join('')}
+      </div>
+
+      <!-- Details -->
+      <div class="admin-grid-2" style="margin-top: 32px; background: var(--cream); padding: 20px; border-radius: var(--radius-sm);">
+        <div>
+          <h4 style="font-size: 13px; text-transform: uppercase; letter-spacing:0.05em; color: var(--green-dark); margin-bottom: 8px;">Customer Information</h4>
+          <p style="margin: 0 0 4px; font-size: 14px;"><strong>Name:</strong> ${order.customerName}</p>
+          <p style="margin: 0 0 4px; font-size: 14px;"><strong>Phone:</strong> ${order.phone}</p>
+          <p style="margin: 0; font-size: 14px;"><strong>Address:</strong> ${order.address}, ${order.city || 'Pakistan'}</p>
+        </div>
+        <div>
+          <h4 style="font-size: 13px; text-transform: uppercase; letter-spacing:0.05em; color: var(--green-dark); margin-bottom: 8px;">Shipping &amp; Logistics</h4>
+          <p style="margin: 0 0 4px; font-size: 14px;"><strong>Courier Partner:</strong> ${order.courier || 'TCS Express'}</p>
+          <p style="margin: 0 0 4px; font-size: 14px;"><strong>Tracking No:</strong> ${order.trackingNum || 'Pending'}</p>
+          <p style="margin: 0; font-size: 14px;"><strong>Order Total:</strong> Rs. ${order.total}</p>
+        </div>
+      </div>
+
+      <div style="margin-top: 20px; text-align: center;">
+        <a href="https://wa.me/923347000322?text=Hi%20Nutrivana,%20I%20am%20checking%20status%20for%20my%20Order%20ID:%20${order.orderId}" target="_blank" class="btn btn-outline btn-sm">
+          💬 Inquiry on WhatsApp for Order ${order.orderId}
+        </a>
+      </div>
+    </div>
+  `;
 }
 
 // ---- PRODUCTS PAGE QTY & WEIGHT RATE CALCULATION ----
@@ -733,6 +911,17 @@ document.addEventListener('DOMContentLoaded', () => {
   initSearch();
   renderCartPage();
   initFloatingWidgets();
+
+  // Track Order URL parameter check
+  const urlParams = new URLSearchParams(window.location.search);
+  const trackId = urlParams.get('id');
+  if (trackId) {
+    const input = document.getElementById('orderIdSearchInput');
+    if (input) {
+      input.value = trackId;
+      handleOrderTrackSearch();
+    }
+  }
 
   // Contact form
   const contactForm = document.getElementById('contactForm');

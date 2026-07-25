@@ -66,6 +66,9 @@
           <button class="admin-nav-item active" onclick="switchTab('productsTab', this)">
             📦 Products Editor
           </button>
+          <button class="admin-nav-item" onclick="switchTab('ordersTab', this)">
+            🚚 Orders &amp; Tracking
+          </button>
           <button class="admin-nav-item" onclick="switchTab('bannersTab', this)">
             🖼️ Hero Banners
           </button>
@@ -73,7 +76,7 @@
             ⚙️ Site Settings
           </button>
           <button class="admin-nav-item" onclick="switchTab('actionsTab', this)">
-            🔄 Data & Actions
+            🔄 Data &amp; Actions
           </button>
         </nav>
 
@@ -200,6 +203,22 @@
                 <button type="button" onclick="saveActiveProduct()" class="btn btn-primary">💾 Save This Product</button>
               </div>
             </form>
+        <!-- TAB: CUSTOMER ORDERS & TRACKING STATUS -->
+        <section id="ordersTab" class="admin-tab-content" style="display: none;">
+          <div class="admin-page-header">
+            <div class="admin-page-title">
+              <h1>🚚 Customer Orders &amp; Status Manager</h1>
+              <p>Update customer order status through the 7 delivery stages and assign courier tracking info.</p>
+            </div>
+            <button onclick="saveAllChanges()" class="btn btn-primary">💾 Save All Changes</button>
+          </div>
+
+          <div class="admin-card">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 12px;">
+              <h3 style="margin:0; font-size: 18px; color: var(--green-dark);">📦 Customer Orders List</h3>
+              <button onclick="addManualOrder()" class="btn btn-outline btn-sm">+ Add Sample Order</button>
+            </div>
+            <div id="adminOrdersList"></div>
           </div>
         </section>
 
@@ -374,8 +393,130 @@
       currentSiteData = getSiteData();
       renderProductSelector();
       loadProductForm(currentSiteData.products[0] ? currentSiteData.products[0].id : 'talbina');
+      renderAdminOrders();
       renderBannersEditor();
       renderSettingsEditor();
+    }
+
+    // ---- ADMIN CUSTOMER ORDERS MANAGER ----
+    function renderAdminOrders() {
+      const container = document.getElementById('adminOrdersList');
+      if (!container) return;
+
+      const orders = currentSiteData.orders || [];
+      const statusOptions = [
+        "Order Received",
+        "Confirmed",
+        "Preparing",
+        "Packed",
+        "Shipped",
+        "Out for Delivery",
+        "Delivered"
+      ];
+
+      if (!orders.length) {
+        container.innerHTML = '<p style="color: var(--gray); font-size:14px;">No customer orders placed yet.</p>';
+        return;
+      }
+
+      container.innerHTML = orders.map((order, idx) => `
+        <div style="background: var(--cream); border: 1px solid var(--cream-dark); padding: 20px; border-radius: var(--radius-sm); margin-bottom: 16px;">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; flex-wrap: wrap; gap: 8px;">
+            <div>
+              <strong style="font-size: 16px; color: var(--green-dark);">Order ID: ${order.orderId}</strong>
+              <span style="font-size: 12px; color: var(--gray); margin-left: 10px;">📅 ${order.date || 'Recent'}</span>
+            </div>
+            <button type="button" onclick="deleteOrder(${idx})" style="background: rgba(217,4,41,0.1); color: #d90429; border: none; border-radius: 6px; padding: 6px 12px; font-size: 12px; cursor: pointer;">
+              🗑️ Delete Order
+            </button>
+          </div>
+
+          <div class="admin-grid-2" style="margin-bottom: 14px;">
+            <div>
+              <p style="margin: 0 0 4px; font-size: 13px;">👤 <strong>Customer:</strong> ${order.customerName}</p>
+              <p style="margin: 0 0 4px; font-size: 13px;">📞 <strong>Phone:</strong> ${order.phone}</p>
+              <p style="margin: 0; font-size: 13px;">📍 <strong>Address:</strong> ${order.address}, ${order.city || ''}</p>
+            </div>
+            <div>
+              <p style="margin: 0 0 4px; font-size: 13px;">📦 <strong>Items:</strong> ${(order.items || []).map(i => `${i.name} (${i.weight || ''}) x${i.qty}`).join(', ')}</p>
+              <p style="margin: 0; font-size: 14px; font-weight: 700; color: var(--green-dark);">💰 Total: Rs. ${order.total}</p>
+            </div>
+          </div>
+
+          <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; align-items: center; background: var(--white); padding: 12px; border-radius: 6px; border: 1px solid var(--cream-dark);">
+            <div>
+              <label class="form-label" style="font-size: 11px; margin-bottom: 4px;">Order Status (7 Steps):</label>
+              <select class="form-select" onchange="updateOrderStatus(${idx}, this.value)">
+                ${statusOptions.map(opt => `
+                  <option value="${opt}" ${opt === order.status ? 'selected' : ''}>${opt}</option>
+                `).join('')}
+              </select>
+            </div>
+            <div>
+              <label class="form-label" style="font-size: 11px; margin-bottom: 4px;">Courier Partner:</label>
+              <input type="text" class="form-input" value="${order.courier || 'TCS Express'}" onchange="updateOrderCourier(${idx}, this.value)" placeholder="e.g. TCS / Leopard" />
+            </div>
+            <div>
+              <label class="form-label" style="font-size: 11px; margin-bottom: 4px;">Tracking Number:</label>
+              <input type="text" class="form-input" value="${order.trackingNum || ''}" onchange="updateOrderTrackingNum(${idx}, this.value)" placeholder="e.g. TCS-98471203" />
+            </div>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function updateOrderStatus(idx, newStatus) {
+      if (currentSiteData.orders[idx]) {
+        currentSiteData.orders[idx].status = newStatus;
+        saveSiteData(currentSiteData);
+        showToast(`🚚 Order ${currentSiteData.orders[idx].orderId} status set to: ${newStatus}`);
+      }
+    }
+
+    function updateOrderCourier(idx, courier) {
+      if (currentSiteData.orders[idx]) {
+        currentSiteData.orders[idx].courier = courier.trim();
+        saveSiteData(currentSiteData);
+      }
+    }
+
+    function updateOrderTrackingNum(idx, num) {
+      if (currentSiteData.orders[idx]) {
+        currentSiteData.orders[idx].trackingNum = num.trim();
+        saveSiteData(currentSiteData);
+      }
+    }
+
+    function deleteOrder(idx) {
+      const oId = currentSiteData.orders[idx].orderId;
+      if (confirm(`Are you sure you want to delete order ${oId}?`)) {
+        currentSiteData.orders.splice(idx, 1);
+        saveSiteData(currentSiteData);
+        renderAdminOrders();
+        showToast(`🗑️ Deleted order ${oId}`);
+      }
+    }
+
+    function addManualOrder() {
+      const newId = `NV-${Math.floor(10000 + Math.random() * 90000)}`;
+      const newOrder = {
+        orderId: newId,
+        customerName: "Sample Customer",
+        phone: "+92 300 0000000",
+        city: "Lahore",
+        address: "Sample House, Model Town",
+        items: [{ name: "Premium Talbina", weight: "500g", qty: 1, price: 1600 }],
+        total: 1600,
+        date: new Date().toISOString().slice(0, 16).replace('T', ' '),
+        status: "Order Received",
+        courier: "TCS Express",
+        trackingNum: `TCS-${Math.floor(10000000 + Math.random() * 90000000)}`
+      };
+      if (!currentSiteData.orders) currentSiteData.orders = [];
+      currentSiteData.orders.unshift(newOrder);
+      saveSiteData(currentSiteData);
+      renderAdminOrders();
+      showToast(`🎉 Created sample order ${newId}`);
     }
 
     function renderProductSelector() {
