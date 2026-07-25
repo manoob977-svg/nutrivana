@@ -3,20 +3,36 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Cart – Nutrivana | Your Wellness Basket</title>
-  <meta name="description" content="View and manage your Nutrivana cart. Secure checkout with JazzCash, EasyPaisa, and Cash on Delivery." />
+  <title>Refund & Exchange Policy | Nutrivana Organic Superfoods</title>
+  <meta name="description" content="Read Nutrivana 7-Day Refund & Exchange Policy. Learn when you can request a return, courier charges coverage, and fast refund processing via Bank Transfer, EasyPaisa, or JazzCash." />
+  <meta name="keywords" content="Nutrivana refund policy, Nutrivana exchange policy, organic food returns Pakistan, EasyPaisa refund, JazzCash refund" />
   <link rel="icon" href="Image/Favicon.png" type="image/png" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="css/style.css" />
+
+  <!-- Structured Data (JSON-LD Schema) for SEO -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebPage",
+    "name": "Refund & Exchange Policy",
+    "description": "Refund and exchange rules for Nutrivana Organic Superfoods across Pakistan.",
+    "publisher": {
+      "@type": "Organization",
+      "name": "Nutrivana",
+      "logo": "Image/Logo.svg"
+    }
+  }
+  </script>
 </head>
 <body>
 
   <!-- Announcement Bar -->
   <div class="announcement-bar" id="announcementBar">
     <div class="announcement-track">
-      <span>🌿 FREE DELIVERY on orders above Rs. 2000 &nbsp;&nbsp;|&nbsp;&nbsp; 🍯 100% Pure &amp; Natural &nbsp;&nbsp;|&nbsp;&nbsp; ⭐ 500+ Happy Customers &nbsp;&nbsp;|&nbsp;&nbsp; 🌿 FREE DELIVERY on orders above Rs. 2000 &nbsp;&nbsp;|&nbsp;&nbsp; 🍯 100% Pure &amp; Natural &nbsp;&nbsp;|&nbsp;&nbsp; ⭐ 500+ Happy Customers</span>
+      <span>🌿 FREE DELIVERY on orders above Rs. 2000 &nbsp;&nbsp;|&nbsp;&nbsp; 🍯 100% Pure &amp; Natural &nbsp;&nbsp;|&nbsp;&nbsp; ⭐ 500+ Happy Customers</span>
     </div>
   </div>
 
@@ -60,156 +76,47 @@
     </div>
   </div>
 
-  <main>
-    <!-- Page Hero -->
-    <section class="page-hero" style="padding: 50px 0 40px;">
-      <div class="container">
-        <h1 class="page-hero-title" style="font-size: 40px;">Your Cart</h1>
-        <p class="page-hero-subtitle" id="cartItemCount">0 items</p>
-      </div>
-    </section>
+  <main class="policy-page-section">
+    <div class="container">
+      <article class="policy-card reveal">
+        <header class="policy-header">
+          <span class="policy-badge">Customer Satisfaction Guarantee</span>
+          <h1 class="policy-title">Refund Policy</h1>
+          <p class="policy-subtitle">We want you to be 100% happy with your order. Please read our refund and exchange policy carefully.</p>
+        </header>
 
-    <!-- Cart Content -->
-    <section class="cart-section">
-      <div class="container">
-        <div class="cart-layout">
-          <!-- Cart Items -->
-          <div>
-            <div id="cartContainer">
-              <!-- Rendered by JS -->
-            </div>
+        <div class="policy-content">
+          <h3>1. When Can You Ask for a Refund or Exchange?</h3>
+          <ul class="policy-list">
+            <li>You can ask for a refund or exchange if the product is defective or if you received the wrong product.</li>
+            <li>You must contact us within <strong>3 days</strong> after you receive your parcel.</li>
+            <li>If you contact us after 3 days of parcel delivery, we will not accept the refund/exchange request.</li>
+          </ul>
 
-            <!-- Continue Shopping -->
-            <div style="margin-top: 24px;">
-              <a href="products.html" class="btn btn-outline" style="gap: 8px;">
-                ← Continue Shopping
-              </a>
-            </div>
-          </div>
+          <h3>2. What You Have to Do:</h3>
+          <ul class="policy-list">
+            <li>First, message our team on WhatsApp (<a href="https://wa.me/923347000322" target="_blank" style="color: var(--green-dark); font-weight: 600;">+92 334 7000322</a>) and send pictures or videos showing the problem clearly.</li>
+            <li>If our team approves the claim, you will send the product back to Nutrivana's official address.</li>
+            <li>Once we receive the returned product, we will dispatch your new replacement product or process your refund immediately.</li>
+          </ul>
 
-          <!-- Order Summary -->
-          <div class="cart-summary">
-            <h3>Order Summary</h3>
+          <h3>3. Courier Charges:</h3>
+          <ul class="policy-list">
+            <li>We will pay a maximum of <strong>Rs. 200</strong> for the return courier charges.</li>
+            <li>You must send us the courier receipt/slip as proof.</li>
+            <li>If you don't send the slip proof, we will not pay for the courier return cost.</li>
+          </ul>
 
-            <div class="summary-row">
-              <span>Subtotal</span>
-              <span id="summarySubtotal">Rs. 0</span>
-            </div>
-            <div class="summary-row discount">
-              <span>Discount</span>
-              <span>— Rs. 0</span>
-            </div>
-            <div class="summary-row">
-              <span>Delivery</span>
-              <span id="summaryDelivery">Rs. 200</span>
-            </div>
-            <div class="summary-row total">
-              <span>Total</span>
-              <span id="summaryTotal">Rs. 0</span>
-            </div>
+          <h3>4. How You Will Get the Refund:</h3>
+          <p>Refund will be sent through <strong>Bank Transfer, EasyPaisa, or JazzCash</strong> within <strong>3 to 7 working days</strong> after we receive and inspect the returned product.</p>
 
-            <!-- Promo Code -->
-            <div class="promo-form">
-              <input type="text" id="promoInput" class="promo-input" placeholder="Promo code (NUTRI10)" />
-              <button class="btn btn-outline btn-sm" onclick="applyPromo()">Apply</button>
-            </div>
-
-            <!-- Free delivery notice -->
-            <div style="background: rgba(45,106,79,0.07); border-radius: var(--radius-sm); padding: 12px 16px; font-size: 13px; color: var(--green); font-weight: 500; margin-bottom: 4px;">
-              🚚 Free delivery on orders above Rs. 2,000!
-            </div>
-
-            <!-- Checkout -->
-            <button class="btn btn-primary checkout-btn" onclick="handleCheckout()">
-              Proceed to Checkout →
-            </button>
-
-            <!-- Secure Badges -->
-            <div class="secure-badges">
-              🔒 Secure & Encrypted Checkout
-            </div>
-
-            <!-- Payment Methods -->
-            <div style="margin-top: 16px; text-align: center;">
-              <p style="font-size: 12px; color: var(--gray); margin-bottom: 10px;">Accepted Payment Methods</p>
-              <div class="payment-methods" style="justify-content: center; flex-wrap: wrap;">
-                <span class="payment-tag" style="background: var(--cream); border-color: var(--cream-dark); color: var(--dark);">💳 JazzCash</span>
-                <span class="payment-tag" style="background: var(--cream); border-color: var(--cream-dark); color: var(--dark);">📱 EasyPaisa</span>
-                <span class="payment-tag" style="background: var(--cream); border-color: var(--cream-dark); color: var(--dark);">💵 Cash on Delivery</span>
-              </div>
-            </div>
+          <div class="policy-alert note">
+            <strong>💡 5. Important Note:</strong>
+            <p>If you don't like the personal taste or flavor of the product, we cannot give a refund or exchange. Organic superfood taste preferences are subjective.</p>
           </div>
         </div>
-      </div>
-    </section>
-
-    <!-- You May Also Like -->
-    <section style="padding: 60px 0; background: var(--white);">
-      <div class="container">
-        <div class="section-header">
-          <span class="section-tag">Complete Your Order</span>
-          <h2 class="section-title">You May Also Like</h2>
-        </div>
-        <div class="products-grid">
-          <div class="product-card">
-            <div class="product-image-wrap">
-              <span class="sale-tag">BESTSELLER</span>
-              <img src="Image/Talbina/Talbina02.png" alt="Talbina" class="product-img" loading="lazy" />
-              <div class="product-overlay">
-                <button class="btn btn-primary btn-sm" onclick="addToCart('Premium Talbina', 1800, 'Image/Talbina/Talbina02.png')">Add to Cart</button>
-              </div>
-            </div>
-            <div class="product-info">
-              <div class="product-rating"><span class="stars">★★★★★</span><span class="rating-count">(128)</span></div>
-              <h3 class="product-name">Premium Talbina</h3>
-              <div class="product-price"><span class="price-sale">Rs. 1,800</span><span class="price-original">Rs. 2,200</span></div>
-            </div>
-          </div>
-          <div class="product-card">
-            <div class="product-image-wrap">
-              <span class="sale-tag">SALE</span>
-              <img src="Image/Honey/Honey01.png" alt="Pure Honey" class="product-img" loading="lazy" />
-              <div class="product-overlay">
-                <button class="btn btn-primary btn-sm" onclick="addToCart('Pure Wild Honey', 2500, 'Image/Honey/Honey01.png')">Add to Cart</button>
-              </div>
-            </div>
-            <div class="product-info">
-              <div class="product-rating"><span class="stars">★★★★★</span><span class="rating-count">(95)</span></div>
-              <h3 class="product-name">Pure Wild Honey</h3>
-              <div class="product-price"><span class="price-sale">Rs. 2,500</span><span class="price-original">Rs. 3,000</span></div>
-            </div>
-          </div>
-          <div class="product-card">
-            <div class="product-image-wrap">
-              <span class="sale-tag">NEW</span>
-              <img src="Image/DesiGhee/Desi Ghee.png" alt="Desi Ghee" class="product-img" loading="lazy" />
-              <div class="product-overlay">
-                <button class="btn btn-primary btn-sm" onclick="addToCart('Bilona Desi Ghee', 3200, 'Image/DesiGhee/Desi Ghee.png')">Add to Cart</button>
-              </div>
-            </div>
-            <div class="product-info">
-              <div class="product-rating"><span class="stars">★★★★☆</span><span class="rating-count">(72)</span></div>
-              <h3 class="product-name">Bilona Desi Ghee</h3>
-              <div class="product-price"><span class="price-sale">Rs. 3,200</span><span class="price-original">Rs. 3,800</span></div>
-            </div>
-          </div>
-          <div class="product-card">
-            <div class="product-image-wrap">
-              <span class="sale-tag">POPULAR</span>
-              <img src="Image/Oatmeal/Oatmeal01.png" alt="Oatmeal" class="product-img" loading="lazy" />
-              <div class="product-overlay">
-                <button class="btn btn-primary btn-sm" onclick="addToCart('Organic Oatmeal', 1200, 'Image/Oatmeal/Oatmeal01.png')">Add to Cart</button>
-              </div>
-            </div>
-            <div class="product-info">
-              <div class="product-rating"><span class="stars">★★★★★</span><span class="rating-count">(54)</span></div>
-              <h3 class="product-name">Organic Oatmeal</h3>
-              <div class="product-price"><span class="price-sale">Rs. 1,200</span><span class="price-original">Rs. 1,500</span></div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
+      </article>
+    </div>
   </main>
 
   <!-- Footer -->

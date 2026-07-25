@@ -1920,12 +1920,186 @@ button { cursor: pointer; border: none; background: none; }
   margin-bottom: 6px;
 }
 
-.admin-img-box span {
-  font-size: 11px;
-  font-weight: 600;
+/* ======================================================
+   SEO POLICY PAGES & CONTACT STYLES
+====================================================== */
+.policy-page-section {
+  padding: 60px 0 90px;
+  background: var(--cream-light);
+}
+
+.policy-card {
+  background: var(--white);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-md);
+  border: 1px solid var(--cream-dark);
+  padding: 48px;
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.policy-header {
+  text-align: center;
+  margin-bottom: 40px;
+  padding-bottom: 24px;
+  border-bottom: 2px solid var(--cream-dark);
+}
+
+.policy-badge {
+  display: inline-block;
+  background: rgba(201, 168, 76, 0.15);
+  color: var(--gold-dark);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 6px 14px;
+  border-radius: 50px;
+  margin-bottom: 12px;
+}
+
+.policy-title {
+  font-family: var(--font-heading);
+  font-size: 38px;
+  color: var(--green-dark);
+  margin-bottom: 12px;
+}
+
+.policy-subtitle {
+  font-size: 15px;
   color: var(--gray);
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.policy-content h2 {
+  font-family: var(--font-heading);
+  font-size: 22px;
+  color: var(--green-dark);
+  margin: 32px 0 16px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--cream-dark);
+}
+
+.policy-content h3 {
+  font-size: 17px;
+  font-weight: 700;
+  color: var(--dark);
+  margin: 20px 0 10px;
+}
+
+.policy-content p {
+  font-size: 15px;
+  line-height: 1.8;
+  color: var(--dark);
+  margin-bottom: 16px;
+}
+
+.policy-list {
+  margin: 0 0 20px 24px;
+  padding: 0;
+}
+
+.policy-list li {
+  font-size: 15px;
+  line-height: 1.8;
+  color: var(--dark);
+  margin-bottom: 10px;
+
+}
+
+.policy-alert {
+  background: var(--cream);
+  border-left: 4px solid var(--green);
+  border-radius: var(--radius-sm);
+  padding: 18px 22px;
+  margin: 24px 0;
+}
+
+.policy-alert.warning {
+  background: #fffdf5;
+  border-left-color: var(--gold);
+}
+
+.policy-alert.note {
+  background: #f4f9f5;
+  border-left-color: var(--green-dark);
+}
+
+.policy-alert strong {
+  display: block;
+  font-size: 14px;
+  color: var(--green-dark);
+  margin-bottom: 4px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.policy-alert p {
+  margin: 0;
+  font-size: 14px;
+}
+
+/* FAQ Accordion */
+.faq-accordion {
+  margin-top: 32px;
+}
+
+.faq-item {
+  border: 1px solid var(--cream-dark);
+  border-radius: var(--radius-sm);
+  margin-bottom: 14px;
+  overflow: hidden;
+  background: var(--white);
+}
+
+.faq-question {
+  width: 100%;
+  padding: 18px 24px;
+  background: var(--cream);
+  border: none;
+  text-align: left;
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--dark);
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  transition: var(--transition);
+}
+
+.faq-question:hover {
+  background: var(--cream-dark);
+}
+
+.faq-answer {
+  padding: 20px 24px;
+  font-size: 14px;
+  line-height: 1.8;
+  color: var(--gray);
+  display: none;
+  border-top: 1px solid var(--cream-dark);
+}
+
+.faq-item.active .faq-answer {
   display: block;
 }
+
+.faq-item.active .faq-icon {
+  transform: rotate(180deg);
+}
+
+.faq-icon {
+  transition: transform 0.3s ease;
+  font-size: 14px;
+}
+
+@media (max-width: 768px) {
+  .policy-card { padding: 28px 20px; }
+  .policy-title { font-size: 28px; }
+}
+
 
 
 

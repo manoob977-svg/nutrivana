@@ -590,6 +590,13 @@ function syncDynamicContent() {
   }
 }
 
+function toggleFaq(btn) {
+  const item = btn.closest('.faq-item');
+  if (item) {
+    item.classList.toggle('active');
+  }
+}
+
 // ---- INIT ----
 document.addEventListener('DOMContentLoaded', () => {
   syncDynamicContent();
@@ -605,4 +612,5 @@ document.addEventListener('DOMContentLoaded', () => {
   const contactForm = document.getElementById('contactForm');
   contactForm?.addEventListener('submit', handleContactForm);
 });
+
 
