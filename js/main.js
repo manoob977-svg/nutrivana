@@ -76,8 +76,9 @@ const DEFAULT_SITE_DATA = {
       ],
       rating: 5,
       reviewsCount: 142,
-      price: 1800,
+      price: 950,
       weights: [
+        { label: "250g", price: 950 },
         { label: "500g", price: 1800 },
         { label: "1kg", price: 3400 }
       ],
@@ -105,8 +106,9 @@ const DEFAULT_SITE_DATA = {
       ],
       rating: 5,
       reviewsCount: 84,
-      price: 650,
+      price: 350,
       weights: [
+        { label: "250g", price: 350 },
         { label: "500g", price: 650 },
         { label: "1kg", price: 1200 }
       ],
@@ -237,6 +239,15 @@ function getSiteData() {
           if (!p.images || p.images.length < defP.images.length) {
             p.images = [...defP.images];
             updated = true;
+          }
+          if (defP.weights && defP.weights.length) {
+            const has250g = (p.weights || []).some(w => w.label === '250g');
+            const defHas250g = defP.weights.some(w => w.label === '250g');
+            if (!has250g && defHas250g) {
+              p.weights = [...defP.weights];
+              p.price = defP.weights[0].price;
+              updated = true;
+            }
           }
         }
       });
@@ -389,8 +400,8 @@ function syncDynamicContent() {
       const imgCol = `
         <div class="product-detail-image product-img-wrap" style="border-radius: ${isEven ? 'var(--radius-lg) 0 0 var(--radius-lg)' : '0 var(--radius-lg) var(--radius-lg) 0'}; cursor: pointer; position: relative; overflow: hidden; aspect-ratio: 1/1;" onclick="window.location='product-detail.html?id=${p.id}'">
           <span class="sale-tag">${escapeHtml(p.tag || 'NEW')}</span>
-          <img src="${img1}" alt="${escapeHtml(p.name)}" class="product-img primary-img" style="width:100%;height:100%;object-fit:cover;" />
-          <img src="${img2}" alt="${escapeHtml(p.name)} Hover" class="product-img hover-img" style="width:100%;height:100%;object-fit:cover;" />
+          <img src="${img1}" alt="${escapeHtml(p.name)}" class="product-img primary-img" style="width:100%;height:100%;object-fit:contain;background:var(--cream);" />
+          <img src="${img2}" alt="${escapeHtml(p.name)} Hover" class="product-img hover-img" style="width:100%;height:100%;object-fit:contain;background:var(--cream);" />
         </div>
       `;
 
