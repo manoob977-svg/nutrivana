@@ -12,9 +12,9 @@ const DEFAULT_SITE_DATA = {
       image: "Image/Talbina/Talbina02.png",
       images: [
         "Image/Talbina/Talbina02.png",
-        "Image/Brackfast.png",
-        "Image/Banner_Talbina.png",
-        "Image/Talbina/Talbina02.png"
+        "Image/Talbina/Talbina03.jpeg",
+        "Image/Talbina/Talbina04.png",
+        "Image/Talbina/Talbina03.jpeg"
       ],
       rating: 5,
       reviewsCount: 128,
@@ -41,7 +41,7 @@ const DEFAULT_SITE_DATA = {
       image: "Image/Honey/Honey01.png",
       images: [
         "Image/Honey/Honey01.png",
-        "Image/Banner_Honey.png",
+        "Image/Banner-Honey.png",
         "Image/Gemini_Generated_Image_n8363mn8363mn836.png",
         "Image/Honey/Honey01.png"
       ],
@@ -70,7 +70,7 @@ const DEFAULT_SITE_DATA = {
       image: "Image/DesiGhee/Desighi01.png",
       images: [
         "Image/DesiGhee/Desighi01.png",
-        "Image/Banner_Collection.png",
+        "Image/Banner -Desi-Ghee.png",
         "Image/Brackfast.png",
         "Image/DesiGhee/Desighi01.png"
       ],
@@ -98,9 +98,10 @@ const DEFAULT_SITE_DATA = {
       image: "Image/Oatmeal/Oatmeal01.png",
       images: [
         "Image/Oatmeal/Oatmeal01.png",
-        "Image/Banner_Oatmeal.png",
-        "Image/Brackfast.png",
-        "Image/Oatmeal/Oatmeal01.png"
+        "Image/Oatmeal/Oatmeal02.png",
+        "Image/Oatmeal/Oatmeal3.jpeg",
+        "Image/Oatmeal/Oatmeal4.jpeg",
+        "Image/Banner-Oatmeal.png"
       ],
       rating: 5,
       reviewsCount: 84,
@@ -122,31 +123,43 @@ const DEFAULT_SITE_DATA = {
   banners: [
     {
       id: 1,
-      title: "Oatmeal — A Wholesome Start",
-      image: "Image/Banner_Oatmeal.png",
-      link: "products.html#oatmeal",
-      btnText: "Shop Oatmeal →"
+      title: "Premium Talbina — A Prophetic Food",
+      badge: "SUNNAH SUPERFOOD",
+      subtitle: "100% Organic Barley, Dates & Almonds for Gut Health & Energy",
+      image: "Image/Banner-Talbina.png",
+      link: "product-detail.html?id=talbina",
+      btnText: "Shop Talbina →",
+      bgPos: "50% 50%"
     },
     {
       id: 2,
-      title: "Explore Our Collection",
-      image: "Image/Banner_Collection.png",
-      link: "products.html",
-      btnText: "Shop Collection →"
+      title: "Pure Honey, Pure Health",
+      badge: "100% RAW & NATURAL",
+      subtitle: "Pure mountain honey for a naturally healthy & better you",
+      image: "Image/Banner-Honey.png",
+      link: "product-detail.html?id=honey",
+      btnText: "Shop Pure Honey →",
+      bgPos: "50% 50%"
     },
     {
       id: 3,
-      title: "Pure Honey, Pure Health",
-      image: "Image/Banner_Honey.png",
-      link: "products.html#honey",
-      btnText: "Shop Pure Honey →"
+      title: "Pure & Natural Bilona Desi Ghee",
+      badge: "TRADITIONAL A2 GHEE",
+      subtitle: "Nourishing your body with traditional whole superfoods",
+      image: "Image/Banner -Desi-Ghee.png",
+      link: "product-detail.html?id=ghee",
+      btnText: "Shop Desi Ghee →",
+      bgPos: "50% 50%"
     },
     {
       id: 4,
-      title: "Talbina — Prophetic Food",
-      image: "Image/Banner_Talbina.png",
-      link: "products.html#talbina",
-      btnText: "Shop Talbina →"
+      title: "Organic Oatmeal — Wholesome Start",
+      badge: "WHOLE GRAIN ENERGY",
+      subtitle: "A wholesome start to your day — nourishes body, calms heart",
+      image: "Image/Banner-Oatmeal.png",
+      link: "product-detail.html?id=oatmeal",
+      btnText: "Shop Oatmeal →",
+      bgPos: "50% 50%"
     }
   ],
   settings: {
@@ -210,13 +223,32 @@ function switchGalleryImage(imgUrl, productId, btn) {
 }
 
 function getSiteData() {
-  const data = localStorage.getItem('nutrivanaSiteData');
-  if (!data) return DEFAULT_SITE_DATA;
+  const stored = localStorage.getItem('nutrivanaSiteData');
+  if (!stored) return JSON.parse(JSON.stringify(DEFAULT_SITE_DATA));
+
   try {
-    const parsed = JSON.parse(data);
+    let parsed = JSON.parse(stored);
+    let updated = false;
+
+    if (parsed.products && Array.isArray(parsed.products)) {
+      parsed.products.forEach(p => {
+        const defP = DEFAULT_SITE_DATA.products.find(dp => dp.id === p.id);
+        if (defP) {
+          if (!p.images || p.images.length < defP.images.length) {
+            p.images = [...defP.images];
+            updated = true;
+          }
+        }
+      });
+    }
+
+    if (updated) {
+      try { localStorage.setItem('nutrivanaSiteData', JSON.stringify(parsed)); } catch (e) {}
+    }
+
     return {
-      products: parsed.products || DEFAULT_SITE_DATA.products,
-      banners: parsed.banners || DEFAULT_SITE_DATA.banners,
+      products: parsed.products || DEFAULT_SITE_DATA.products || [],
+      banners: parsed.banners || DEFAULT_SITE_DATA.banners || [],
       settings: { ...DEFAULT_SITE_DATA.settings, ...(parsed.settings || {}) },
       orders: parsed.orders || DEFAULT_SITE_DATA.orders || []
     };
@@ -228,11 +260,259 @@ function getSiteData() {
 function saveSiteData(data) {
   try {
     localStorage.setItem('nutrivanaSiteData', JSON.stringify(data));
+    return true;
   } catch (e) {
     console.error("localStorage save failed:", e);
     if (typeof showToast === 'function') {
-      showToast('⚠️ Storage limit reached! Uploaded images are compressed automatically.');
+      showToast('⚠️ Storage full! For banner images, use "Browse Image" then click OK to link as local path instead of embedding.');
     }
+    return false;
+  }
+}
+
+// ---- DYNAMIC CONTENT SYNCHRONIZATION ----
+function syncDynamicContent() {
+  const data = getSiteData();
+
+  // 1. Announcement Bar Ticker
+  if (data.settings && data.settings.announcementBar) {
+    document.querySelectorAll('.announcement-track span').forEach(el => {
+      const msg = data.settings.announcementBar;
+      el.innerHTML = `${msg} &nbsp;&nbsp;|&nbsp;&nbsp; ${msg}`;
+    });
+  }
+
+  // 2. Hero Banners Slider (index.html)
+  const heroSlides = document.getElementById('heroSlides');
+  const sliderDots = document.getElementById('sliderDots');
+  if (heroSlides && data.banners && data.banners.length) {
+    heroSlides.innerHTML = data.banners.map((b, i) => {
+      const hasOverlayContent = b.badge || b.title || b.subtitle;
+      const bgPos = b.bgPos || '50% 50%';
+
+      return `
+        <a href="${b.link || 'products.html'}" class="hero-slide ${i === 0 ? 'active' : ''}" style="background-image: url('${b.image}'); background-position: ${bgPos};" aria-label="${escapeHtml(b.title || 'Banner')}">
+          <div class="hero-banner-overlay" style="${hasOverlayContent ? 'display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; background: rgba(0,0,0,0.35); width: 100%; height: 100%; padding: 20px;' : ''}">
+            ${b.badge ? `<span style="background: var(--gold); color: var(--dark); padding: 4px 14px; border-radius: 50px; font-weight: 700; font-size: 12px; display: inline-block; margin-bottom: 10px; letter-spacing: 0.05em; text-transform: uppercase;">${escapeHtml(b.badge)}</span>` : ''}
+            ${b.title ? `<h2 style="color: var(--white); font-family: 'Playfair Display', serif; font-size: clamp(24px, 4vw, 44px); font-weight: 700; margin-bottom: 8px; text-shadow: 0 2px 10px rgba(0,0,0,0.6);">${escapeHtml(b.title)}</h2>` : ''}
+            ${b.subtitle ? `<p style="color: rgba(255,255,255,0.92); font-size: clamp(14px, 2vw, 17px); max-width: 600px; margin: 0 auto 20px; text-shadow: 0 1px 6px rgba(0,0,0,0.6);">${escapeHtml(b.subtitle)}</p>` : ''}
+            <span class="btn btn-primary hero-btn" style="box-shadow: var(--shadow-md);">${escapeHtml(b.btnText || 'Shop Now →')}</span>
+          </div>
+        </a>
+      `;
+    }).join('');
+
+    if (sliderDots) {
+      sliderDots.innerHTML = data.banners.map((_, i) => `
+        <span class="dot ${i === 0 ? 'active' : ''}" data-index="${i}"></span>
+      `).join('');
+    }
+  }
+
+  // 3. Products Grid on Homepage (index.html)
+  const productsGrid = document.getElementById('productsGrid');
+  if (productsGrid && data.products && data.products.length) {
+    productsGrid.innerHTML = data.products.map(p => {
+      const img1 = (p.images && p.images[0]) || p.image || 'Image/Favicon.png';
+      const img2 = (p.images && p.images[1]) || img1;
+      const minPrice = (p.weights && p.weights[0]) ? p.weights[0].price : (p.price || 0);
+      const tag = p.tag || 'NEW';
+
+      return `
+        <div class="product-card" data-product="${p.id}" style="cursor:pointer;" onclick="window.location='product-detail.html?id=${p.id}'">
+          <div class="product-img-wrap">
+            <span class="sale-tag">${escapeHtml(tag)}</span>
+            <img src="${img1}" alt="${escapeHtml(p.name)}" class="product-img primary-img" loading="lazy" />
+            <img src="${img2}" alt="${escapeHtml(p.name)} Hover" class="product-img hover-img" loading="lazy" />
+            <div class="product-overlay">
+              <button class="btn btn-primary btn-sm" onclick="event.stopPropagation();addToCart('${escapeHtml(p.name)}', ${minPrice}, '${img1}')">Add to Cart</button>
+              <a href="product-detail.html?id=${p.id}" class="btn btn-outline btn-sm" onclick="event.stopPropagation()">View Details</a>
+            </div>
+          </div>
+          <div class="product-info">
+            <div class="product-rating">
+              <span class="stars">${'★'.repeat(Math.round(p.rating||5))}${'☆'.repeat(5-Math.round(p.rating||5))}</span>
+              <span class="rating-count">(${p.reviewsCount || 100})</span>
+            </div>
+            <h3 class="product-name">${escapeHtml(p.name)}</h3>
+            <p class="product-desc">${escapeHtml(p.description || '')}</p>
+            <div class="product-price">
+              <span class="price-sale">Rs. ${minPrice.toLocaleString()}</span>
+            </div>
+          </div>
+        </div>
+      `;
+    }).join('');
+  }
+
+  // 4. Products Container on Products Page (products.html)
+  const dynamicContainer = document.getElementById('dynamicProductsContainer');
+  if (dynamicContainer && data.products && data.products.length) {
+    dynamicContainer.innerHTML = data.products.map((p, index) => {
+      const isEven = index % 2 === 0;
+      const img1 = (p.images && p.images[0]) || p.image || 'Image/Favicon.png';
+      const img2 = (p.images && p.images[1]) || img1;
+
+      // Initialize state for this product
+      window.productStates[p.id] = window.productStates[p.id] || { weightIdx: 0, qty: 1 };
+      const state = window.productStates[p.id];
+
+      const weights = p.weights && p.weights.length ? p.weights : [{ label: 'Standard', price: p.price || 0 }];
+      const currentWeight = weights[state.weightIdx] || weights[0];
+      const unitPrice = currentWeight.price || p.price || 0;
+      const totalPrice = unitPrice * state.qty;
+      const origPrice = Math.round(totalPrice * 1.22);
+      const savePct = Math.round(((origPrice - totalPrice) / origPrice) * 100);
+
+      const tagsHtml = (p.badgeItems || []).map(t => `<span class="product-tag-item">${escapeHtml(t)}</span>`).join('');
+      
+      const weightsHtml = weights.map((w, wIdx) => `
+        <button type="button" class="weight-btn ${wIdx === state.weightIdx ? 'selected' : ''}" onclick="selectProductsPageWeight('${p.id}', ${wIdx})">${escapeHtml(w.label)}</button>
+      `).join('');
+
+      // Instructions / Details Highlight box
+      let highlightHtml = '';
+      if (p.instructions) {
+        highlightHtml = `
+          <div style="background: rgba(45, 106, 79, 0.06); border: 1px dashed rgba(45, 106, 79, 0.3); border-radius: 12px; padding: 14px 18px; margin-bottom: 20px; font-size: 13px; color: var(--green-dark); line-height: 1.6;">
+            💡 <strong>Usage &amp; Preparation:</strong> ${escapeHtml(p.instructions)}
+          </div>
+        `;
+      } else if (p.details && p.details.length) {
+        highlightHtml = `
+          <div style="background: rgba(45, 106, 79, 0.06); border: 1px dashed rgba(45, 106, 79, 0.3); border-radius: 12px; padding: 14px 18px; margin-bottom: 20px; font-size: 13px; color: var(--green-dark); line-height: 1.6;">
+            ✨ <strong>Highlights:</strong> ${p.details.map(d => escapeHtml(d)).join(' • ')}
+          </div>
+        `;
+      }
+
+      const imgCol = `
+        <div class="product-detail-image product-img-wrap" style="border-radius: ${isEven ? 'var(--radius-lg) 0 0 var(--radius-lg)' : '0 var(--radius-lg) var(--radius-lg) 0'}; cursor: pointer; position: relative; overflow: hidden; aspect-ratio: 1/1;" onclick="window.location='product-detail.html?id=${p.id}'">
+          <span class="sale-tag">${escapeHtml(p.tag || 'NEW')}</span>
+          <img src="${img1}" alt="${escapeHtml(p.name)}" class="product-img primary-img" style="width:100%;height:100%;object-fit:cover;" />
+          <img src="${img2}" alt="${escapeHtml(p.name)} Hover" class="product-img hover-img" style="width:100%;height:100%;object-fit:cover;" />
+        </div>
+      `;
+
+      const bodyCol = `
+        <div class="product-detail-body" style="padding: 48px 40px; display: flex; flex-direction: column; justify-content: center;">
+          <div class="product-rating" style="margin-bottom: 10px;">
+            <span class="stars">${'★'.repeat(Math.round(p.rating||5))}${'☆'.repeat(5-Math.round(p.rating||5))}</span>
+            <span class="rating-count">(${p.reviewsCount || 100} reviews)</span>
+          </div>
+          <h2 class="product-name" style="font-size: 30px; margin-bottom: 12px; cursor: pointer;" onclick="window.location='product-detail.html?id=${p.id}'">${escapeHtml(p.name)}</h2>
+          ${tagsHtml ? `<div class="product-tags" style="margin-bottom: 16px;">${tagsHtml}</div>` : ''}
+          <p class="product-desc" style="font-size: 15px; line-height: 1.8; margin-bottom: 20px;">
+            ${escapeHtml(p.description || '')}
+          </p>
+          ${highlightHtml}
+          ${weightsHtml ? `
+            <div style="margin-bottom: 20px;">
+              <div style="font-size: 11px; font-weight: 700; color: var(--green-dark); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 8px;">SELECT SIZE</div>
+              <div class="product-weight" id="weight-buttons-${p.id}">
+                ${weightsHtml}
+              </div>
+            </div>
+          ` : ''}
+          <div class="product-price" style="margin-bottom: 20px;" id="price-box-${p.id}">
+            <span class="price-sale">Rs. ${totalPrice.toLocaleString()}</span>
+            <span class="price-original">Rs. ${origPrice.toLocaleString()}</span>
+            <span class="price-save-tag" style="background: rgba(45,106,79,0.1); color: var(--green); padding: 3px 10px; border-radius: 50px; font-size: 12px; font-weight: 700; margin-left: 8px;">Save ${savePct}%</span>
+          </div>
+          <div style="display: flex; align-items: center; gap: 16px; margin-bottom: 24px;">
+            <div class="quantity-selector">
+              <button type="button" class="qty-btn" onclick="changeProductsPageQty('${p.id}', -1)">−</button>
+              <span class="qty-display" id="qty-display-${p.id}">${state.qty}</span>
+              <button type="button" class="qty-btn" onclick="changeProductsPageQty('${p.id}', 1)">+</button>
+            </div>
+          </div>
+          <div class="product-actions" style="display: flex; gap: 12px; flex-wrap: wrap;">
+            <button type="button" class="btn btn-primary btn-lg" onclick="addProductsPageToCart('${p.id}', false)">Add to Cart 🛒</button>
+            <button type="button" class="btn btn-gold btn-lg" onclick="addProductsPageToCart('${p.id}', true)">Buy Now</button>
+          </div>
+        </div>
+      `;
+
+      return `
+        <div class="product-detail-card reveal product-card" id="${p.id}" style="margin-bottom: 40px; background: var(--white); border-radius: var(--radius-lg); overflow: hidden; box-shadow: var(--shadow-sm);">
+          <div style="display: grid; grid-template-columns: ${isEven ? '1.2fr 1fr' : '1fr 1.2fr'}; gap: 0;">
+            ${isEven ? imgCol + bodyCol : bodyCol + imgCol}
+          </div>
+        </div>
+      `;
+    }).join('');
+  }
+}
+
+// Global product card state store for products.html
+window.productStates = window.productStates || {};
+
+function updateProductsPageCard(productId) {
+  const data = getSiteData();
+  const p = (data.products || []).find(item => item.id === productId);
+  if (!p) return;
+
+  const state = window.productStates[productId] || { weightIdx: 0, qty: 1 };
+  const weights = p.weights && p.weights.length ? p.weights : [{ label: 'Standard', price: p.price || 0 }];
+  const currentWeight = weights[state.weightIdx] || weights[0];
+  const unitPrice = currentWeight.price || p.price || 0;
+  const totalPrice = unitPrice * state.qty;
+  const origPrice = Math.round(totalPrice * 1.22);
+  const savePct = Math.round(((origPrice - totalPrice) / origPrice) * 100);
+
+  // Update Qty display
+  const qtyEl = document.getElementById(`qty-display-${productId}`);
+  if (qtyEl) qtyEl.textContent = state.qty;
+
+  // Update Price display
+  const priceBox = document.getElementById(`price-box-${productId}`);
+  if (priceBox) {
+    const saleEl = priceBox.querySelector('.price-sale');
+    const origEl = priceBox.querySelector('.price-original');
+    const saveEl = priceBox.querySelector('.price-save-tag');
+
+    if (saleEl) saleEl.textContent = `Rs. ${totalPrice.toLocaleString()}`;
+    if (origEl) origEl.textContent = `Rs. ${origPrice.toLocaleString()}`;
+    if (saveEl) saveEl.textContent = `Save ${savePct}%`;
+  }
+}
+
+function selectProductsPageWeight(productId, weightIdx) {
+  window.productStates[productId] = window.productStates[productId] || { weightIdx: 0, qty: 1 };
+  window.productStates[productId].weightIdx = weightIdx;
+
+  const container = document.getElementById(`weight-buttons-${productId}`);
+  if (container) {
+    container.querySelectorAll('.weight-btn').forEach((btn, idx) => {
+      btn.classList.toggle('selected', idx === weightIdx);
+    });
+  }
+
+  updateProductsPageCard(productId);
+}
+
+function changeProductsPageQty(productId, delta) {
+  window.productStates[productId] = window.productStates[productId] || { weightIdx: 0, qty: 1 };
+  window.productStates[productId].qty = Math.max(1, window.productStates[productId].qty + delta);
+  updateProductsPageCard(productId);
+}
+
+function addProductsPageToCart(productId, buyNow = false) {
+  const data = getSiteData();
+  const p = (data.products || []).find(item => item.id === productId);
+  if (!p) return;
+
+  const state = window.productStates[productId] || { weightIdx: 0, qty: 1 };
+  const weights = p.weights && p.weights.length ? p.weights : [{ label: 'Standard', price: p.price || 0 }];
+  const currentWeight = weights[state.weightIdx] || weights[0];
+  const img = (p.images && p.images[0]) || p.image || 'Image/Favicon.png';
+  const itemTitle = `${p.name} (${currentWeight.label})`;
+  const unitPrice = currentWeight.price || p.price || 0;
+
+  addToCart(itemTitle, unitPrice, img, state.qty);
+
+  if (buyNow) {
+    window.location.href = 'cart.html';
   }
 }
 
@@ -474,10 +754,395 @@ function applyPromo() {
   }
 }
 
-function handleCheckout(event) {
-  if (event) event.preventDefault();
+// ---- OFFICIAL PAYMENT MODAL & CHECKOUT HANDLER ----
+function initPaymentModal() {
+  if (document.getElementById('paymentInfoModal')) return;
+
+  const modal = document.createElement('div');
+  modal.id = 'paymentInfoModal';
+  modal.className = 'search-overlay';
+  modal.style.zIndex = '10000';
+
+  modal.innerHTML = `
+    <div style="background: var(--white); border-radius: var(--radius-lg); padding: 32px; max-width: 520px; width: 90%; position: relative; box-shadow: var(--shadow-lg); border: 2px solid var(--gold); text-align: left; animation: fadeIn 0.3s ease;">
+      <button onclick="closePaymentModal()" style="position: absolute; top: 16px; right: 16px; font-size: 20px; color: var(--gray); border: none; background: none; cursor: pointer; padding: 4px 8px; border-radius: 50%;">✕</button>
+      <div id="paymentModalContent"></div>
+    </div>
+  `;
+
+  document.body.appendChild(modal);
+
+  modal.addEventListener('click', (e) => {
+    if (e.target === modal) closePaymentModal();
+  });
+}
+
+function openPaymentModal(type = 'all') {
+  initPaymentModal();
+  const modal = document.getElementById('paymentInfoModal');
+  const content = document.getElementById('paymentModalContent');
+
+  let html = `
+    <div style="display:flex; align-items:center; gap:12px; margin-bottom: 20px; padding-bottom: 14px; border-bottom: 1px solid var(--cream-dark);">
+      <span style="font-size: 28px;">💳</span>
+      <div>
+        <h3 style="font-family: 'Playfair Display', serif; font-size: 22px; color: var(--green-dark); margin:0;">Official Payment Methods</h3>
+        <p style="font-size: 13px; color: var(--gray); margin:0;">Nutrivana Accounts &amp; Instant Transfer Details</p>
+      </div>
+    </div>
+
+    <div style="display: flex; flex-direction: column; gap: 14px; max-height: 400px; overflow-y: auto; padding-right: 4px;">
+      
+      <!-- Raast -->
+      <div style="background: ${type === 'raast' ? 'rgba(0,168,89,0.08)' : 'var(--cream)'}; border: 2px solid ${type === 'raast' ? 'var(--green)' : 'var(--cream-dark)'}; border-radius: 12px; padding: 14px; display: flex; gap: 14px; align-items: flex-start;">
+        <img src="Image/raast.jpg" alt="Raast" style="width:48px; height:48px; object-fit:cover; border-radius:8px; flex-shrink:0;" />
+        <div style="flex:1;">
+          <div style="display:flex; justify-space-between; align-items:center;">
+            <h4 style="font-size:15px; font-weight:700; color:var(--dark); margin:0;">State Bank Raast Gateway</h4>
+            <span style="font-size:10px; background:rgba(0,168,89,0.15); color:var(--green-dark); font-weight:700; padding:2px 8px; border-radius:50px;">INSTANT ⚡</span>
+          </div>
+          <p style="font-size:12px; color:var(--gray); margin: 3px 0 8px;">Instant transfer from any Mobile Banking App (HBL, Meezan, UBL, Allied, Alfalah, etc.)</p>
+          <div style="background:var(--white); padding:8px 12px; border-radius:6px; font-size:13px; font-weight:600; color:var(--green-dark); border:1px solid var(--cream-dark);">
+            🏛️ Raast ID / Mobile: <strong>03347000322</strong><br>
+            👤 Title: <strong>Sikander Hayat / Nutrivana</strong>
+          </div>
+        </div>
+      </div>
+
+      <!-- JazzCash -->
+      <div style="background: ${type === 'jazzcash' ? 'rgba(206,17,38,0.08)' : 'var(--cream)'}; border: 2px solid ${type === 'jazzcash' ? '#CE1126' : 'var(--cream-dark)'}; border-radius: 12px; padding: 14px; display: flex; gap: 14px; align-items: flex-start;">
+        <img src="Image/JazzCash.jpg" alt="JazzCash" style="width:48px; height:48px; object-fit:cover; border-radius:8px; flex-shrink:0;" />
+        <div style="flex:1;">
+          <div style="display:flex; justify-content:space-between; align-items:center;">
+            <h4 style="font-size:15px; font-weight:700; color:var(--dark); margin:0;">JazzCash Mobile Wallet</h4>
+            <span style="font-size:10px; background:rgba(206,17,38,0.15); color:#CE1126; font-weight:700; padding:2px 8px; border-radius:50px;">WALLETS 📱</span>
+          </div>
+          <p style="font-size:12px; color:var(--gray); margin: 3px 0 8px;">Direct transfer from your JazzCash App or Retailer shop.</p>
+          <div style="background:var(--white); padding:8px 12px; border-radius:6px; font-size:13px; font-weight:600; color:var(--dark); border:1px solid var(--cream-dark);">
+            📱 JazzCash #: <strong>0334 7000322</strong><br>
+            👤 Account Title: <strong>Sikander Hayat / Nutrivana</strong>
+          </div>
+        </div>
+      </div>
+
+      <!-- EasyPaisa -->
+      <div style="background: ${type === 'easypaisa' ? 'rgba(0,168,89,0.08)' : 'var(--cream)'}; border: 2px solid ${type === 'easypaisa' ? '#00A859' : 'var(--cream-dark)'}; border-radius: 12px; padding: 14px; display: flex; gap: 14px; align-items: flex-start;">
+        <img src="Image/easypaisa.jpg" alt="EasyPaisa" style="width:48px; height:48px; object-fit:cover; border-radius:8px; flex-shrink:0;" />
+        <div style="flex:1;">
+          <div style="display:flex; justify-content:space-between; align-items:center;">
+            <h4 style="font-size:15px; font-weight:700; color:var(--dark); margin:0;">EasyPaisa Mobile Wallet</h4>
+            <span style="font-size:10px; background:rgba(0,168,89,0.15); color:#00A859; font-weight:700; padding:2px 8px; border-radius:50px;">WALLETS 📱</span>
+          </div>
+          <p style="font-size:12px; color:var(--gray); margin: 3px 0 8px;">Direct transfer from your EasyPaisa App or Agent shop.</p>
+          <div style="background:var(--white); padding:8px 12px; border-radius:6px; font-size:13px; font-weight:600; color:var(--dark); border:1px solid var(--cream-dark);">
+            📲 EasyPaisa #: <strong>0334 7000322</strong><br>
+            👤 Account Title: <strong>Sikander Hayat / Nutrivana</strong>
+          </div>
+        </div>
+      </div>
+
+      <!-- COD -->
+      <div style="background: ${type === 'cod' ? 'rgba(201,168,76,0.12)' : 'var(--cream)'}; border: 2px solid ${type === 'cod' ? 'var(--gold)' : 'var(--cream-dark)'}; border-radius: 12px; padding: 14px; display: flex; gap: 14px; align-items: flex-start;">
+        <img src="Image/COD.jpg" alt="Cash on Delivery" style="width:48px; height:48px; object-fit:cover; border-radius:8px; flex-shrink:0;" />
+        <div style="flex:1;">
+          <div style="display:flex; justify-content:space-between; align-items:center;">
+            <h4 style="font-size:15px; font-weight:700; color:var(--dark); margin:0;">Cash on Delivery (COD)</h4>
+            <span style="font-size:10px; background:rgba(201,168,76,0.2); color:var(--green-dark); font-weight:700; padding:2px 8px; border-radius:50px;">DOORSTEP 🚚</span>
+          </div>
+          <p style="font-size:12px; color:var(--gray); margin: 3px 0 8px;">Pay cash in hand to the courier rider when receiving your parcel.</p>
+          <div style="background:var(--white); padding:8px 12px; border-radius:6px; font-size:13px; font-weight:600; color:var(--green-dark); border:1px solid var(--cream-dark);">
+            💵 Delivery Partners: TCS Express / Leopard Courier / Pakistan Post
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <div style="margin-top: 18px; text-align: center;">
+      <a href="https://wa.me/923347000322?text=Hi%20Nutrivana,%20I%20have%20a%20payment%20question" target="_blank" class="btn btn-primary" style="width: 100%;">
+        💬 Send Payment Proof on WhatsApp (+92 334 7000322)
+      </a>
+    </div>
+  `;
+
+  content.innerHTML = html;
+  modal.classList.add('active');
+}
+
+function closePaymentModal() {
+  const modal = document.getElementById('paymentInfoModal');
+  if (modal) modal.classList.remove('active');
+}
+
+// ---- INTERACTIVE CHECKOUT MODAL ----
+let selectedPaymentMethod = 'COD';
+
+function openCheckoutModal() {
   if (cart.length === 0) {
-    showToast('Your cart is empty!');
+    showToast('Your cart is empty! Add products first.');
+    return;
+  }
+
+  let checkoutModal = document.getElementById('checkoutModalOverlay');
+  if (!checkoutModal) {
+    checkoutModal = document.createElement('div');
+    checkoutModal.id = 'checkoutModalOverlay';
+    checkoutModal.className = 'search-overlay';
+    checkoutModal.style.zIndex = '10001';
+    document.body.appendChild(checkoutModal);
+  }
+
+  const subtotal = cart.reduce((sum, item) => sum + (item.price * item.qty), 0);
+  const deliveryFee = subtotal >= 2000 ? 0 : 200;
+  const grandTotal = subtotal + deliveryFee;
+
+  const savedDragX = checkoutModal.dataset.dragX || '0';
+  const savedDragY = checkoutModal.dataset.dragY || '0';
+
+  checkoutModal.innerHTML = `
+    <div id="checkoutModalContentContainer" style="background: var(--white); border-radius: var(--radius-lg); padding: 32px; max-width: 580px; width: 92%; position: relative; box-shadow: var(--shadow-lg); border: 2px solid var(--green); text-align: left; max-height: 90vh; overflow-y: auto; transform: translate(${savedDragX}px, ${savedDragY}px);">
+      <button onclick="closeCheckoutModal()" style="position: absolute; top: 16px; right: 16px; font-size: 20px; color: var(--gray); border: none; background: none; cursor: pointer; padding: 4px 8px; border-radius: 50%; z-index: 10;">✕</button>
+
+      <div id="checkoutModalHeader" style="display:flex; align-items:center; gap:12px; margin-bottom: 20px; padding-bottom: 14px; border-bottom: 1px solid var(--cream-dark); cursor: move; user-select: none;">
+        <span style="font-size: 28px;">📦</span>
+        <div style="flex-grow: 1;">
+          <h3 style="font-family: 'Playfair Display', serif; font-size: 22px; color: var(--green-dark); margin:0;">Complete Your Order</h3>
+          <p style="font-size: 13px; color: var(--gray); margin:0;">Enter shipping details &amp; choose payment method <span style="font-size: 11px; color: var(--green); font-weight: bold; display: inline-block; margin-left: 5px;">(Drag to Move ✥)</span></p>
+        </div>
+      </div>
+
+      <form onsubmit="submitFinalOrder(event)">
+        <!-- Shipping Fields -->
+        <div class="form-group" style="margin-bottom: 14px;">
+          <label class="form-label">Full Name *</label>
+          <input type="text" id="modalCheckoutName" class="form-input" placeholder="e.g. Sikander Hayat" required />
+        </div>
+
+        <div class="admin-grid-2" style="display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom: 14px;">
+          <div class="form-group">
+            <label class="form-label">Phone / WhatsApp *</label>
+            <input type="tel" id="modalCheckoutPhone" class="form-input" placeholder="+92 334 7000322" required />
+          </div>
+          <div class="form-group">
+            <label class="form-label">City *</label>
+            <input type="text" id="modalCheckoutCity" class="form-input" placeholder="e.g. Lahore, Karachi" required />
+          </div>
+        </div>
+
+        <div class="form-group" style="margin-bottom: 20px;">
+          <label class="form-label">Complete Delivery Address *</label>
+          <textarea id="modalCheckoutAddress" class="form-textarea" rows="2" placeholder="House #, Street #, Sector / Area" required></textarea>
+        </div>
+
+        <!-- Payment Method Selection Grid -->
+        <div class="form-group" style="margin-bottom: 20px;">
+          <label class="form-label" style="font-size: 14px; font-weight: 700; color: var(--green-dark);">💳 Select Payment Method *</label>
+          
+          <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-top: 8px;">
+            
+            <label class="payment-option-card ${selectedPaymentMethod==='Raast'?'active':''}" onclick="selectCheckoutPayment('Raast')" style="border: 2px solid ${selectedPaymentMethod==='Raast'?'var(--green)':'var(--cream-dark)'}; background: ${selectedPaymentMethod==='Raast'?'rgba(45,106,79,0.06)':'var(--cream)'}; padding: 12px; border-radius: 10px; cursor: pointer; display: flex; align-items: center; gap: 10px; transition: all 0.2s;">
+              <img src="Image/raast.jpg" alt="Raast" style="width: 32px; height: 32px; object-fit: cover; border-radius: 6px; flex-shrink: 0;" />
+              <div>
+                <strong style="display: block; font-size: 13px; color: var(--dark);">Raast (SBP)</strong>
+                <span style="font-size: 11px; color: var(--gray);">Instant Banking</span>
+              </div>
+            </label>
+
+            <label class="payment-option-card ${selectedPaymentMethod==='JazzCash'?'active':''}" onclick="selectCheckoutPayment('JazzCash')" style="border: 2px solid ${selectedPaymentMethod==='JazzCash'?'#CE1126':'var(--cream-dark)'}; background: ${selectedPaymentMethod==='JazzCash'?'rgba(206,17,38,0.06)':'var(--cream)'}; padding: 12px; border-radius: 10px; cursor: pointer; display: flex; align-items: center; gap: 10px; transition: all 0.2s;">
+              <img src="Image/JazzCash.jpg" alt="JazzCash" style="width: 32px; height: 32px; object-fit: cover; border-radius: 6px; flex-shrink: 0;" />
+              <div>
+                <strong style="display: block; font-size: 13px; color: var(--dark);">JazzCash</strong>
+                <span style="font-size: 11px; color: var(--gray);">Mobile Wallet</span>
+              </div>
+            </label>
+
+            <label class="payment-option-card ${selectedPaymentMethod==='EasyPaisa'?'active':''}" onclick="selectCheckoutPayment('EasyPaisa')" style="border: 2px solid ${selectedPaymentMethod==='EasyPaisa'?'#00A859':'var(--cream-dark)'}; background: ${selectedPaymentMethod==='EasyPaisa'?'rgba(0,168,89,0.06)':'var(--cream)'}; padding: 12px; border-radius: 10px; cursor: pointer; display: flex; align-items: center; gap: 10px; transition: all 0.2s;">
+              <img src="Image/easypaisa.jpg" alt="EasyPaisa" style="width: 32px; height: 32px; object-fit: cover; border-radius: 6px; flex-shrink: 0;" />
+              <div>
+                <strong style="display: block; font-size: 13px; color: var(--dark);">EasyPaisa</strong>
+                <span style="font-size: 11px; color: var(--gray);">Mobile Wallet</span>
+              </div>
+            </label>
+
+            <label class="payment-option-card ${selectedPaymentMethod==='COD'?'active':''}" onclick="selectCheckoutPayment('COD')" style="border: 2px solid ${selectedPaymentMethod==='COD'?'var(--gold)':'var(--cream-dark)'}; background: ${selectedPaymentMethod==='COD'?'rgba(201,168,76,0.1)':'var(--cream)'}; padding: 12px; border-radius: 10px; cursor: pointer; display: flex; align-items: center; gap: 10px; transition: all 0.2s;">
+              <img src="Image/COD.jpg" alt="COD" style="width: 32px; height: 32px; object-fit: cover; border-radius: 6px; flex-shrink: 0;" />
+              <div>
+                <strong style="display: block; font-size: 13px; color: var(--dark);">Cash on Delivery</strong>
+                <span style="font-size: 11px; color: var(--gray);">Pay at Doorstep</span>
+              </div>
+            </label>
+
+          </div>
+        </div>
+
+        <!-- Dynamic Payment Instructions -->
+        <div id="checkoutPaymentInstructions" style="background: var(--cream); border: 1px solid var(--cream-dark); border-radius: 10px; padding: 14px; margin-bottom: 20px; font-size: 13px;">
+          ${renderCheckoutPaymentInfo(selectedPaymentMethod)}
+        </div>
+
+        <!-- Order Summary Box -->
+        <div style="background: rgba(27,67,50,0.05); padding: 14px 18px; border-radius: 10px; margin-bottom: 20px; font-size: 14px; color: var(--green-dark);">
+          <div style="display:flex; justify-space-between; margin-bottom: 4px;">
+            <span>Subtotal:</span><strong>Rs. ${subtotal.toLocaleString()}</strong>
+          </div>
+          <div style="display:flex; justify-space-between; margin-bottom: 6px;">
+            <span>Shipping:</span><strong>${deliveryFee === 0 ? 'FREE 🚚' : 'Rs. ' + deliveryFee}</strong>
+          </div>
+          <div style="display:flex; justify-space-between; font-size: 17px; font-weight: 700; border-top: 1px solid rgba(27,67,50,0.15); padding-top: 6px;">
+            <span>Total Payable:</span><span>Rs. ${grandTotal.toLocaleString()}</span>
+          </div>
+        </div>
+
+        <button type="submit" class="btn btn-primary" style="width: 100%; padding: 16px; font-size: 16px;">
+          🎉 Confirm &amp; Place Order (Rs. ${grandTotal.toLocaleString()}) →
+        </button>
+      </form>
+    </div>
+  `;
+
+  checkoutModal.classList.add('active');
+  makeCheckoutDraggable();
+}
+
+function selectCheckoutPayment(method) {
+  selectedPaymentMethod = method;
+  openCheckoutModal(); // Refresh modal view
+}
+
+function renderCheckoutPaymentInfo(method) {
+  if (method === 'Raast') {
+    return `
+      🏛️ <strong>Raast Instant Transfer Details:</strong><br>
+      Account #: <strong>03347000322</strong> | Title: <strong>Sikander Hayat / Nutrivana</strong><br>
+      <span style="color:var(--gray); font-size:12px;">💡 Transfer via Raast from any Banking App &amp; keep screenshot for proof.</span>
+    `;
+  } else if (method === 'JazzCash') {
+    return `
+      📱 <strong>JazzCash Account Details:</strong><br>
+      Account #: <strong>03347000322</strong> | Title: <strong>Sikander Hayat / Nutrivana</strong><br>
+      <span style="color:var(--gray); font-size:12px;">💡 Send amount to JazzCash number &amp; WhatsApp screenshot to +92 334 7000322.</span>
+    `;
+  } else if (method === 'EasyPaisa') {
+    return `
+      📲 <strong>EasyPaisa Account Details:</strong><br>
+      Account #: <strong>03347000322</strong> | Title: <strong>Sikander Hayat / Nutrivana</strong><br>
+      <span style="color:var(--gray); font-size:12px;">💡 Send amount to EasyPaisa number &amp; WhatsApp screenshot to +92 334 7000322.</span>
+    `;
+  } else {
+    return `
+      💵 <strong>Cash on Delivery (COD):</strong><br>
+      Pay cash in hand to rider upon receiving your parcel.<br>
+      <span style="color:var(--gray); font-size:12px;">💡 Verified courier delivery across all Pakistan cities.</span>
+    `;
+  }
+}
+
+function closeCheckoutModal() {
+  const modal = document.getElementById('checkoutModalOverlay');
+  if (modal) {
+    modal.classList.remove('active');
+    modal.dataset.dragX = '0';
+    modal.dataset.dragY = '0';
+    const targetElement = document.getElementById('checkoutModalContentContainer');
+    if (targetElement) {
+      targetElement.style.transform = 'translate(0px, 0px)';
+    }
+  }
+}
+
+function makeCheckoutDraggable() {
+  const dragHandle = document.getElementById('checkoutModalHeader');
+  const targetElement = document.getElementById('checkoutModalContentContainer');
+  const overlay = document.getElementById('checkoutModalOverlay');
+  if (!dragHandle || !targetElement || !overlay) return;
+
+  let pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;
+
+  dragHandle.onmousedown = dragMouseDown;
+  dragHandle.ontouchstart = dragTouchStart;
+
+  function dragMouseDown(e) {
+    e = e || window.event;
+    if (e.target.tagName === 'BUTTON' || e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA' || e.target.closest('button')) {
+      return;
+    }
+    e.preventDefault();
+    pos3 = e.clientX;
+    pos4 = e.clientY;
+    document.onmouseup = closeDragElement;
+    document.onmousemove = elementDrag;
+  }
+
+  function dragTouchStart(e) {
+    if (e.target.tagName === 'BUTTON' || e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA' || e.target.closest('button')) {
+      return;
+    }
+    pos3 = e.touches[0].clientX;
+    pos4 = e.touches[0].clientY;
+    document.ontouchend = closeDragElement;
+    document.ontouchmove = elementTouchDrag;
+  }
+
+  function elementDrag(e) {
+    e = e || window.event;
+    e.preventDefault();
+    pos1 = pos3 - e.clientX;
+    pos2 = pos4 - e.clientY;
+    pos3 = e.clientX;
+    pos4 = e.clientY;
+
+    let currentX = parseFloat(overlay.dataset.dragX || '0');
+    let currentY = parseFloat(overlay.dataset.dragY || '0');
+
+    currentX -= pos1;
+    currentY -= pos2;
+
+    overlay.dataset.dragX = currentX.toString();
+    overlay.dataset.dragY = currentY.toString();
+
+    targetElement.style.transform = `translate(${currentX}px, ${currentY}px)`;
+  }
+
+  function elementTouchDrag(e) {
+    pos1 = pos3 - e.touches[0].clientX;
+    pos2 = pos4 - e.touches[0].clientY;
+    pos3 = e.touches[0].clientX;
+    pos4 = e.touches[0].clientY;
+
+    let currentX = parseFloat(overlay.dataset.dragX || '0');
+    let currentY = parseFloat(overlay.dataset.dragY || '0');
+
+    currentX -= pos1;
+    currentY -= pos2;
+
+    overlay.dataset.dragX = currentX.toString();
+    overlay.dataset.dragY = currentY.toString();
+
+    targetElement.style.transform = `translate(${currentX}px, ${currentY}px)`;
+  }
+
+  function closeDragElement() {
+    document.onmouseup = null;
+    document.onmousemove = null;
+    document.ontouchend = null;
+    document.ontouchmove = null;
+  }
+}
+
+function submitFinalOrder(e) {
+  if (e) e.preventDefault();
+  if (cart.length === 0) {
+    showToast('Cart is empty!');
+    return;
+  }
+
+  const name = document.getElementById('modalCheckoutName')?.value.trim();
+  const phone = document.getElementById('modalCheckoutPhone')?.value.trim();
+  const city = document.getElementById('modalCheckoutCity')?.value.trim();
+  const address = document.getElementById('modalCheckoutAddress')?.value.trim();
+
+  if (!name || !phone || !city || !address) {
+    showToast('Please fill in all shipping fields!');
     return;
   }
 
@@ -485,12 +1150,7 @@ function handleCheckout(event) {
   const siteData = getSiteData();
   if (!siteData.orders) siteData.orders = [];
 
-  const fullName = document.getElementById('checkoutName')?.value.trim() || 'Valued Customer';
-  const phone = document.getElementById('checkoutPhone')?.value.trim() || '+92 3XX XXXXXXX';
-  const city = document.getElementById('checkoutCity')?.value.trim() || 'Pakistan';
-  const address = document.getElementById('checkoutAddress')?.value.trim() || 'Delivery Address';
-
-  const subtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+  const subtotal = cart.reduce((sum, item) => sum + (item.price * item.qty), 0);
   const deliveryFee = subtotal >= (siteData.settings.freeDeliveryThreshold || 2000) ? 0 : (siteData.settings.deliveryFee || 200);
   const total = subtotal + deliveryFee;
 
@@ -499,11 +1159,12 @@ function handleCheckout(event) {
 
   const newOrder = {
     orderId: orderId,
-    customerName: fullName,
+    customerName: name,
     phone: phone,
     city: city,
     address: address,
-    items: cart.map(i => ({ name: i.name, weight: i.weight || '', qty: i.quantity, price: i.price })),
+    paymentMethod: selectedPaymentMethod,
+    items: cart.map(i => ({ name: i.name, weight: i.weight || '', qty: i.qty, price: i.price })),
     total: total,
     date: dateStr,
     status: "Order Received",
@@ -516,12 +1177,18 @@ function handleCheckout(event) {
 
   cart = [];
   saveCart();
-  
-  showToast(`🎉 Order Placed! Your Order ID is ${orderId}`);
+  closeCheckoutModal();
+
+  showToast(`🎉 Order Placed via ${selectedPaymentMethod}! Order ID: ${orderId}`);
 
   setTimeout(() => {
     window.location.href = `track-order.html?id=${orderId}`;
   }, 1200);
+}
+
+function handleCheckout(event) {
+  if (event) event.preventDefault();
+  openCheckoutModal();
 }
 
 // ---- ORDER TRACKING SEARCH & TIMELINE STEPPER ----
@@ -531,31 +1198,103 @@ function handleOrderTrackSearch(e) {
   const container = document.getElementById('orderTrackingResultContainer');
   if (!input || !container) return;
 
-  const query = input.value.trim().toUpperCase();
+  const raw = input.value.trim();
+  const query = raw.toUpperCase();
   if (!query) {
-    showToast('Please enter your Order ID!');
+    showToast('Please enter your Tracking / Order ID!');
     return;
   }
 
+  // ---- Check if it looks like a Pakistan Post / EP tracking number ----
+  // EP Post numbers typically start with letters like UMS, RR, CP, CZ, RA, EM, EA etc.
+  const epPattern = /^[A-Z]{2,3}\d{8,11}[A-Z]{0,2}$/i;
+  const isEPNumber = epPattern.test(query);
+
+  // ---- Search in Nutrivana local orders ----
   const siteData = getSiteData();
   const orders = siteData.orders || [];
   const found = orders.find(o => o.orderId.toUpperCase() === query);
 
-  if (!found) {
+  if (found) {
+    // Order found — show full timeline + EP Post button if tracking number exists
     container.style.display = 'block';
-    container.innerHTML = `
-      <div class="tracker-card text-center" style="padding: 40px 20px;">
-        <span style="font-size: 48px;">🔍</span>
-        <h3 style="color: #d90429; margin-top: 10px;">Order ID "${escapeHtml(query)}" Not Found</h3>
-        <p style="color: var(--gray); margin: 8px 0 20px;">Please check the Order ID on your receipt or SMS and try again.</p>
-        <p style="font-size: 13px;">Need assistance? <a href="https://wa.me/923347000322?text=Hi%20Nutrivana,%20I%20need%20help%20tracking%20Order%20${escapeHtml(query)}" target="_blank" style="color: var(--green-dark); font-weight: 700;">Chat with Us on WhatsApp (+92 334 7000322)</a></p>
-      </div>
-    `;
+    container.innerHTML = renderOrderTrackingTimeline(found);
     return;
   }
 
+  // ---- Not a local Nutrivana order ----
+  // If it looks like a Pakistan Post tracking number, redirect directly to EP Post
+  if (isEPNumber) {
+    // Open EP Post tracking in new tab with the tracking number
+    const epUrl = `https://ep.gov.pk/track.asp`;
+    container.style.display = 'block';
+    container.innerHTML = `
+      <div class="tracker-card" style="padding: 36px 28px; text-align: center; border-top: 4px solid var(--green-dark);">
+        <div style="font-size: 52px; margin-bottom: 12px;">📦</div>
+        <h3 style="color: var(--green-dark); font-size: 22px; margin-bottom: 8px;">Pakistan Post Tracking</h3>
+        <p style="color: var(--gray); margin-bottom: 6px; font-size: 15px;">
+          Tracking Number: <strong style="color: var(--green-dark); font-size: 17px; letter-spacing: 1px;">${escapeHtml(query)}</strong>
+        </p>
+        <p style="color: var(--gray); font-size: 13px; margin-bottom: 24px;">
+          Your parcel is being tracked through <strong>Pakistan Post (EP)</strong>.<br>
+          Click below to check live status on the official Pakistan Post website.
+        </p>
+        <a href="${epUrl}" target="_blank" rel="noopener noreferrer"
+          onclick="copyEPNumber('${escapeHtml(query)}')"
+          style="display: inline-flex; align-items: center; gap: 10px; background: var(--green-dark); color: var(--gold-light); font-weight: 700; padding: 14px 32px; border-radius: 50px; font-size: 16px; text-decoration: none; border: 2px solid var(--gold); transition: all 0.2s;"
+          onmouseover="this.style.background='var(--green-mid)'"
+          onmouseout="this.style.background='var(--green-dark)'"
+        >
+          🌐 Track on Pakistan Post (EP)
+        </a>
+        <div style="margin-top: 16px; padding: 12px 20px; background: rgba(201,168,76,0.12); border: 1px dashed rgba(201,168,76,0.5); border-radius: 10px; font-size: 13px; color: var(--gray);">
+          💡 <strong>How to track:</strong> Click the button above → Pakistan Post website will open → Enter <strong>${escapeHtml(query)}</strong> in the tracking field → Click Track
+        </div>
+        <div style="margin-top: 20px;">
+          <a href="https://wa.me/923347000322?text=Hi%20Nutrivana,%20please%20help%20me%20track%20my%20parcel:%20${escapeHtml(query)}" target="_blank" style="color: var(--green-dark); font-weight: 600; font-size: 13px; text-decoration: none;">
+            💬 Need help? Chat on WhatsApp
+          </a>
+        </div>
+      </div>
+    `;
+    // Copy number to clipboard automatically so user can paste on EP site
+    if (navigator.clipboard) {
+      navigator.clipboard.writeText(query).then(() => {
+        showToast('✅ Tracking number copied! Paste it on Pakistan Post site.');
+      }).catch(() => {});
+    }
+    return;
+  }
+
+  // ---- Generic not found ----
   container.style.display = 'block';
-  container.innerHTML = renderOrderTrackingTimeline(found);
+  container.innerHTML = `
+    <div class="tracker-card text-center" style="padding: 40px 20px;">
+      <span style="font-size: 48px;">🔍</span>
+      <h3 style="color: #d90429; margin-top: 10px;">ID "${escapeHtml(query)}" Not Found</h3>
+      <p style="color: var(--gray); margin: 8px 0 12px;">Please check the Order ID on your receipt or SMS and try again.</p>
+      <div style="display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; margin-top: 16px;">
+        <a href="https://ep.gov.pk/track.asp" target="_blank" rel="noopener noreferrer"
+          onclick="copyEPNumber('${escapeHtml(query)}')"
+          style="display: inline-flex; align-items: center; gap: 8px; background: var(--green-dark); color: var(--gold-light); font-weight: 700; padding: 12px 24px; border-radius: 50px; font-size: 14px; text-decoration: none; border: 2px solid var(--gold);">
+          🌐 Track via Pakistan Post (EP)
+        </a>
+        <a href="https://wa.me/923347000322?text=Hi%20Nutrivana,%20I%20need%20help%20tracking:%20${escapeHtml(query)}" target="_blank"
+          style="display: inline-flex; align-items: center; gap: 8px; background: transparent; color: var(--green-dark); font-weight: 700; padding: 12px 24px; border-radius: 50px; font-size: 14px; text-decoration: none; border: 2px solid var(--green-dark);">
+          💬 WhatsApp Support
+        </a>
+      </div>
+    </div>
+  `;
+}
+
+// Helper: copy EP tracking number to clipboard
+function copyEPNumber(num) {
+  if (navigator.clipboard) {
+    navigator.clipboard.writeText(num).then(() => {
+      showToast('✅ Tracking number copied! Paste it on Pakistan Post site.');
+    }).catch(() => {});
+  }
 }
 
 function renderOrderTrackingTimeline(order) {
@@ -572,6 +1311,25 @@ function renderOrderTrackingTimeline(order) {
   const currentIdx = steps.findIndex(s => s.title.toLowerCase() === (order.status || '').toLowerCase());
   const activeIdx = currentIdx !== -1 ? currentIdx : 0;
   const progressPercent = (activeIdx / (steps.length - 1)) * 100;
+
+  // Check if EP Post tracking number is available
+  const hasEPNum = order.trackingNum && order.trackingNum !== 'Pending' && order.trackingNum.trim() !== '';
+  const epTrackBtn = hasEPNum ? `
+    <div style="margin-top: 16px; padding: 16px 20px; background: rgba(201,168,76,0.1); border: 1px solid rgba(201,168,76,0.4); border-radius: 12px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px;">
+      <div>
+        <p style="margin: 0 0 4px; font-size: 13px; color: var(--gray); text-transform: uppercase; letter-spacing: 0.05em;">Pakistan Post (EP) Tracking</p>
+        <p style="margin: 0; font-weight: 700; font-size: 17px; color: var(--green-dark); letter-spacing: 1px;">${order.trackingNum}</p>
+      </div>
+      <a href="https://ep.gov.pk/track.asp" target="_blank" rel="noopener noreferrer"
+        onclick="copyEPNumber('${order.trackingNum}')"
+        style="display: inline-flex; align-items: center; gap: 8px; background: var(--green-dark); color: var(--gold-light); font-weight: 700; padding: 12px 22px; border-radius: 50px; font-size: 14px; text-decoration: none; border: 2px solid var(--gold); white-space: nowrap;"
+        onmouseover="this.style.opacity='0.85'"
+        onmouseout="this.style.opacity='1'"
+      >
+        🌐 Track on Pakistan Post
+      </a>
+    </div>
+  ` : '';
 
   return `
     <div class="tracker-card reveal" style="animation: fadeIn 0.4s ease;">
@@ -615,11 +1373,14 @@ function renderOrderTrackingTimeline(order) {
         </div>
         <div>
           <h4 style="font-size: 13px; text-transform: uppercase; letter-spacing:0.05em; color: var(--green-dark); margin-bottom: 8px;">Shipping &amp; Logistics</h4>
-          <p style="margin: 0 0 4px; font-size: 14px;"><strong>Courier Partner:</strong> ${order.courier || 'TCS Express'}</p>
+          <p style="margin: 0 0 4px; font-size: 14px;"><strong>Courier Partner:</strong> ${order.courier || 'Pakistan Post (EP)'}</p>
           <p style="margin: 0 0 4px; font-size: 14px;"><strong>Tracking No:</strong> ${order.trackingNum || 'Pending'}</p>
           <p style="margin: 0; font-size: 14px;"><strong>Order Total:</strong> Rs. ${order.total}</p>
         </div>
       </div>
+
+      <!-- EP Post Track Button (only if tracking number assigned) -->
+      ${epTrackBtn}
 
       <div style="margin-top: 20px; text-align: center;">
         <a href="https://wa.me/923347000322?text=Hi%20Nutrivana,%20I%20am%20checking%20status%20for%20my%20Order%20ID:%20${order.orderId}" target="_blank" class="btn btn-outline btn-sm">
@@ -697,13 +1458,19 @@ function syncDynamicContent() {
   // 2. Hero Banners Sync
   const heroSlidesContainer = document.getElementById('heroSlides');
   if (heroSlidesContainer && data.banners && data.banners.length > 0) {
-    heroSlidesContainer.innerHTML = data.banners.map((b, i) => `
-      <a href="${b.link}" class="hero-slide ${i === 0 ? 'active' : ''}" style="background-image: url('${b.image}');" aria-label="${b.title}">
-        <div class="hero-banner-overlay">
-          <span class="btn btn-primary hero-btn">${b.btnText || 'Shop Now →'}</span>
-        </div>
-      </a>
-    `).join('');
+    heroSlidesContainer.innerHTML = data.banners.map((b, i) => {
+      const bgPos = b.bgPos || '50% 50%';
+      const link = b.link || 'products.html';
+      const title = (b.title || 'Banner').replace(/"/g, '&quot;');
+      const btnText = b.btnText || 'Shop Now →';
+      return `
+        <a href="${link}" class="hero-slide ${i === 0 ? 'active' : ''}" style="background-image: url('${b.image}'); background-position: ${bgPos};" aria-label="${title}">
+          <div class="hero-banner-overlay">
+            <span class="btn btn-primary hero-btn">${btnText}</span>
+          </div>
+        </a>
+      `;
+    }).join('');
 
     const sliderDots = document.getElementById('sliderDots');
     if (sliderDots) {
@@ -712,6 +1479,7 @@ function syncDynamicContent() {
       `).join('');
     }
   }
+
 
   // 3. Products Page Dynamic Rendering
   const productsPageContainer = document.getElementById('dynamicProductsContainer');

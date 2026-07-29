@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Product Detail | Nutrivana Organic Superfoods</title>
+  <meta name="description" content="View full product details, images, benefits and buy premium organic superfoods from Nutrivana." />
+  <link rel="icon" href="Image/Favicon.png" type="image/png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/style.css?v=2.0" />
+  <style>
+    .pd-section{padding:48px 0 100px}.pd-breadcrumb{font-size:13px;color:var(--gray);margin-bottom:32px;display:flex;align-items:center;gap:6px;flex-wrap:wrap}.pd-breadcrumb a{color:var(--green-dark);text-decoration:none;font-weight:500}.pd-breadcrumb a:hover{text-decoration:underline}.pd-grid{display:grid;grid-template-columns:1fr 1fr;gap:56px;align-items:start}@media(max-width:860px){.pd-grid{grid-template-columns:1fr;gap:32px}}.pd-gallery{position:sticky;top:100px}.pd-main-img-wrap{border-radius:20px;overflow:hidden;background:var(--cream);border:1px solid var(--cream-dark);margin-bottom:14px;aspect-ratio:1/1;display:flex;align-items:center;justify-content:center}.pd-main-img-wrap img{width:100%;height:100%;object-fit:cover;transition:transform .4s ease}.pd-main-img-wrap img:hover{transform:scale(1.04)}.pd-thumbs{display:flex;gap:10px;flex-wrap:wrap}.pd-thumb{width:72px;height:72px;border-radius:12px;overflow:hidden;cursor:pointer;border:2px solid transparent;transition:border-color .2s,transform .2s;background:var(--cream);flex-shrink:0}.pd-thumb img{width:100%;height:100%;object-fit:cover}.pd-thumb.active{border-color:var(--green-dark)}.pd-thumb:hover{transform:scale(1.05);border-color:var(--gold)}.pd-video-thumb{width:72px;height:72px;border-radius:12px;cursor:pointer;border:2px solid transparent;transition:border-color .2s,transform .2s;background:var(--green-dark);flex-shrink:0;display:flex;align-items:center;justify-content:center}.pd-video-thumb:hover{border-color:var(--gold);transform:scale(1.05)}.pd-video-wrap{border-radius:20px;overflow:hidden;background:#000;border:1px solid var(--cream-dark);margin-bottom:14px;aspect-ratio:1/1;display:none;align-items:center;justify-content:center}.pd-video-wrap iframe{width:100%;height:100%;border:none}.pd-info{display:flex;flex-direction:column;gap:0}.pd-badge{display:inline-block;background:var(--green-dark);color:var(--gold-light);font-size:11px;font-weight:700;padding:4px 12px;border-radius:50px;letter-spacing:.08em;text-transform:uppercase;margin-bottom:12px}.pd-title{font-family:var(--font-heading);font-size:32px;color:var(--green-dark);margin:0 0 10px;line-height:1.2}.pd-rating-row{display:flex;align-items:center;gap:10px;margin-bottom:16px}.pd-stars{color:var(--gold);font-size:18px;letter-spacing:2px}.pd-review-count{font-size:13px;color:var(--gray)}.pd-price-row{display:flex;align-items:center;gap:12px;margin-bottom:20px;flex-wrap:wrap}.pd-price-sale{font-size:28px;font-weight:700;color:var(--green-dark)}.pd-price-orig{font-size:18px;color:var(--gray);text-decoration:line-through}.pd-save-badge{background:rgba(45,106,79,.12);color:var(--green);padding:4px 12px;border-radius:50px;font-size:12px;font-weight:700}.pd-tags{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:20px}.pd-tag{background:var(--cream);border:1px solid var(--cream-dark);color:var(--green-dark);padding:5px 13px;border-radius:50px;font-size:13px;font-weight:500}.pd-label{font-size:13px;font-weight:600;color:var(--green-dark);text-transform:uppercase;letter-spacing:.05em;margin-bottom:10px}.pd-weights{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:24px}.pd-weight-btn{padding:8px 20px;border-radius:50px;border:2px solid var(--cream-dark);background:transparent;color:var(--text);font-size:14px;font-weight:600;cursor:pointer;transition:all .2s}.pd-weight-btn:hover{border-color:var(--green-dark);color:var(--green-dark)}.pd-weight-btn.active{border-color:var(--green-dark);background:var(--green-dark);color:var(--white)}.pd-qty-row{display:flex;align-items:center;gap:16px;margin-bottom:20px;flex-wrap:wrap}.pd-qty{display:flex;align-items:center;border:2px solid var(--cream-dark);border-radius:50px;overflow:hidden}.pd-qty-btn{width:40px;height:40px;background:none;border:none;font-size:20px;cursor:pointer;color:var(--green-dark);transition:background .2s}.pd-qty-btn:hover{background:var(--cream)}.pd-qty-num{width:40px;text-align:center;font-weight:700;font-size:16px}.pd-cta-row{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:28px}.pd-cta-row .btn{flex:1;min-width:140px;padding:15px 20px;font-size:15px}.pd-delivery{background:var(--cream);border-radius:14px;padding:14px 18px;margin-bottom:24px;display:flex;gap:16px;flex-wrap:wrap}.pd-delivery-item{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--text)}.pd-delivery-item strong{color:var(--green-dark)}.pd-accordion{border-top:1px solid var(--cream-dark)}.pd-acc-item{border-bottom:1px solid var(--cream-dark)}.pd-acc-btn{width:100%;background:none;border:none;text-align:left;padding:16px 0;font-size:15px;font-weight:600;color:var(--green-dark);cursor:pointer;display:flex;justify-content:space-between;align-items:center;font-family:var(--font-body);transition:color .2s}.pd-acc-btn:hover{color:var(--gold)}.pd-acc-icon{font-size:20px;flex-shrink:0}.pd-acc-content{max-height:0;overflow:hidden;transition:max-height .35s ease}.pd-acc-content.open{max-height:600px}.pd-acc-inner{padding:4px 0 20px;font-size:14px;line-height:1.9;color:var(--gray)}.pd-acc-inner ul{padding-left:18px;margin:0}.pd-acc-inner li{margin-bottom:6px}.pd-reviews-avg{font-size:52px;font-weight:700;color:var(--green-dark);line-height:1}.pd-bar-row{display:flex;align-items:center;gap:8px;margin-bottom:4px;font-size:12px}.pd-bar-track{flex:1;height:6px;background:var(--cream-dark);border-radius:99px;overflow:hidden}.pd-bar-fill{height:100%;background:var(--gold);border-radius:99px}.pd-review-cards{display:flex;flex-direction:column;gap:16px}.pd-review-card{background:var(--cream);border-radius:14px;padding:20px;border:1px solid var(--cream-dark)}.pd-reviewer{display:flex;align-items:center;gap:10px;margin-bottom:8px}.pd-avatar{width:38px;height:38px;border-radius:50%;background:var(--green-dark);color:var(--gold-light);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:14px;flex-shrink:0}.pd-reviewer-name{font-weight:600;font-size:14px;color:var(--text)}.pd-reviewer-date{font-size:12px;color:var(--gray)}.pd-review-stars{color:var(--gold);font-size:13px;margin-bottom:6px}.pd-review-text{font-size:14px;color:var(--gray);line-height:1.7}.pd-related-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:20px;margin-top:24px}.pd-related-card{background:var(--white);border-radius:16px;overflow:hidden;border:1px solid var(--cream-dark);cursor:pointer;transition:transform .25s,box-shadow .25s;text-decoration:none;display:block}.pd-related-card:hover{transform:translateY(-4px);box-shadow:0 12px 32px rgba(0,0,0,.1)}.pd-related-img{width:100%;aspect-ratio:1/1;object-fit:cover}.pd-related-info{padding:14px}.pd-related-name{font-weight:600;font-size:14px;color:var(--green-dark);margin-bottom:4px}.pd-related-price{font-size:14px;font-weight:700;color:var(--text)}
+  </style>
+</head>
+<body>
+  <div class="announcement-bar" id="announcementBar">
+    <div class="announcement-track">
+      <span>🌿 FREE DELIVERY on orders above Rs. 2000 &nbsp;&nbsp;|&nbsp;&nbsp; 🍯 100% Pure &amp; Natural &nbsp;&nbsp;|&nbsp;&nbsp; ⭐ 500+ Happy Customers</span>
+    </div>
+  </div>
+  <header class="site-header" id="siteHeader">
+    <div class="header-inner">
+      <nav class="header-nav left-nav">
+        <a href="index.html" class="nav-link">Home</a>
+        <a href="products.html" class="nav-link active">Products</a>
+        <a href="track-order.html" class="nav-link">Track Order</a>
+        <a href="contact.html" class="nav-link">Contact Us</a>
+      </nav>
+      <a href="index.html" class="logo-link"><img src="Image/Logo.svg" alt="Nutrivana Logo" class="site-logo" /></a>
+      <div class="header-actions">
+        <button class="icon-btn" id="searchBtn" aria-label="Search">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        </button>
+        <a href="cart.html" class="icon-btn cart-btn" aria-label="Cart">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+          <span class="cart-count" id="cartCount">0</span>
+        </a>
+        <button class="mobile-menu-btn" id="mobileMenuBtn" aria-label="Menu"><span></span><span></span><span></span></button>
+      </div>
+    </div>
+    <nav class="mobile-nav" id="mobileNav">
+      <a href="index.html" class="mobile-nav-link">Home</a>
+      <a href="products.html" class="mobile-nav-link">Products</a>
+      <a href="track-order.html" class="mobile-nav-link">Track Order</a>
+      <a href="contact.html" class="mobile-nav-link">Contact Us</a>
+      <a href="cart.html" class="mobile-nav-link">Cart</a>
+    </nav>
+  </header>
+  <div class="search-overlay" id="searchOverlay">
+    <div class="search-box">
+      <input type="text" placeholder="Search products..." id="searchInput" class="search-input" />
+      <button class="search-close" id="searchClose">&#x2715;</button>
+    </div>
+  </div>
+
+  <main>
+    <section class="pd-section">
+      <div class="container">
+        <div class="pd-breadcrumb">
+          <a href="index.html">Home</a><span>&#x203A;</span>
+          <a href="products.html">Products</a><span>&#x203A;</span>
+          <span id="pdBreadcrumbName">Product</span>
+        </div>
+        <div class="pd-grid">
+          <div class="pd-gallery">
+            <div class="pd-main-img-wrap" id="pdMainImgWrap"><img src="" alt="" id="pdMainImg" /></div>
+            <div class="pd-video-wrap" id="pdVideoWrap"><iframe id="pdVideoFrame" src="" allowfullscreen allow="autoplay"></iframe></div>
+            <div class="pd-thumbs" id="pdThumbs"></div>
+          </div>
+          <div class="pd-info">
+            <span class="pd-badge" id="pdBadge">BESTSELLER</span>
+            <h1 class="pd-title" id="pdTitle">Loading...</h1>
+            <div class="pd-rating-row">
+              <span class="pd-stars" id="pdStars">&#x2605;&#x2605;&#x2605;&#x2605;&#x2605;</span>
+              <span class="pd-review-count" id="pdReviewCount">(0 reviews)</span>
+            </div>
+            <div class="pd-price-row">
+              <span class="pd-price-sale" id="pdPriceSale">Rs. 0</span>
+              <span class="pd-price-orig" id="pdPriceOrig"></span>
+              <span class="pd-save-badge" id="pdSaveBadge"></span>
+            </div>
+            <div class="pd-tags" id="pdTags"></div>
+            <div id="pdWeightSection">
+              <p class="pd-label">Select Size</p>
+              <div class="pd-weights" id="pdWeights"></div>
+            </div>
+            <div class="pd-qty-row">
+              <p class="pd-label" style="margin:0;">Quantity</p>
+              <div class="pd-qty">
+                <button class="pd-qty-btn" onclick="pdChangeQty(-1)">&#x2212;</button>
+                <span class="pd-qty-num" id="pdQtyNum">1</span>
+                <button class="pd-qty-btn" onclick="pdChangeQty(1)">+</button>
+              </div>
+            </div>
+            <div class="pd-cta-row">
+              <button class="btn btn-primary btn-lg" id="pdAddCart">&#x1F6D2; Add to Cart</button>
+              <button class="btn btn-gold btn-lg" id="pdBuyNow">&#x26A1; Buy Now</button>
+            </div>
+            <div class="pd-delivery">
+              <div class="pd-delivery-item">&#x1F69A; <span><strong>Free delivery</strong> on orders above Rs. 2000</span></div>
+              <div class="pd-delivery-item">&#x2705; <span><strong>100% Authentic</strong> &mdash; direct from source</span></div>
+              <div class="pd-delivery-item">&#x1F504; <span><strong>Easy returns</strong> within 7 days</span></div>
+            </div>
+            <div class="pd-accordion">
+              <div class="pd-acc-item">
+                <button class="pd-acc-btn" onclick="toggleAcc(this)"><span>&#x1F4CB; What It Is</span><span class="pd-acc-icon">+</span></button>
+                <div class="pd-acc-content"><div class="pd-acc-inner" id="pdAccDescription">&#x2014;</div></div>
+              </div>
+              <div class="pd-acc-item">
+                <button class="pd-acc-btn" onclick="toggleAcc(this)"><span>&#x1F49A; Benefits</span><span class="pd-acc-icon">+</span></button>
+                <div class="pd-acc-content"><div class="pd-acc-inner" id="pdAccBenefits">&#x2014;</div></div>
+              </div>
+              <div class="pd-acc-item">
+                <button class="pd-acc-btn" onclick="toggleAcc(this)"><span>&#x1F4D6; How to Use</span><span class="pd-acc-icon">+</span></button>
+                <div class="pd-acc-content"><div class="pd-acc-inner" id="pdAccHowTo">&#x2014;</div></div>
+              </div>
+              <div class="pd-acc-item">
+                <button class="pd-acc-btn" onclick="toggleAcc(this)"><span>&#x1F33E; Ingredients</span><span class="pd-acc-icon">+</span></button>
+                <div class="pd-acc-content"><div class="pd-acc-inner" id="pdAccIngredients">&#x2014;</div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div style="margin-top:64px;">
+          <h2 style="font-family:var(--font-heading);color:var(--green-dark);font-size:26px;margin-bottom:24px;">Customer Reviews</h2>
+          <div style="display:flex;align-items:flex-start;gap:40px;flex-wrap:wrap;background:var(--cream);padding:28px;border-radius:18px;border:1px solid var(--cream-dark);margin-bottom:28px;">
+            <div style="text-align:center;">
+              <div class="pd-reviews-avg" id="pdAvgRating">4.8</div>
+              <div style="color:var(--gold);font-size:20px;margin:4px 0;" id="pdAvgStars">&#x2605;&#x2605;&#x2605;&#x2605;&#x2605;</div>
+              <div style="font-size:13px;color:var(--gray);" id="pdTotalReviews">Based on reviews</div>
+            </div>
+            <div style="flex:1;max-width:260px;" id="pdReviewBars"></div>
+          </div>
+          <div class="pd-review-cards" id="pdReviewCards"></div>
+        </div>
+
+        <div style="margin-top:64px;">
+          <h2 style="font-family:var(--font-heading);color:var(--green-dark);font-size:26px;">You May Also Like</h2>
+          <div class="pd-related-grid" id="pdRelatedGrid"></div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <img src="Image/Logo.svg" alt="Nutrivana" class="footer-logo" />
+          <p>Pure. Natural. Nourishing. &mdash; Your trusted source for premium organic superfoods.</p>
+          <div class="social-links">
+            <a href="https://www.facebook.com/share/14dvm677pu6/" target="_blank" rel="noopener noreferrer" class="social-link" aria-label="Facebook">
+              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M18 2h-3a5 5 0 00-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 011-1h3z"/></svg>
+            </a>
+            <a href="https://www.instagram.com/nutrivanaa.official?igsh=MWJiY3F4MHZkcW9oaw==" target="_blank" rel="noopener noreferrer" class="social-link" aria-label="Instagram">
+              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1112.63 8 4 4 0 0116 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
+            </a>
+          </div>
+        </div>
+        <div class="footer-links">
+          <h4>Quick Links</h4>
+          <ul>
+            <li><a href="index.html">Home</a></li>
+            <li><a href="products.html">Products</a></li>
+            <li><a href="track-order.html">Track Order</a></li>
+            <li><a href="cart.html">Cart</a></li>
+            <li><a href="contact.html">Contact Us</a></li>
+          </ul>
+        </div>
+        <div class="footer-links">
+          <h4>Policies</h4>
+          <ul>
+            <li><a href="terms-of-service.html">Terms of Service</a></li>
+            <li><a href="privacy-policy.html">Privacy Policy</a></li>
+            <li><a href="refund-policy.html">Refund Policy</a></li>
+          </ul>
+        </div>
+        <div class="footer-links">
+          <h4>Contact</h4>
+          <ul class="footer-contact-list">
+            <li class="footer-contact-item">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--gold-light)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="footer-contact-icon"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+              <span>Pakistan</span>
+            </li>
+            <li class="footer-contact-item">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--gold-light)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="footer-contact-icon"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+              <a href="tel:+923347000322" style="color: inherit; text-decoration: none;">+92 334 7000322</a>
+            </li>
+            <li class="footer-contact-item">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--gold-light)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="footer-contact-icon"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+              <a href="mailto:nutrivanaa.official@gmail.com" style="color: inherit; text-decoration: none;">nutrivanaa.official@gmail.com</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>&copy; 2026 Nutrivana. All rights reserved.</p>
+        <div class="payment-methods">
+          <div class="payment-badge" onclick="openPaymentModal('raast')" title="Raast Instant Transfer">
+            <img src="Image/raast.jpg" alt="Raast" />
+          </div>
+          <div class="payment-badge" onclick="openPaymentModal('jazzcash')" title="JazzCash Mobile Wallet">
+            <img src="Image/JazzCash.jpg" alt="JazzCash" />
+          </div>
+          <div class="payment-badge" onclick="openPaymentModal('easypaisa')" title="EasyPaisa Mobile Wallet">
+            <img src="Image/easypaisa.jpg" alt="EasyPaisa" />
+          </div>
+          <div class="payment-badge" onclick="openPaymentModal('cod')" title="Cash on Delivery">
+            <img src="Image/COD.jpg" alt="Cash on Delivery" />
+          </div>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <div class="toast" id="toast"></div>
+  <div class="floating-widgets-group" id="floatingWidgetsGroup">
+    <button class="back-to-top-btn" id="backToTopBtn" onclick="scrollToTop()" title="Back to top" aria-label="Back to Top">
+      <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/></svg>
+    </button>
+    <a href="https://wa.me/923347000322" class="whatsapp-float-btn" target="_blank" rel="noopener noreferrer" aria-label="Chat on WhatsApp">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+    </a>
+  </div>
+
+  <script src="js/main.js?v=2.0"></script>
+  <script>
+  // ===== LIVE DATA FROM ADMIN (localStorage) =====
+  function getLiveProducts(){
+    var siteData = getSiteData(); // from main.js
+    var liveMap = {};
+    (siteData.products||[]).forEach(function(p){
+      // Map admin format -> detail page format
+      var ws = (p.weights&&p.weights.length) ? p.weights.map(function(w){
+        var origPrice = Math.round((w.price||p.price||0)*1.22); // ~22% markup as original
+        return {label:w.label, price:w.price||p.price||0, orig:w.orig||origPrice};
+      }) : [{label:'Standard',price:p.price||0,orig:Math.round((p.price||0)*1.22)}];
+
+      var starsFull = Math.round(p.rating||5);
+      var starsStr = '★'.repeat(starsFull)+'☆'.repeat(5-starsFull);
+
+      // Build benefits/howToUse/ingredients from admin fields
+      var benefitsHtml = '';
+      if(p.details&&p.details.length){
+        benefitsHtml='<ul>'+p.details.map(function(d){return'<li>✅ '+d+'</li>';}).join('')+'</ul>';
+      }
+      var howToHtml = p.instructions ? '<p>'+p.instructions.replace(/\n/g,'<br>')+'</p>' : '';
+
+      liveMap[p.id] = {
+        id: p.id,
+        name: p.name||'Product',
+        badge: p.tag||'',
+        stars: starsStr,
+        reviewCount: p.reviewsCount||p.rating||0,
+        avgRating: p.rating||5,
+        images: p.images||[p.image||'Image/Favicon.png'],
+        videoUrl: p.videoUrl||'',
+        tags: p.badgeItems||[],
+        weights: ws,
+        description: p.description||'',
+        benefits: benefitsHtml,
+        howToUse: howToHtml,
+        ingredients: p.ingredients||'',
+        reviews: p.reviews||[],
+        ratingBars: p.ratingBars||{5:80,4:12,3:5,2:2,1:1}
+      };
+    });
+    return liveMap;
+  }
+
+  var PRODUCTS = getLiveProducts();
+  var currentProduct=null,selectedQty=1,selectedWeightIdx=0;
+  document.addEventListener('DOMContentLoaded',function(){
+    PRODUCTS = getLiveProducts(); // refresh from localStorage on load
+    var p=new URLSearchParams(window.location.search).get('id')||'talbina';
+    loadProduct(p);
+  });
+  function getSelectedWeight(){return currentProduct.weights[selectedWeightIdx];}
+  function updatePriceDisplay(){
+    var w=getSelectedWeight(),total=w.price*selectedQty;
+    var orig = w.orig ? w.orig*selectedQty : 0;
+    var ps=document.getElementById('pdPriceSale'),po=document.getElementById('pdPriceOrig'),pb=document.getElementById('pdSaveBadge');
+    ps.style.transition='all 0.2s';ps.style.transform='scale(1.08)';ps.style.color='var(--green-dark)';
+    setTimeout(function(){ps.style.transform='scale(1)';},200);
+    ps.textContent='Rs. '+total.toLocaleString();
+    if(orig && orig>total){
+      var savePct=Math.round(((orig-total)/orig)*100);
+      po.textContent='Rs. '+orig.toLocaleString();
+      pb.textContent='Save '+savePct+'%';
+    } else {
+      po.textContent='';
+      pb.textContent='';
+    }
+    document.getElementById('pdQtyNum').textContent=selectedQty;
+  }
+  function loadProduct(id){var p=PRODUCTS[id];if(!p)return;currentProduct=p;selectedQty=1;selectedWeightIdx=0;
+    document.title=p.name+' | Nutrivana Organic Superfoods';
+    document.getElementById('pdBreadcrumbName').textContent=p.name;
+    document.getElementById('pdBadge').textContent=p.badge;
+    document.getElementById('pdTitle').textContent=p.name;
+    document.getElementById('pdStars').textContent=p.stars;
+    document.getElementById('pdReviewCount').textContent='('+p.reviewCount+' reviews)';
+    document.getElementById('pdQtyNum').textContent=1;
+    document.getElementById('pdTags').innerHTML=p.tags.map(function(t){return'<span class="pd-tag">'+t+'</span>';}).join('');
+    // Build weight buttons
+    document.getElementById('pdWeights').innerHTML=p.weights.map(function(w,i){
+      return '<button class="pd-weight-btn'+(i===0?' active':'')+'" onclick="selectPdWeight(this,'+i+')" data-idx="'+i+'">'+w.label+'</button>';
+    }).join('');
+    buildGallery(p);
+    document.getElementById('pdAccDescription').innerHTML=p.description;
+    document.getElementById('pdAccBenefits').innerHTML=p.benefits;
+    document.getElementById('pdAccHowTo').innerHTML=p.howToUse;
+    document.getElementById('pdAccIngredients').innerHTML=p.ingredients;
+    updatePriceDisplay();
+    buildReviews(p);buildRelated(id);
+    document.getElementById('pdAddCart').onclick=function(){var w=getSelectedWeight();addProductToCart(p.name+' '+w.label,w.price*selectedQty,p.images[0],p.id);};
+    document.getElementById('pdBuyNow').onclick=function(){var w=getSelectedWeight();addProductToCart(p.name+' '+w.label,w.price*selectedQty,p.images[0],p.id);window.location='cart.html';};
+  }
+  function buildGallery(p){
+    var mi=document.getElementById('pdMainImg'),mw=document.getElementById('pdMainImgWrap'),vw=document.getElementById('pdVideoWrap'),te=document.getElementById('pdThumbs');
+    mi.src=p.images[0];mi.alt=p.name;mw.style.display='flex';vw.style.display='none';
+    var h=p.images.map(function(img,i){return'<div class="pd-thumb'+(i===0?' active':'')+'" onclick="selectPdImage('+i+')"><img src="'+img+'" alt="'+p.name+' '+(i+1)+'" loading="lazy" /></div>';}).join('');
+    if(p.videoUrl)h+='<div class="pd-video-thumb" onclick="showPdVideo()" title="Play Video"><span style="font-size:24px;">&#x25B6;&#xFE0F;</span></div>';
+    te.innerHTML=h;
+  }
+  function selectPdImage(idx){
+    document.getElementById('pdMainImg').src=currentProduct.images[idx];
+    document.getElementById('pdMainImgWrap').style.display='flex';
+    document.getElementById('pdVideoWrap').style.display='none';
+    document.querySelectorAll('.pd-thumb').forEach(function(el,i){el.classList.toggle('active',i===idx);});
+  }
+  function showPdVideo(){
+    if(!currentProduct.videoUrl)return;
+    document.getElementById('pdVideoFrame').src=currentProduct.videoUrl;
+    document.getElementById('pdMainImgWrap').style.display='none';
+    document.getElementById('pdVideoWrap').style.display='flex';
+    document.querySelectorAll('.pd-thumb').forEach(function(el){el.classList.remove('active');});
+  }
+  function selectPdWeight(btn,idx){
+    selectedWeightIdx=idx;
+    document.querySelectorAll('.pd-weight-btn').forEach(function(b){b.classList.remove('active');});
+    btn.classList.add('active');
+    updatePriceDisplay();
+  }
+  function pdChangeQty(delta){
+    selectedQty=Math.max(1,selectedQty+delta);
+    updatePriceDisplay();
+  }
+  function buildReviews(p){
+    document.getElementById('pdAvgRating').textContent=p.avgRating.toFixed(1);
+    var sc=Math.round(p.avgRating);
+    document.getElementById('pdAvgStars').textContent='★'.repeat(sc)+'☆'.repeat(5-sc);
+    document.getElementById('pdTotalReviews').textContent='Based on '+p.reviewCount+' reviews';
+    document.getElementById('pdReviewBars').innerHTML=[5,4,3,2,1].map(function(s){return'<div class="pd-bar-row"><span style="width:14px;color:var(--gold);">'+s+'★</span><div class="pd-bar-track"><div class="pd-bar-fill" style="width:'+(p.ratingBars[s]||0)+'%"></div></div><span style="width:28px;color:var(--gray);">'+(p.ratingBars[s]||0)+'%</span></div>';}).join('');
+    document.getElementById('pdReviewCards').innerHTML=p.reviews.map(function(r){return'<div class="pd-review-card"><div class="pd-reviewer"><div class="pd-avatar">'+r.name.charAt(0)+'</div><div><div class="pd-reviewer-name">'+r.name+'</div><div class="pd-reviewer-date">'+r.date+'</div></div></div><div class="pd-review-stars">'+'★'.repeat(r.rating)+'☆'.repeat(5-r.rating)+'</div><p class="pd-review-text">'+r.text+'</p></div>';}).join('');
+  }
+  function buildRelated(currentId){
+    var allProds = Object.values(PRODUCTS).filter(function(p){return p.id!==currentId;});
+    document.getElementById('pdRelatedGrid').innerHTML=allProds.map(function(p){
+      var price = p.weights&&p.weights.length ? p.weights[0].price : 0;
+      return '<a class="pd-related-card" href="product-detail.html?id='+p.id+'">'+
+        '<img class="pd-related-img" src="'+p.images[0]+'" alt="'+p.name+'" loading="lazy" />'+
+        '<div class="pd-related-info"><div class="pd-related-name">'+p.name+'</div>'+
+        '<div class="pd-related-price">Rs. '+price.toLocaleString()+'</div></div></a>';
+    }).join('');
+  }
+  function toggleAcc(btn){
+    var content=btn.nextElementSibling,icon=btn.querySelector('.pd-acc-icon'),isOpen=content.classList.contains('open');
+    document.querySelectorAll('.pd-acc-content').forEach(function(c){c.classList.remove('open');});
+    document.querySelectorAll('.pd-acc-icon').forEach(function(i){i.textContent='+';});
+    if(!isOpen){content.classList.add('open');icon.textContent='−';}
+  }
+  </script>
+</body>
+</html>
