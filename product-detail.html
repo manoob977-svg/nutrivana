@@ -288,21 +288,16 @@
     setTimeout(function(){ps.style.transform='scale(1)';},200);
     ps.textContent='Rs. '+total.toLocaleString();
     if(origTotal && origTotal > total){
-      var saveAmt = origTotal - total;
       po.style.display = 'inline';
       po.style.color = '#d90429';
       po.style.textDecoration = 'line-through';
       po.textContent = 'Rs. ' + origTotal.toLocaleString();
 
-      pb.style.display = 'inline-block';
-      pb.style.background = 'rgba(217,4,41,0.1)';
-      pb.style.color = '#d90429';
-      pb.textContent = 'Save Rs. ' + saveAmt.toLocaleString();
+      if(pb) { pb.style.display = 'none'; pb.textContent = ''; }
     } else {
       po.style.display = 'none';
       po.textContent = '';
-      pb.style.display = 'none';
-      pb.textContent = '';
+      if(pb) { pb.style.display = 'none'; pb.textContent = ''; }
     }
     document.getElementById('pdQtyNum').textContent=selectedQty;
   }

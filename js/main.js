@@ -357,7 +357,6 @@ function syncDynamicContent() {
             <div class="product-price" style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
               <span class="price-original" style="text-decoration: line-through; color: #d90429; font-size: 13px; font-weight: 500;">Rs. ${origPrice.toLocaleString()}</span>
               <span class="price-sale" style="font-weight: 700; color: var(--green-dark); font-size: 17px;">Rs. ${salePrice.toLocaleString()}</span>
-              <span style="background: rgba(217,4,41,0.1); color: #d90429; font-size: 11px; font-weight: 700; padding: 2px 8px; border-radius: 50px;">Save Rs. ${saveAmt.toLocaleString()}</span>
             </div>
           </div>
         </div>
@@ -438,7 +437,6 @@ function syncDynamicContent() {
           <div class="product-price" style="margin-bottom: 20px;" id="price-box-${p.id}">
             <span class="price-original" style="text-decoration: line-through; color: #d90429; font-weight: 500; font-size: 18px; margin-right: 10px;">Rs. ${origPrice.toLocaleString()}</span>
             <span class="price-sale" style="font-size: 26px; font-weight: 700; color: var(--green-dark);">Rs. ${totalPrice.toLocaleString()}</span>
-            <span class="price-save-tag" style="background: rgba(217,4,41,0.1); color: #d90429; padding: 4px 12px; border-radius: 50px; font-size: 13px; font-weight: 700; margin-left: 10px;">Save Rs. ${saveAmt.toLocaleString()}</span>
           </div>
           <div style="display: flex; align-items: center; gap: 16px; margin-bottom: 24px;">
             <div class="quantity-selector">
@@ -480,7 +478,6 @@ function updateProductsPageCard(productId) {
   const totalPrice = unitPrice * state.qty;
   const origUnitPrice = (currentWeight.originalPrice && currentWeight.originalPrice > unitPrice) ? currentWeight.originalPrice : null;
   const origTotalPrice = origUnitPrice ? (origUnitPrice * state.qty) : null;
-  const saveAmt = origTotalPrice ? (origTotalPrice - totalPrice) : 0;
 
   // Update Qty display
   const qtyEl = document.getElementById(`qty-display-${productId}`);
@@ -492,7 +489,6 @@ function updateProductsPageCard(productId) {
     priceBox.innerHTML = `
       ${origTotalPrice ? `<span class="price-original" style="text-decoration: line-through; color: #d90429; font-weight: 500; font-size: 18px; margin-right: 10px;">Rs. ${origTotalPrice.toLocaleString()}</span>` : ''}
       <span class="price-sale" style="font-size: 26px; font-weight: 700; color: var(--green-dark);">Rs. ${totalPrice.toLocaleString()}</span>
-      ${origTotalPrice ? `<span class="price-save-tag" style="background: rgba(217,4,41,0.1); color: #d90429; padding: 4px 12px; border-radius: 50px; font-size: 13px; font-weight: 700; margin-left: 10px;">Save Rs. ${saveAmt.toLocaleString()}</span>` : ''}
     `;
   }
 }
