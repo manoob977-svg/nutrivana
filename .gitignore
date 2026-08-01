@@ -18,6 +18,8 @@ Image/Honey02.png
 Image/Contanier.png
 Image/Daily Essentials.png
 Image/Eco-Conscious Living.png
+node_modules/
+*.tmp
 Image/Premium Gifting.png
 Image/Starter Kits.png
 Image/Superfoods.png
