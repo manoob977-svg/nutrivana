@@ -20,9 +20,9 @@ const DEFAULT_SITE_DATA = {
       reviewsCount: 128,
       price: 850,
       weights: [
-        { label: "250g", price: 850 },
-        { label: "500g", price: 1600 },
-        { label: "1kg", price: 3000 }
+        { label: "250g", price: 850, originalPrice: 1000 },
+        { label: "500g", price: 1600, originalPrice: 1850 },
+        { label: "1kg", price: 3000, originalPrice: 3500 }
       ],
       description: "Our Premium Talbina is crafted from 100% organic barley — the beloved Sunnah superfood recommended by Prophet Muhammad ﷺ. Rich in beta-glucan fiber, vitamins, and minerals, it supports gut health, boosts energy, and calms the nervous system.",
       instructions: "Mix 2-3 tablespoons of Talbina powder in 1 cup of milk or water. Cook on low flame for 10-12 minutes, stirring continuously until smooth and thick. Sweeten with pure honey or dates before serving warm.",
@@ -49,9 +49,9 @@ const DEFAULT_SITE_DATA = {
       reviewsCount: 96,
       price: 1250,
       weights: [
-        { label: "250g", price: 1250 },
-        { label: "500g", price: 2400 },
-        { label: "1kg", price: 4500 }
+        { label: "250g", price: 1250, originalPrice: 1450 },
+        { label: "500g", price: 2400, originalPrice: 2800 },
+        { label: "1kg", price: 4500, originalPrice: 5200 }
       ],
       description: "Nutrivana Pure Honey is 100% raw, unheated, and unfiltered. Sourced directly from wildflower beehives in Pakistan, it preserves natural enzymes, antioxidants, pollen, and propolis for maximum health benefits.",
       instructions: "Consume 1-2 teaspoons directly every morning on an empty stomach, or mix with warm water, lemon, or herbal tea. Use as a natural healthy sweetener in Talbina or Oatmeal.",
@@ -78,9 +78,9 @@ const DEFAULT_SITE_DATA = {
       reviewsCount: 142,
       price: 950,
       weights: [
-        { label: "250g", price: 950 },
-        { label: "500g", price: 1800 },
-        { label: "1kg", price: 3400 }
+        { label: "250g", price: 950, originalPrice: 1150 },
+        { label: "500g", price: 1800, originalPrice: 2100 },
+        { label: "1kg", price: 3400, originalPrice: 3900 }
       ],
       description: "Our Desi Ghee is prepared using the ancient Vedic Bilona method — slow-churned from cultured curd made of pure cow milk. It yields a rich, granular texture with an unforgettable golden aroma.",
       instructions: "Add 1 tablespoon to warm rotis, parathas, rice, or lentils. Excellent high-smoke-point cooking oil for daily nutritious cooking and traditional recipes.",
@@ -108,9 +108,9 @@ const DEFAULT_SITE_DATA = {
       reviewsCount: 84,
       price: 350,
       weights: [
-        { label: "250g", price: 350 },
-        { label: "500g", price: 650 },
-        { label: "1kg", price: 1200 }
+        { label: "250g", price: 350, originalPrice: 420 },
+        { label: "500g", price: 650, originalPrice: 800 },
+        { label: "1kg", price: 1200, originalPrice: 1500 }
       ],
       description: "Clean, wholesome, non-GMO rolled oats designed to power your mornings with long-lasting complex energy and gut-friendly fiber.",
       instructions: "Combine 1/2 cup oatmeal with 1 cup milk or water in a saucepan. Bring to boil and simmer for 4-5 minutes. Top with Nutrivana Pure Honey, nuts, and fresh fruits.",
@@ -249,6 +249,18 @@ function getSiteData() {
               updated = true;
             }
           }
+          // Ensure every weight option has an originalPrice (> price) for strikethrough discount display
+          (p.weights || []).forEach((w, wIdx) => {
+            const defW = (defP.weights && defP.weights[wIdx]) ? defP.weights[wIdx] : null;
+            const targetOrig = (defW && defW.originalPrice && defW.originalPrice > w.price) 
+              ? defW.originalPrice 
+              : Math.round((w.price || 0) * 1.22);
+
+            if (!w.originalPrice || w.originalPrice <= w.price) {
+              w.originalPrice = targetOrig;
+              updated = true;
+            }
+          });
         }
       });
     }
@@ -298,18 +310,10 @@ function syncDynamicContent() {
   const sliderDots = document.getElementById('sliderDots');
   if (heroSlides && data.banners && data.banners.length) {
     heroSlides.innerHTML = data.banners.map((b, i) => {
-      const hasOverlayContent = b.badge || b.title || b.subtitle;
       const bgPos = b.bgPos || '50% 50%';
 
       return `
-        <a href="${b.link || 'products.html'}" class="hero-slide ${i === 0 ? 'active' : ''}" style="background-image: url('${b.image}'); background-position: ${bgPos};" aria-label="${escapeHtml(b.title || 'Banner')}">
-          <div class="hero-banner-overlay" style="${hasOverlayContent ? 'display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; background: rgba(0,0,0,0.35); width: 100%; height: 100%; padding: 20px;' : ''}">
-            ${b.badge ? `<span style="background: var(--gold); color: var(--dark); padding: 4px 14px; border-radius: 50px; font-weight: 700; font-size: 12px; display: inline-block; margin-bottom: 10px; letter-spacing: 0.05em; text-transform: uppercase;">${escapeHtml(b.badge)}</span>` : ''}
-            ${b.title ? `<h2 style="color: var(--white); font-family: 'Playfair Display', serif; font-size: clamp(24px, 4vw, 44px); font-weight: 700; margin-bottom: 8px; text-shadow: 0 2px 10px rgba(0,0,0,0.6);">${escapeHtml(b.title)}</h2>` : ''}
-            ${b.subtitle ? `<p style="color: rgba(255,255,255,0.92); font-size: clamp(14px, 2vw, 17px); max-width: 600px; margin: 0 auto 20px; text-shadow: 0 1px 6px rgba(0,0,0,0.6);">${escapeHtml(b.subtitle)}</p>` : ''}
-            <span class="btn btn-primary hero-btn" style="box-shadow: var(--shadow-md);">${escapeHtml(b.btnText || 'Shop Now →')}</span>
-          </div>
-        </a>
+        <a href="${b.link || 'products.html'}" class="hero-slide ${i === 0 ? 'active' : ''}" style="background-image: url('${b.image}'); background-position: ${bgPos};" aria-label="${escapeHtml(b.title || 'Banner')}"></a>
       `;
     }).join('');
 
@@ -326,7 +330,10 @@ function syncDynamicContent() {
     productsGrid.innerHTML = data.products.map(p => {
       const img1 = (p.images && p.images[0]) || p.image || 'Image/Favicon.png';
       const img2 = (p.images && p.images[1]) || img1;
-      const minPrice = (p.weights && p.weights[0]) ? p.weights[0].price : (p.price || 0);
+      const w0 = (p.weights && p.weights[0]) ? p.weights[0] : { price: p.price || 0 };
+      const salePrice = w0.price || p.price || 0;
+      const origPrice = (w0.originalPrice && w0.originalPrice > salePrice) ? w0.originalPrice : Math.round(salePrice * 1.22);
+      const saveAmt = origPrice ? (origPrice - salePrice) : 0;
       const tag = p.tag || 'NEW';
 
       return `
@@ -336,7 +343,7 @@ function syncDynamicContent() {
             <img src="${img1}" alt="${escapeHtml(p.name)}" class="product-img primary-img" loading="lazy" />
             <img src="${img2}" alt="${escapeHtml(p.name)} Hover" class="product-img hover-img" loading="lazy" />
             <div class="product-overlay">
-              <button class="btn btn-primary btn-sm" onclick="event.stopPropagation();addToCart('${escapeHtml(p.name)}', ${minPrice}, '${img1}')">Add to Cart</button>
+              <button class="btn btn-primary btn-sm" onclick="event.stopPropagation();addToCart('${escapeHtml(p.name)}', ${salePrice}, '${img1}', 1, ${origPrice})">Add to Cart</button>
               <a href="product-detail.html?id=${p.id}" class="btn btn-outline btn-sm" onclick="event.stopPropagation()">View Details</a>
             </div>
           </div>
@@ -347,8 +354,10 @@ function syncDynamicContent() {
             </div>
             <h3 class="product-name">${escapeHtml(p.name)}</h3>
             <p class="product-desc">${escapeHtml(p.description || '')}</p>
-            <div class="product-price">
-              <span class="price-sale">Rs. ${minPrice.toLocaleString()}</span>
+            <div class="product-price" style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
+              <span class="price-original" style="text-decoration: line-through; color: #d90429; font-size: 13px; font-weight: 500;">Rs. ${origPrice.toLocaleString()}</span>
+              <span class="price-sale" style="font-weight: 700; color: var(--green-dark); font-size: 17px;">Rs. ${salePrice.toLocaleString()}</span>
+              <span style="background: rgba(217,4,41,0.1); color: #d90429; font-size: 11px; font-weight: 700; padding: 2px 8px; border-radius: 50px;">Save Rs. ${saveAmt.toLocaleString()}</span>
             </div>
           </div>
         </div>
@@ -372,8 +381,9 @@ function syncDynamicContent() {
       const currentWeight = weights[state.weightIdx] || weights[0];
       const unitPrice = currentWeight.price || p.price || 0;
       const totalPrice = unitPrice * state.qty;
-      const origPrice = Math.round(totalPrice * 1.22);
-      const savePct = Math.round(((origPrice - totalPrice) / origPrice) * 100);
+      const origUnitPrice = (currentWeight.originalPrice && currentWeight.originalPrice > unitPrice) ? currentWeight.originalPrice : Math.round(unitPrice * 1.22);
+      const origPrice = origUnitPrice * state.qty;
+      const saveAmt = origPrice - totalPrice;
 
       const tagsHtml = (p.badgeItems || []).map(t => `<span class="product-tag-item">${escapeHtml(t)}</span>`).join('');
       
@@ -426,9 +436,9 @@ function syncDynamicContent() {
             </div>
           ` : ''}
           <div class="product-price" style="margin-bottom: 20px;" id="price-box-${p.id}">
-            <span class="price-sale">Rs. ${totalPrice.toLocaleString()}</span>
-            <span class="price-original">Rs. ${origPrice.toLocaleString()}</span>
-            <span class="price-save-tag" style="background: rgba(45,106,79,0.1); color: var(--green); padding: 3px 10px; border-radius: 50px; font-size: 12px; font-weight: 700; margin-left: 8px;">Save ${savePct}%</span>
+            <span class="price-original" style="text-decoration: line-through; color: #d90429; font-weight: 500; font-size: 18px; margin-right: 10px;">Rs. ${origPrice.toLocaleString()}</span>
+            <span class="price-sale" style="font-size: 26px; font-weight: 700; color: var(--green-dark);">Rs. ${totalPrice.toLocaleString()}</span>
+            <span class="price-save-tag" style="background: rgba(217,4,41,0.1); color: #d90429; padding: 4px 12px; border-radius: 50px; font-size: 13px; font-weight: 700; margin-left: 10px;">Save Rs. ${saveAmt.toLocaleString()}</span>
           </div>
           <div style="display: flex; align-items: center; gap: 16px; margin-bottom: 24px;">
             <div class="quantity-selector">
@@ -468,8 +478,9 @@ function updateProductsPageCard(productId) {
   const currentWeight = weights[state.weightIdx] || weights[0];
   const unitPrice = currentWeight.price || p.price || 0;
   const totalPrice = unitPrice * state.qty;
-  const origPrice = Math.round(totalPrice * 1.22);
-  const savePct = Math.round(((origPrice - totalPrice) / origPrice) * 100);
+  const origUnitPrice = (currentWeight.originalPrice && currentWeight.originalPrice > unitPrice) ? currentWeight.originalPrice : null;
+  const origTotalPrice = origUnitPrice ? (origUnitPrice * state.qty) : null;
+  const saveAmt = origTotalPrice ? (origTotalPrice - totalPrice) : 0;
 
   // Update Qty display
   const qtyEl = document.getElementById(`qty-display-${productId}`);
@@ -478,13 +489,11 @@ function updateProductsPageCard(productId) {
   // Update Price display
   const priceBox = document.getElementById(`price-box-${productId}`);
   if (priceBox) {
-    const saleEl = priceBox.querySelector('.price-sale');
-    const origEl = priceBox.querySelector('.price-original');
-    const saveEl = priceBox.querySelector('.price-save-tag');
-
-    if (saleEl) saleEl.textContent = `Rs. ${totalPrice.toLocaleString()}`;
-    if (origEl) origEl.textContent = `Rs. ${origPrice.toLocaleString()}`;
-    if (saveEl) saveEl.textContent = `Save ${savePct}%`;
+    priceBox.innerHTML = `
+      ${origTotalPrice ? `<span class="price-original" style="text-decoration: line-through; color: #d90429; font-weight: 500; font-size: 18px; margin-right: 10px;">Rs. ${origTotalPrice.toLocaleString()}</span>` : ''}
+      <span class="price-sale" style="font-size: 26px; font-weight: 700; color: var(--green-dark);">Rs. ${totalPrice.toLocaleString()}</span>
+      ${origTotalPrice ? `<span class="price-save-tag" style="background: rgba(217,4,41,0.1); color: #d90429; padding: 4px 12px; border-radius: 50px; font-size: 13px; font-weight: 700; margin-left: 10px;">Save Rs. ${saveAmt.toLocaleString()}</span>` : ''}
+    `;
   }
 }
 
@@ -519,8 +528,9 @@ function addProductsPageToCart(productId, buyNow = false) {
   const img = (p.images && p.images[0]) || p.image || 'Image/Favicon.png';
   const itemTitle = `${p.name} (${currentWeight.label})`;
   const unitPrice = currentWeight.price || p.price || 0;
+  const origUnitPrice = (currentWeight.originalPrice && currentWeight.originalPrice > unitPrice) ? currentWeight.originalPrice : null;
 
-  addToCart(itemTitle, unitPrice, img, state.qty);
+  addToCart(itemTitle, unitPrice, img, state.qty, origUnitPrice);
 
   if (buyNow) {
     window.location.href = 'cart.html';
@@ -543,12 +553,13 @@ function updateCartCount() {
   });
 }
 
-function addToCart(name, price, image, qty = 1) {
+function addToCart(name, price, image, qty = 1, originalPrice = null) {
   const existing = cart.find(i => i.name === name);
   if (existing) {
     existing.qty += qty;
+    if (originalPrice) existing.originalPrice = originalPrice;
   } else {
-    cart.push({ name, price, image, qty });
+    cart.push({ name, price, image, qty, originalPrice });
   }
   saveCart();
   showToast(`✓ ${name} added to cart!`);
@@ -716,12 +727,20 @@ function renderCartPage() {
 
   container.innerHTML = `
     <div class="cart-items-list">
-      ${cart.map((item, i) => `
+      ${cart.map((item, i) => {
+        const hasDiscount = item.originalPrice && item.originalPrice > item.price;
+        const itemOrigTotal = hasDiscount ? (item.originalPrice * item.qty) : null;
+        const itemPriceTotal = item.price * item.qty;
+
+        return `
         <div class="cart-item">
           <img src="${item.image}" alt="${item.name}" class="cart-item-img" />
           <div class="cart-item-details">
             <h4>${item.name}</h4>
-            <p>Rs. ${item.price.toLocaleString()} each</p>
+            <p style="display:flex; align-items:center; gap:6px;">
+              ${hasDiscount ? `<span style="text-decoration:line-through; color:#d90429; font-size:12px;">Rs. ${item.originalPrice.toLocaleString()}</span>` : ''}
+              <span style="font-weight:600; color:var(--green-dark);">Rs. ${item.price.toLocaleString()} each</span>
+            </p>
             <div class="cart-item-controls">
               <div class="quantity-selector">
                 <button class="qty-btn" onclick="updateQty(${i}, -1)">−</button>
@@ -731,11 +750,15 @@ function renderCartPage() {
             </div>
           </div>
           <div class="cart-item-right">
-            <div class="cart-item-price">Rs. ${(item.price * item.qty).toLocaleString()}</div>
+            <div class="cart-item-price" style="display:flex; flex-direction:column; align-items:flex-end;">
+              ${hasDiscount ? `<span style="text-decoration:line-through; color:#d90429; font-size:12px;">Rs. ${itemOrigTotal.toLocaleString()}</span>` : ''}
+              <span style="font-weight:700; color:var(--green-dark);">Rs. ${itemPriceTotal.toLocaleString()}</span>
+            </div>
             <button class="cart-remove-btn" onclick="removeFromCart(${i})" title="Remove">🗑</button>
           </div>
         </div>
-      `).join('')}
+      `;
+      }).join('')}
     </div>
   `;
 
@@ -744,14 +767,25 @@ function renderCartPage() {
 
 function updateSummary() {
   const subtotal = cart.reduce((s, i) => s + i.price * i.qty, 0);
-  const delivery = subtotal >= 2000 ? 0 : 200;
-  const discount = 0;
-  const total = subtotal + delivery - discount;
+  const totalSavings = cart.reduce((s, i) => {
+    if (i.originalPrice && i.originalPrice > i.price) {
+      return s + ((i.originalPrice - i.price) * i.qty);
+    }
+    return s;
+  }, 0);
 
-  const el = (id) => document.getElementById(id);
-  if (el('summarySubtotal')) el('summarySubtotal').textContent = `Rs. ${subtotal.toLocaleString()}`;
-  if (el('summaryDelivery')) el('summaryDelivery').textContent = delivery === 0 ? 'FREE' : `Rs. ${delivery}`;
-  if (el('summaryTotal')) el('summaryTotal').textContent = `Rs. ${total.toLocaleString()}`;
+  const delivery = subtotal >= 2000 ? 0 : (subtotal > 0 ? 200 : 0);
+  const total = subtotal + delivery;
+
+  const subEl = document.getElementById('summarySubtotal');
+  const discEl = document.getElementById('summaryDiscount');
+  const delEl = document.getElementById('summaryDelivery');
+  const totEl = document.getElementById('summaryTotal');
+
+  if (subEl) subEl.textContent = `Rs. ${subtotal.toLocaleString()}`;
+  if (discEl) discEl.textContent = totalSavings > 0 ? `— Rs. ${totalSavings.toLocaleString()}` : `— Rs. 0`;
+  if (delEl) delEl.textContent = delivery === 0 ? 'FREE' : `Rs. ${delivery.toLocaleString()}`;
+  if (totEl) totEl.textContent = `Rs. ${total.toLocaleString()}`;
 }
 
 function applyPromo() {
@@ -1455,105 +1489,6 @@ function addProductToCart(baseName, fallbackPrice, image, productId) {
   addToCart(fullName, unitPrice, image, qty);
 }
 
-// ---- DYNAMIC CONTENT SYNC ----
-function syncDynamicContent() {
-  const data = getSiteData();
-  
-  // 1. Ticker / Announcement Bar
-  const trackSpan = document.querySelector('#announcementBar .announcement-track span');
-  if (trackSpan && data.settings.announcementBar) {
-    const msg = data.settings.announcementBar;
-    trackSpan.innerHTML = `${msg} &nbsp;&nbsp;|&nbsp;&nbsp; ${msg} &nbsp;&nbsp;|&nbsp;&nbsp; ${msg}`;
-  }
-
-  // 2. Hero Banners Sync
-  const heroSlidesContainer = document.getElementById('heroSlides');
-  if (heroSlidesContainer && data.banners && data.banners.length > 0) {
-    heroSlidesContainer.innerHTML = data.banners.map((b, i) => {
-      const bgPos = b.bgPos || '50% 50%';
-      const link = b.link || 'products.html';
-      const title = (b.title || 'Banner').replace(/"/g, '&quot;');
-      const btnText = b.btnText || 'Shop Now →';
-      return `
-        <a href="${link}" class="hero-slide ${i === 0 ? 'active' : ''}" style="background-image: url('${b.image}'); background-position: ${bgPos};" aria-label="${title}">
-          <div class="hero-banner-overlay">
-            <span class="btn btn-primary hero-btn">${btnText}</span>
-          </div>
-        </a>
-      `;
-    }).join('');
-
-    const sliderDots = document.getElementById('sliderDots');
-    if (sliderDots) {
-      sliderDots.innerHTML = data.banners.map((_, i) => `
-        <span class="dot ${i === 0 ? 'active' : ''}" data-index="${i}"></span>
-      `).join('');
-    }
-  }
-
-
-  // 3. Products Page Dynamic Rendering
-  const productsPageContainer = document.getElementById('dynamicProductsContainer');
-  if (productsPageContainer && data.products) {
-    productsPageContainer.innerHTML = data.products.map(p => `
-      <div class="product-detail-card reveal" id="${p.id}" style="margin-bottom: 40px;">
-        <div style="display: grid; grid-template-columns: 1.2fr 1fr; gap: 0;">
-          <div class="product-detail-image" style="border-radius: var(--radius-lg) 0 0 var(--radius-lg);">
-            <img src="${p.image}" alt="${p.name}" />
-            <span class="sale-tag">${p.tag || 'POPULAR'}</span>
-          </div>
-          <div class="product-detail-body" style="padding: 48px 40px; display: flex; flex-direction: column; justify-content: center;">
-            <div class="product-rating" style="margin-bottom: 10px;">
-              <span class="stars">${'★'.repeat(p.rating || 5)}${'☆'.repeat(5 - (p.rating || 5))}</span>
-              <span class="rating-count">(${p.reviewsCount || 100} reviews)</span>
-            </div>
-            <h2 class="product-name" style="font-size: 30px; margin-bottom: 12px;">${p.name}</h2>
-            
-            ${p.badgeItems && p.badgeItems.length ? `
-              <div class="product-tags">
-                ${p.badgeItems.map(item => `<span class="product-tag-item">${item}</span>`).join('')}
-              </div>
-            ` : ''}
-
-            <p class="product-desc" style="font-size: 15px; line-height: 1.8; margin-bottom: 20px;">
-              ${p.description}
-            </p>
-
-            ${p.instructions ? `
-              <div style="background: var(--cream); border-left: 3px solid var(--green); padding: 14px 18px; border-radius: 6px; margin-bottom: 20px;">
-                <strong style="font-size: 13px; color: var(--green-dark); text-transform: uppercase; letter-spacing: 0.05em; display: block; margin-bottom: 4px;">🥣 How to Use / Preparation Guide:</strong>
-                <p style="font-size: 14px; color: var(--dark); line-height: 1.6; margin: 0;">${p.instructions}</p>
-              </div>
-            ` : ''}
-
-            ${p.weights && p.weights.length ? `
-              <div class="product-weight" style="margin-bottom: 20px;">
-                ${p.weights.map((w, idx) => `
-                  <button class="weight-btn ${idx === 0 ? 'selected' : ''}" data-weight-group="${p.id}" data-price="${w.price}" onclick="selectWeight(this, '${p.id}', ${w.price})">${w.label}</button>
-                `).join('')}
-              </div>
-            ` : ''}
-
-            <div class="product-price-row" style="display: flex; align-items: center; justify-content: space-between; margin-top: 10px;">
-              <div class="product-price" style="font-size: 26px; font-weight: 700; color: var(--green-dark);" id="priceDisplay-${p.id}">
-                ${data.settings.currency || 'Rs.'} ${(p.price || (p.weights && p.weights[0] ? p.weights[0].price : 0)).toLocaleString()}
-              </div>
-              <div style="display: flex; gap: 12px; align-items: center;">
-                <div class="quantity-selector">
-                  <button class="qty-btn" onclick="changeQty('${p.id}', -1)">−</button>
-                  <span class="qty-display" id="qty-${p.id}">1</span>
-                  <button class="qty-btn" onclick="changeQty('${p.id}', 1)">+</button>
-                </div>
-                <button class="btn btn-primary" onclick="addProductToCart('${p.name}', getSelectedPrice('${p.id}', ${p.price}), '${p.image}', '${p.id}')">Add to Cart</button>
-              </div>
-            </div>
-
-          </div>
-        </div>
-      </div>
-    `).join('');
-  }
-}
 
 function toggleFaq(btn) {
   const item = btn.closest('.faq-item');

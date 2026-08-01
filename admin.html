@@ -95,7 +95,6 @@
               <h1>📦 Edit Products</h1>
               <p>Modify images, sizes/weights, banners, instructions, descriptions & prices for all items.</p>
             </div>
-            <button onclick="saveAllChanges()" class="btn btn-primary">💾 Save All Changes</button>
           </div>
 
           <!-- Product Selector & Management Header -->
@@ -119,7 +118,7 @@
               <button type="button" onclick="deleteActiveProduct()" class="btn btn-outline btn-sm" style="color: #d90429; border-color: rgba(217,4,41,0.3); background: rgba(217,4,41,0.05);" title="Delete Product">🗑️ Delete Product</button>
             </div>
 
-            <form id="productEditForm" onsubmit="event.preventDefault();">
+            <form id="productEditForm" onsubmit="event.preventDefault(); saveAllChanges();">
               <input type="hidden" id="editProductId" value="talbina" />
 
               <div class="admin-grid-2">
@@ -133,34 +132,52 @@
                 </div>
               </div>
 
-              <!-- Multi-Image Manager with Direct File Picker & Add/Delete Options -->
+              <!-- Single Persistent Image Upload Zone -->
               <div class="form-group" style="background: var(--cream); border: 1px solid var(--cream-dark); padding: 20px; border-radius: var(--radius-sm); margin-bottom: 24px;">
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
-                  <label class="form-label" style="margin: 0; font-size: 15px; font-weight: 700; color: var(--dark);">📸 Product Images (Direct File Upload &amp; URLs) *</label>
-                  <button type="button" onclick="addImageRow()" class="btn btn-outline btn-sm">+ Add Image Slot</button>
-                </div>
-                <p style="font-size: 12px; color: var(--gray); margin-bottom: 16px;">
-                  Click 📁 <strong>Browse File...</strong> to pick an image directly from your folder/computer, or type an image URL/path. Image 1 is Primary, Image 2 is Hover Swap.
+                <label class="form-label" style="margin: 0 0 12px; font-size: 15px; font-weight: 700; color: var(--dark); display: block;">📸 Product Images</label>
+                <p style="font-size: 12px; color: var(--gray); margin-bottom: 16px; line-height: 1.6;">
+                  Click <strong>Add Image</strong> below to pick images from your computer. Image 1 is <strong>Primary</strong>, Image 2 is <strong>Hover Swap</strong> (shown on cursor hover on product cards). Add as many as you like.
                 </p>
-                
-                <div id="productImagesListRows"></div>
 
-                <!-- Live Image Previews Grid -->
-                <div style="margin-top: 18px; padding-top: 14px; border-top: 1px solid var(--cream-dark);">
-                  <span style="font-size: 12px; font-weight: 700; color: var(--dark); display: block; margin-bottom: 8px;">Live Gallery Previews:</span>
-                  <div id="adminImagesPreviewGrid" class="admin-images-grid"></div>
+                <!-- Hidden file input — single, persistent -->
+                <input type="file" accept="image/*" style="display: none;" id="persistentFilePicker" onchange="handlePersistentFileSelect(this)" />
+
+                <!-- Single Upload Box — never disappears -->
+                <div class="admin-img-upload-zone" onclick="document.getElementById('persistentFilePicker').click()">
+                  <div class="admin-img-upload-zone-icon">📁</div>
+                  <div class="admin-img-upload-zone-label">Add Image</div>
+                  <div class="admin-img-upload-zone-sub">Click to browse from your computer</div>
                 </div>
+
+                <!-- Uploaded Thumbnails Grid — images appear here after each upload -->
+                <div id="adminUploadedThumbsGrid" class="admin-uploaded-images-grid"></div>
               </div>
 
-              <div class="admin-grid-2">
-                <div class="form-group">
-                  <label class="form-label">Base Price (Rs.) *</label>
-                  <input type="number" id="editProductPrice" class="form-input" required />
+
+              <!-- Single Persistent Video Upload Zone -->
+              <div class="form-group" style="background: var(--cream); border: 1px solid var(--cream-dark); padding: 20px; border-radius: var(--radius-sm); margin-bottom: 24px;">
+                <label class="form-label" style="margin: 0 0 12px; font-size: 15px; font-weight: 700; color: var(--dark); display: block;">🎥 Product Video</label>
+                <p style="font-size: 12px; color: var(--gray); margin-bottom: 16px; line-height: 1.6;">
+                  Click <strong>Add Video</strong> below to pick a video file from your computer, or paste a video URL below.
+                </p>
+
+                <!-- Hidden video file input -->
+                <input type="file" accept="video/*" style="display: none;" id="persistentVideoPicker" onchange="handlePersistentVideoSelect(this)" />
+
+                <!-- Single Upload Box — Add Video -->
+                <div class="admin-img-upload-zone" onclick="document.getElementById('persistentVideoPicker').click()">
+                  <div class="admin-img-upload-zone-icon">📁</div>
+                  <div class="admin-img-upload-zone-label">Add Video</div>
+                  <div class="admin-img-upload-zone-sub">Click to browse from your computer</div>
                 </div>
-                <div class="form-group">
-                  <label class="form-label">Customer Reviews Rating (1-5)</label>
-                  <input type="number" id="editProductRating" class="form-input" min="1" max="5" required />
+
+                <!-- Video URL Input Option -->
+                <div style="margin-top: 14px; margin-bottom: 16px;">
+                  <input type="text" id="editProductVideo" class="form-input" placeholder="Or paste video URL (e.g. https://www.youtube.com/embed/dQw4w9WgXcQ)" style="margin-bottom: 0; font-size: 13px;" oninput="renderAdminVideoPreview()" />
                 </div>
+
+                <!-- Video Thumbnail Preview Grid -->
+                <div id="adminVideoPreviewGrid" class="admin-uploaded-images-grid"></div>
               </div>
 
               <!-- Weights & Rate Options Builder -->
@@ -172,9 +189,10 @@
                 <p style="font-size: 12px; color: var(--gray); margin-bottom: 16px;">Set separate weight label and rate box for each size (e.g. Weight: 250g | Rate: Rs. 850).</p>
                 
                 <div id="weightsTableContainer">
-                  <div style="display: grid; grid-template-columns: 1fr 1fr 40px; gap: 12px; font-size: 12px; font-weight: 700; color: var(--dark); text-transform: uppercase; margin-bottom: 8px; padding-bottom: 4px; border-bottom: 1px solid var(--cream-dark);">
+                  <div style="display: grid; grid-template-columns: 1fr 1fr 1fr 40px; gap: 12px; font-size: 12px; font-weight: 700; color: var(--dark); text-transform: uppercase; margin-bottom: 8px; padding-bottom: 4px; border-bottom: 1px solid var(--cream-dark);">
                     <span>Weight Label Box</span>
-                    <span>Rate / Price Box (Rs.)</span>
+                    <span>Rate / Original Price (Rs.)</span>
+                    <span>Discount Rate (Rs.) (Optional)</span>
                     <span></span>
                   </div>
                   <div id="weightsListRows"></div>
@@ -200,7 +218,7 @@
               </div>
 
               <div style="display: flex; gap: 12px; justify-content: flex-end; margin-top: 24px;">
-                <button type="button" onclick="saveActiveProduct()" class="btn btn-primary">💾 Save This Product</button>
+                <button type="submit" class="btn btn-primary" style="background: var(--green); border-color: var(--green); box-shadow: 0 4px 12px rgba(45,106,79,0.3);">💾 Save Changes</button>
               </div>
             </form>
           </div>
@@ -617,25 +635,32 @@
       const container = document.getElementById('weightsListRows');
       if (!container) return;
 
-      container.innerHTML = weights.map(w => `
-        <div class="weight-row-item" style="display: grid; grid-template-columns: 1fr 1fr 40px; gap: 12px; align-items: center; margin-bottom: 10px;">
-          <input type="text" class="form-input weight-label-input" value="${w.label || ''}" placeholder="e.g. 250g" required />
-          <input type="number" class="form-input weight-price-input" value="${w.price || 0}" placeholder="Rate (Rs.)" required />
-          <button type="button" onclick="removeWeightRow(this)" style="background: rgba(217,4,41,0.1); color: #d90429; border: none; border-radius: 6px; width: 36px; height: 38px; font-size: 16px; cursor: pointer; display: flex; align-items: center; justify-content: center;" title="Remove Option">🗑️</button>
-        </div>
-      `).join('');
+      container.innerHTML = weights.map(w => {
+        const origVal = w.originalPrice || w.price || 0;
+        const discVal = w.discountPrice || (w.originalPrice && w.originalPrice > w.price ? w.price : '');
+
+        return `
+          <div class="weight-row-item" style="display: grid; grid-template-columns: 1fr 1fr 1fr 40px; gap: 12px; align-items: center; margin-bottom: 10px;">
+            <input type="text" class="form-input weight-label-input" value="${w.label || ''}" placeholder="e.g. 250g" required />
+            <input type="number" class="form-input weight-price-input" value="${origVal}" placeholder="Rate (Rs.)" required />
+            <input type="number" class="form-input weight-discount-input" value="${discVal}" placeholder="Discount Rate (Rs.)" />
+            <button type="button" onclick="removeWeightRow(this)" style="background: rgba(217,4,41,0.1); color: #d90429; border: none; border-radius: 6px; width: 36px; height: 38px; font-size: 16px; cursor: pointer; display: flex; align-items: center; justify-content: center;" title="Remove Option">🗑️</button>
+          </div>
+        `;
+      }).join('');
     }
 
-    function addWeightRow(label = '', price = 0) {
+    function addWeightRow(label = '', price = 0, discountPrice = '') {
       const container = document.getElementById('weightsListRows');
       if (!container) return;
 
       const div = document.createElement('div');
       div.className = 'weight-row-item';
-      div.style.cssText = 'display: grid; grid-template-columns: 1fr 1fr 40px; gap: 12px; align-items: center; margin-bottom: 10px;';
+      div.style.cssText = 'display: grid; grid-template-columns: 1fr 1fr 1fr 40px; gap: 12px; align-items: center; margin-bottom: 10px;';
       div.innerHTML = `
         <input type="text" class="form-input weight-label-input" value="${label}" placeholder="e.g. 500g" required />
-        <input type="number" class="form-input weight-price-input" value="${price}" placeholder="Rate (Rs.)" required />
+        <input type="number" class="form-input weight-price-input" value="${price || ''}" placeholder="Rate (Rs.)" required />
+        <input type="number" class="form-input weight-discount-input" value="${discountPrice}" placeholder="Discount Rate (Rs.)" />
         <button type="button" onclick="removeWeightRow(this)" style="background: rgba(217,4,41,0.1); color: #d90429; border: none; border-radius: 6px; width: 36px; height: 38px; font-size: 16px; cursor: pointer; display: flex; align-items: center; justify-content: center;" title="Remove Option">🗑️</button>
       `;
       container.appendChild(div);
@@ -646,146 +671,190 @@
       if (row) row.remove();
     }
 
-    // ---- MULTI-IMAGE PREVIEW ----
-    function updateMultiImagePreviews() {
-      const grid = document.getElementById('adminImagesPreviewGrid');
+    // ============================================================
+    //  IMAGE UPLOAD — SINGLE PERSISTENT BOX SYSTEM
+    // ============================================================
+
+    // In-memory image list for the current product being edited
+    let currentProductImages = [];
+
+    // Render thumbnails grid from currentProductImages array
+    function renderAdminThumbs() {
+      const grid = document.getElementById('adminUploadedThumbsGrid');
       if (!grid) return;
-
-      const imgUrls = [
-        document.getElementById('editProductImg1')?.value.trim(),
-        document.getElementById('editProductImg2')?.value.trim(),
-        document.getElementById('editProductImg3')?.value.trim(),
-        document.getElementById('editProductImg4')?.value.trim(),
-        document.getElementById('editProductImg5')?.value.trim(),
-        document.getElementById('editProductImg6')?.value.trim()
-      ].filter(Boolean);
-
-      const labels = ['1. Primary', '2. Hover Swap', '3. Gallery 3', '4. Gallery 4', '5. Gallery 5', '6. Gallery 6'];
-
-      grid.innerHTML = imgUrls.length ? imgUrls.map((url, i) => `
-        <div class="admin-img-box">
-          <img src="${url}" onerror="this.src='Image/Favicon.png'" alt="Img ${i+1}" />
-          <span>${labels[i] || 'Gallery'}</span>
-        </div>
-      `).join('') : '<p style="font-size:12px; color:var(--gray);">No images entered yet.</p>';
-    }
-
-    // ---- DYNAMIC DEDICATED IMAGE ROWS BUILDER WITH FILE PICKER ----
-    function renderImageRows(images) {
-      const container = document.getElementById('productImagesListRows');
-      if (!container) return;
-
-      const imgList = images && images.length ? images : ['Image/Favicon.png'];
-
-      container.innerHTML = imgList.map((url, idx) => `
-        <div class="image-row-item" style="display: grid; grid-template-columns: 110px 1fr auto auto; gap: 10px; align-items: center; margin-bottom: 12px; background: var(--white); padding: 10px; border-radius: 6px; border: 1px solid var(--cream-dark);">
-          <span style="font-size: 11px; font-weight: 700; color: var(--green-dark); text-transform: uppercase;">
-            ${idx === 0 ? '1. Primary' : (idx === 1 ? '2. Hover Swap' : `Slot #${idx + 1}`)}
-          </span>
-          <input type="text" class="form-input product-image-url-input" value="${url}" placeholder="Image URL / Path or pick file" oninput="updateMultiImagePreviews()" id="imgUrlInput_${idx}" required />
-          <div>
-            <input type="file" accept="image/*" style="display: none;" id="filePicker_${idx}" onchange="handleFileSelect(this, 'imgUrlInput_${idx}')" />
-            <button type="button" class="btn btn-outline btn-sm" onclick="document.getElementById('filePicker_${idx}').click()" title="Pick image file from folder">📁 Browse File...</button>
+      grid.innerHTML = currentProductImages.length ? currentProductImages.map((url, i) => `
+        <div class="admin-img-thumb-wrapper" style="display: flex; flex-direction: column; align-items: center; gap: 6px; width: 110px;">
+          <div class="admin-img-thumb-card" id="thumb_${i}" style="margin: 0; border-color: ${i === 0 ? 'var(--green)' : (i === 1 ? 'var(--gold)' : 'var(--cream-dark)')}; border-width: 2px;">
+            <img src="${url}" onerror="this.src='Image/Favicon.png'" alt="Image ${i+1}" />
+            <span class="admin-img-thumb-badge">${i + 1}</span>
+            <button type="button" class="admin-img-thumb-delete" onclick="removeAdminThumb(${i})" title="Remove Image">✕</button>
           </div>
-          <button type="button" onclick="removeImageRow(this)" style="background: rgba(217,4,41,0.1); color: #d90429; border: none; border-radius: 6px; width: 36px; height: 36px; font-size: 16px; cursor: pointer; display: flex; align-items: center; justify-content: center;" title="Delete Image Slot">🗑️</button>
+          <div style="font-size: 11px; font-weight: 700; color: ${i === 0 ? 'var(--green-dark)' : (i === 1 ? '#c9a84c' : 'var(--gray)')}; text-align: center; text-transform: uppercase; letter-spacing: 0.05em; margin-top: 2px;">
+            ${i === 0 ? 'Primary' : (i === 1 ? 'Secondary' : `Image ${i + 1}`)}
+          </div>
         </div>
-      `).join('');
-
-      updateMultiImagePreviews();
+      `).join('') : '<p style="font-size:12px;color:var(--gray);margin-top:8px;">No images added yet. Click <strong>Add Image</strong> above.</p>';
     }
 
-    function addImageRow(initialUrl = '') {
-      const container = document.getElementById('productImagesListRows');
+    // Remove a thumbnail by index
+    function removeAdminThumb(idx) {
+      currentProductImages.splice(idx, 1);
+      renderAdminThumbs();
+      showToast('🗑️ Image removed.');
+    }
+
+    // Render video preview in the video container
+    function renderAdminVideoPreview() {
+      const container = document.getElementById('adminVideoPreviewGrid');
       if (!container) return;
+      const url = document.getElementById('editProductVideo').value.trim();
+      
+      if (!url) {
+        container.innerHTML = '<p style="font-size:12px;color:var(--gray);margin-top:8px;">No video linked yet. Upload a video file or paste a URL above to see preview.</p>';
+        return;
+      }
 
-      const idx = container.children.length;
-      const div = document.createElement('div');
-      div.className = 'image-row-item';
-      div.style.cssText = 'display: grid; grid-template-columns: 110px 1fr auto auto; gap: 10px; align-items: center; margin-bottom: 12px; background: var(--white); padding: 10px; border-radius: 6px; border: 1px solid var(--cream-dark);';
-      div.innerHTML = `
-        <span style="font-size: 11px; font-weight: 700; color: var(--green-dark); text-transform: uppercase;">
-          ${idx === 0 ? '1. Primary' : (idx === 1 ? '2. Hover Swap' : `Slot #${idx + 1}`)}
-        </span>
-        <input type="text" class="form-input product-image-url-input" value="${initialUrl}" placeholder="Image URL / Path or pick file" oninput="updateMultiImagePreviews()" id="imgUrlInput_${idx}" required />
-        <div>
-          <input type="file" accept="image/*" style="display: none;" id="filePicker_${idx}" onchange="handleFileSelect(this, 'imgUrlInput_${idx}')" />
-          <button type="button" class="btn btn-outline btn-sm" onclick="document.getElementById('filePicker_${idx}').click()" title="Pick image file from folder">📁 Browse File...</button>
+      let thumbUrl = '';
+      let isEmbed = false;
+      let isLocalVideo = url.startsWith('data:video') || url.startsWith('blob:') || Boolean(url.match(/\.(mp4|webm|ogg)$/i));
+
+      if (url.includes('youtube.com') || url.includes('youtu.be')) {
+        let ytId = '';
+        if (url.includes('embed/')) {
+          ytId = url.split('embed/')[1]?.split('?')[0];
+        } else if (url.includes('v=')) {
+          ytId = url.split('v=')[1]?.split('&')[0];
+        } else if (url.includes('youtu.be/')) {
+          ytId = url.split('youtu.be/')[1]?.split('?')[0];
+        }
+        if (ytId) {
+          thumbUrl = `https://img.youtube.com/vi/${ytId}/hqdefault.jpg`;
+          isEmbed = true;
+        }
+      }
+
+      let mediaHtml = '';
+      if (isLocalVideo) {
+        mediaHtml = `<video src="${url}" controls style="width:100%; height:100%; object-fit:cover; border-radius: 8px;"></video>`;
+      } else if (isEmbed && thumbUrl) {
+        mediaHtml = `<img src="${thumbUrl}" onerror="this.src='Image/Favicon.png'" alt="Video Preview" style="width:100%; height:100%; object-fit:cover;" />`;
+      } else {
+        mediaHtml = `<div style="width:100%; height:100%; display:flex; align-items:center; justify-content:center; background:var(--green-dark); color:#fff; font-size:24px;">🎥</div>`;
+      }
+
+      container.innerHTML = `
+        <div class="admin-img-thumb-wrapper" style="display: flex; flex-direction: column; align-items: center; gap: 6px; width: 110px;">
+          <div class="admin-img-thumb-card" style="margin: 0; border-color: var(--gold); border-width: 2px; position: relative;">
+            ${mediaHtml}
+            <span class="admin-img-thumb-badge" style="background:var(--gold); color:var(--dark);">▶</span>
+            <button type="button" class="admin-img-thumb-delete" onclick="removeAdminVideo()" title="Remove Video">✕</button>
+          </div>
+          <div style="font-size: 11px; font-weight: 700; color: var(--gold-dark); text-align: center; text-transform: uppercase; letter-spacing: 0.05em; margin-top: 2px;">
+            VIDEO
+          </div>
         </div>
-        <button type="button" onclick="removeImageRow(this)" style="background: rgba(217,4,41,0.1); color: #d90429; border: none; border-radius: 6px; width: 36px; height: 36px; font-size: 16px; cursor: pointer; display: flex; align-items: center; justify-content: center;" title="Delete Image Slot">🗑️</button>
       `;
-      container.appendChild(div);
-      updateMultiImagePreviews();
     }
 
-    function removeImageRow(btn) {
-      const row = btn.closest('.image-row-item');
-      if (row) {
-        row.remove();
-        updateMultiImagePreviews();
-      }
+    function removeAdminVideo() {
+      document.getElementById('editProductVideo').value = '';
+      const picker = document.getElementById('persistentVideoPicker');
+      if (picker) picker.value = '';
+      renderAdminVideoPreview();
+      showToast('🗑️ Video removed.');
     }
 
-    function handleFileSelect(fileInput, targetTextInputId) {
-      if (fileInput.files && fileInput.files[0]) {
-        const file = fileInput.files[0];
-        const isBannerInput = targetTextInputId.startsWith('bannerImg_');
-        
+    // Handle video file selected via the persistent video picker
+    function handlePersistentVideoSelect(fileInput) {
+      if (!fileInput.files || !fileInput.files[0]) return;
+      const file = fileInput.files[0];
 
-        const reader = new FileReader();
-        reader.onload = function(e) {
-          const originalDataUrl = e.target.result;
-          const img = new Image();
-          img.onload = function() {
-            let finalDataUrl = originalDataUrl;
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        document.getElementById('editProductVideo').value = e.target.result;
+        renderAdminVideoPreview();
+        showToast('✅ Video added successfully!');
+      };
+      reader.readAsDataURL(file);
+    }
 
-            // Only compress/resize if file is larger than 1.5MB to preserve 100% original quality
-            if (file.size > 1.5 * 1024 * 1024) {
-              const canvas = document.createElement('canvas');
-              const maxDim = 2560;
-              let width = img.width;
-              let height = img.height;
+    // Handle file selected via the persistent picker
+    function handlePersistentFileSelect(fileInput) {
+      if (!fileInput.files || !fileInput.files[0]) return;
+      const file = fileInput.files[0];
+      fileInput.value = ''; // Reset input so same file can be re-picked
 
-              if (width > maxDim || height > maxDim) {
-                if (width > height) {
-                  height = Math.round((height * maxDim) / width);
-                  width = maxDim;
-                } else {
-                  width = Math.round((width * maxDim) / height);
-                  height = maxDim;
-                }
-              }
-
-              canvas.width = width;
-              canvas.height = height;
-
-              const ctx = canvas.getContext('2d');
-              ctx.imageSmoothingEnabled = true;
-              ctx.imageSmoothingQuality = 'high';
-              ctx.drawImage(img, 0, 0, width, height);
-
-              // Use WebP for best quality (smaller size, no transparency loss)
-              finalDataUrl = canvas.toDataURL('image/webp', 0.92);
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        const originalDataUrl = e.target.result;
+        const img = new Image();
+        img.onload = function() {
+          let finalDataUrl = originalDataUrl;
+          // Compress only if file is larger than 1.5 MB
+          if (file.size > 1.5 * 1024 * 1024) {
+            const canvas = document.createElement('canvas');
+            const maxDim = 2560;
+            let w = img.width, h = img.height;
+            if (w > maxDim || h > maxDim) {
+              if (w > h) { h = Math.round(h * maxDim / w); w = maxDim; }
+              else { w = Math.round(w * maxDim / h); h = maxDim; }
             }
-
-            const textInput = document.getElementById(targetTextInputId);
-            if (textInput) {
-              textInput.value = finalDataUrl;
-              
-              // Trigger preview update if banner preview
-              if (isBannerInput) {
-                const prevId = targetTextInputId.replace('bannerImg_', 'bannerPreview_');
-                const prevEl = document.getElementById(prevId);
-                if (prevEl) prevEl.src = finalDataUrl;
-              }
-
-              if (typeof updateMultiImagePreviews === 'function') updateMultiImagePreviews();
-              showToast(`✨ Image Loaded: ${file.name}`);
-            }
-          };
-          img.src = e.target.result;
+            canvas.width = w; canvas.height = h;
+            const ctx = canvas.getContext('2d');
+            ctx.imageSmoothingEnabled = true;
+            ctx.imageSmoothingQuality = 'high';
+            ctx.drawImage(img, 0, 0, w, h);
+            finalDataUrl = canvas.toDataURL('image/webp', 0.92);
+          }
+          currentProductImages.push(finalDataUrl);
+          renderAdminThumbs();
+          showToast(`✅ Image added! (${currentProductImages.length} total)`);
         };
-        reader.readAsDataURL(file);
-      }
+        img.src = originalDataUrl;
+      };
+      reader.readAsDataURL(file);
+    }
+
+    // Handle file select for banner images (separate from product images)
+    function handleFileSelect(fileInput, targetTextInputId) {
+      if (!fileInput.files || !fileInput.files[0]) return;
+      const file = fileInput.files[0];
+      const isBannerInput = targetTextInputId.startsWith('bannerImg_');
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        const originalDataUrl = e.target.result;
+        const img = new Image();
+        img.onload = function() {
+          let finalDataUrl = originalDataUrl;
+          if (file.size > 1.5 * 1024 * 1024) {
+            const canvas = document.createElement('canvas');
+            const maxDim = 2560;
+            let w = img.width, h = img.height;
+            if (w > maxDim || h > maxDim) {
+              if (w > h) { h = Math.round(h * maxDim / w); w = maxDim; }
+              else { w = Math.round(w * maxDim / h); h = maxDim; }
+            }
+            canvas.width = w; canvas.height = h;
+            const ctx = canvas.getContext('2d');
+            ctx.imageSmoothingEnabled = true;
+            ctx.imageSmoothingQuality = 'high';
+            ctx.drawImage(img, 0, 0, w, h);
+            finalDataUrl = canvas.toDataURL('image/webp', 0.92);
+          }
+          const textInput = document.getElementById(targetTextInputId);
+          if (textInput) {
+            textInput.value = finalDataUrl;
+            if (isBannerInput) {
+              const prevId = targetTextInputId.replace('bannerImg_', 'bannerPreview_');
+              const prevEl = document.getElementById(prevId);
+              if (prevEl) prevEl.src = finalDataUrl;
+            }
+            showToast(`✨ Image Loaded: ${file.name}`);
+          }
+        };
+        img.src = originalDataUrl;
+      };
+      reader.readAsDataURL(file);
     }
 
     // Update a single banner image preview element
@@ -797,27 +866,6 @@
       }
     }
 
-    function updateMultiImagePreviews() {
-      const grid = document.getElementById('adminImagesPreviewGrid');
-      if (!grid) return;
-
-      const urlInputs = document.querySelectorAll('#productImagesListRows .product-image-url-input');
-      const imgUrls = [];
-      urlInputs.forEach(input => {
-        const val = input.value.trim();
-        if (val) imgUrls.push(val);
-      });
-
-      const labels = ['1. Primary', '2. Hover Swap', '3. Gallery 3', '4. Gallery 4', '5. Gallery 5', '6. Gallery 6'];
-
-      grid.innerHTML = imgUrls.length ? imgUrls.map((url, i) => `
-        <div class="admin-img-box">
-          <img src="${url}" onerror="this.src='Image/Favicon.png'" alt="Img ${i+1}" />
-          <span>${labels[i] || `Gallery #${i+1}`}</span>
-        </div>
-      `).join('') : '<p style="font-size:12px; color:var(--gray);">No images added yet. Click "+ Add Image Slot".</p>';
-    }
-
     // ---- PRODUCT FORM LOAD & SAVE ----
     function loadProductForm(productId, btnEl) {
       const p = currentSiteData.products.find(item => item.id === productId) || currentSiteData.products[0];
@@ -826,14 +874,14 @@
       document.getElementById('editProductId').value = p.id;
       document.getElementById('editProductName').value = p.name || '';
       document.getElementById('editProductTag').value = p.tag || '';
-      document.getElementById('editProductPrice').value = p.price || 0;
-      document.getElementById('editProductRating').value = p.rating || 5;
+      document.getElementById('editProductVideo').value = p.videoUrl || '';
+      renderAdminVideoPreview();
       document.getElementById('editProductDesc').value = p.description || '';
       document.getElementById('editProductInstructions').value = p.instructions || '';
       
-      // Render dynamic Image Rows with File Picker
-      const pImages = p.images && p.images.length ? p.images : [p.image || 'Image/Favicon.png'];
-      renderImageRows(pImages);
+      // Load product images into the persistent image system
+      currentProductImages = (p.images && p.images.length) ? [...p.images] : [p.image || 'Image/Favicon.png'];
+      renderAdminThumbs();
 
       // Render Weight & Rate rows
       renderWeightRows(p.weights || []);
@@ -854,36 +902,44 @@
       const idx = currentSiteData.products.findIndex(p => p.id === id);
       if (idx === -1) return;
 
-      const urlInputs = document.querySelectorAll('#productImagesListRows .product-image-url-input');
-      const imgUrls = [];
-      urlInputs.forEach(input => {
-        const val = input.value.trim();
-        if (val) imgUrls.push(val);
-      });
+      // Use currentProductImages array (managed by the persistent upload zone)
+      const imgUrls = currentProductImages.length ? [...currentProductImages] : [currentSiteData.products[idx].image || 'Image/Favicon.png'];
 
       const weightRows = document.querySelectorAll('#weightsListRows .weight-row-item');
       const parsedWeights = [];
       weightRows.forEach(row => {
         const label = row.querySelector('.weight-label-input').value.trim();
-        const price = parseInt(row.querySelector('.weight-price-input').value) || 0;
+        const origPrice = parseInt(row.querySelector('.weight-price-input').value) || 0;
+        const discInput = row.querySelector('.weight-discount-input') ? row.querySelector('.weight-discount-input').value.trim() : '';
+        const discPrice = discInput !== '' ? (parseInt(discInput) || 0) : null;
+        
         if (label) {
-          parsedWeights.push({ label, price });
+          const hasDiscount = discPrice !== null && discPrice > 0 && discPrice < origPrice;
+          const activePrice = hasDiscount ? discPrice : origPrice;
+
+          parsedWeights.push({
+            label: label,
+            price: activePrice,
+            originalPrice: origPrice,
+            discountPrice: hasDiscount ? discPrice : null
+          });
         }
       });
 
       const detailsText = document.getElementById('editProductDetails').value.trim();
       const parsedDetails = detailsText ? detailsText.split('\n').map(l => l.trim()).filter(Boolean) : [];
 
-      const basePrice = parsedWeights.length ? parsedWeights[0].price : (parseInt(document.getElementById('editProductPrice').value) || 0);
+      const basePrice = parsedWeights.length ? parsedWeights[0].price : (currentSiteData.products[idx].price || 0);
 
       currentSiteData.products[idx] = {
         ...currentSiteData.products[idx],
         name: document.getElementById('editProductName').value.trim(),
         tag: document.getElementById('editProductTag').value.trim(),
         image: imgUrls[0] || 'Image/Favicon.png',
-        images: imgUrls.length ? imgUrls : [currentSiteData.products[idx].image],
+        images: imgUrls,
         price: basePrice,
-        rating: parseInt(document.getElementById('editProductRating').value) || 5,
+        rating: currentSiteData.products[idx].rating || 5,
+        videoUrl: document.getElementById('editProductVideo').value.trim(),
         description: document.getElementById('editProductDesc').value.trim(),
         instructions: document.getElementById('editProductInstructions').value.trim(),
         weights: parsedWeights.length ? parsedWeights : currentSiteData.products[idx].weights,

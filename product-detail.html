@@ -235,8 +235,8 @@
     (siteData.products||[]).forEach(function(p){
       // Map admin format -> detail page format
       var ws = (p.weights&&p.weights.length) ? p.weights.map(function(w){
-        var origPrice = Math.round((w.price||p.price||0)*1.22); // ~22% markup as original
-        return {label:w.label, price:w.price||p.price||0, orig:w.orig||origPrice};
+        var origPrice = (w.originalPrice && w.originalPrice > w.price) ? w.originalPrice : ((w.orig && w.orig > w.price) ? w.orig : Math.round((w.price||p.price||0)*1.22));
+        return {label:w.label, price:w.price||p.price||0, orig:origPrice};
       }) : [{label:'Standard',price:p.price||0,orig:Math.round((p.price||0)*1.22)}];
 
       var starsFull = Math.round(p.rating||5);
@@ -281,18 +281,28 @@
   function getSelectedWeight(){return currentProduct.weights[selectedWeightIdx];}
   function updatePriceDisplay(){
     var w=getSelectedWeight(),total=w.price*selectedQty;
-    var orig = w.orig ? w.orig*selectedQty : 0;
+    var origUnit = w.orig && w.orig > w.price ? w.orig : null;
+    var origTotal = origUnit ? origUnit * selectedQty : 0;
     var ps=document.getElementById('pdPriceSale'),po=document.getElementById('pdPriceOrig'),pb=document.getElementById('pdSaveBadge');
     ps.style.transition='all 0.2s';ps.style.transform='scale(1.08)';ps.style.color='var(--green-dark)';
     setTimeout(function(){ps.style.transform='scale(1)';},200);
     ps.textContent='Rs. '+total.toLocaleString();
-    if(orig && orig>total){
-      var savePct=Math.round(((orig-total)/orig)*100);
-      po.textContent='Rs. '+orig.toLocaleString();
-      pb.textContent='Save '+savePct+'%';
+    if(origTotal && origTotal > total){
+      var saveAmt = origTotal - total;
+      po.style.display = 'inline';
+      po.style.color = '#d90429';
+      po.style.textDecoration = 'line-through';
+      po.textContent = 'Rs. ' + origTotal.toLocaleString();
+
+      pb.style.display = 'inline-block';
+      pb.style.background = 'rgba(217,4,41,0.1)';
+      pb.style.color = '#d90429';
+      pb.textContent = 'Save Rs. ' + saveAmt.toLocaleString();
     } else {
-      po.textContent='';
-      pb.textContent='';
+      po.style.display = 'none';
+      po.textContent = '';
+      pb.style.display = 'none';
+      pb.textContent = '';
     }
     document.getElementById('pdQtyNum').textContent=selectedQty;
   }
@@ -316,8 +326,8 @@
     document.getElementById('pdAccIngredients').innerHTML=p.ingredients;
     updatePriceDisplay();
     buildReviews(p);buildRelated(id);
-    document.getElementById('pdAddCart').onclick=function(){var w=getSelectedWeight();addProductToCart(p.name+' '+w.label,w.price*selectedQty,p.images[0],p.id);};
-    document.getElementById('pdBuyNow').onclick=function(){var w=getSelectedWeight();addProductToCart(p.name+' '+w.label,w.price*selectedQty,p.images[0],p.id);window.location='cart.html';};
+    document.getElementById('pdAddCart').onclick=function(){var w=getSelectedWeight();addToCart(p.name+' ('+w.label+')',w.price,p.images[0],selectedQty,w.orig||null);};
+    document.getElementById('pdBuyNow').onclick=function(){var w=getSelectedWeight();addToCart(p.name+' ('+w.label+')',w.price,p.images[0],selectedQty,w.orig||null);window.location='cart.html';};
   }
   function buildGallery(p){
     var mi=document.getElementById('pdMainImg'),mw=document.getElementById('pdMainImgWrap'),vw=document.getElementById('pdVideoWrap'),te=document.getElementById('pdThumbs');
@@ -334,9 +344,15 @@
   }
   function showPdVideo(){
     if(!currentProduct.videoUrl)return;
-    document.getElementById('pdVideoFrame').src=currentProduct.videoUrl;
+    var vw = document.getElementById('pdVideoWrap');
+    var url = currentProduct.videoUrl;
+    if(url.startsWith('data:video') || url.startsWith('blob:') || Boolean(url.match(/\.(mp4|webm|ogg)$/i))) {
+      vw.innerHTML = '<video src="' + url + '" controls autoplay style="width:100%;height:100%;object-fit:contain;border:none;"></video>';
+    } else {
+      vw.innerHTML = '<iframe id="pdVideoFrame" src="' + url + '" allowfullscreen allow="autoplay" style="width:100%;height:100%;border:none;"></iframe>';
+    }
     document.getElementById('pdMainImgWrap').style.display='none';
-    document.getElementById('pdVideoWrap').style.display='flex';
+    vw.style.display='flex';
     document.querySelectorAll('.pd-thumb').forEach(function(el){el.classList.remove('active');});
   }
   function selectPdWeight(btn,idx){
