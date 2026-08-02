@@ -236,18 +236,14 @@ function getSiteData() {
       parsed.products.forEach(p => {
         const defP = DEFAULT_SITE_DATA.products.find(dp => dp.id === p.id);
         if (defP) {
-          if (!p.images || p.images.length < defP.images.length) {
+          if (!p.images || !Array.isArray(p.images) || p.images.length === 0) {
             p.images = [...defP.images];
             updated = true;
           }
-          if (defP.weights && defP.weights.length) {
-            const has250g = (p.weights || []).some(w => w.label === '250g');
-            const defHas250g = defP.weights.some(w => w.label === '250g');
-            if (!has250g && defHas250g) {
-              p.weights = [...defP.weights];
-              p.price = defP.weights[0].price;
-              updated = true;
-            }
+          if (!p.weights || !Array.isArray(p.weights) || p.weights.length === 0) {
+            p.weights = [...defP.weights];
+            p.price = defP.weights[0].price;
+            updated = true;
           }
           // Ensure every weight option has an originalPrice (> price) for strikethrough discount display
           (p.weights || []).forEach((w, wIdx) => {

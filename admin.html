@@ -903,7 +903,7 @@
       if (idx === -1) return;
 
       // Use currentProductImages array (managed by the persistent upload zone)
-      const imgUrls = currentProductImages.length ? [...currentProductImages] : [currentSiteData.products[idx].image || 'Image/Favicon.png'];
+      const imgUrls = [...currentProductImages];
 
       const weightRows = document.querySelectorAll('#weightsListRows .weight-row-item');
       const parsedWeights = [];
