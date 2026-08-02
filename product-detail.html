@@ -256,7 +256,7 @@
         stars: starsStr,
         reviewCount: p.reviewsCount||p.rating||0,
         avgRating: p.rating||5,
-        images: (p.images && p.images.length) ? p.images : [p.image || 'Image/Favicon.png'],
+        images: (p.images && p.images.length > 0) ? p.images : ['Image/Favicon.png'],
         videoUrl: p.videoUrl||'',
         tags: p.badgeItems||[],
         weights: ws,

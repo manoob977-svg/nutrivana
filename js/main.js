@@ -240,6 +240,14 @@ function getSiteData() {
             p.images = [...defP.images];
             updated = true;
           }
+          // Ensure p.image is always synced with p.images[0] or clean placeholder
+          if (Array.isArray(p.images)) {
+            const targetImg = p.images.length > 0 ? p.images[0] : 'Image/Favicon.png';
+            if (p.image !== targetImg) {
+              p.image = targetImg;
+              updated = true;
+            }
+          }
           if (!p.weights || !Array.isArray(p.weights)) {
             p.weights = [...defP.weights];
             p.price = defP.weights[0].price;
