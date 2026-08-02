@@ -236,11 +236,11 @@ function getSiteData() {
       parsed.products.forEach(p => {
         const defP = DEFAULT_SITE_DATA.products.find(dp => dp.id === p.id);
         if (defP) {
-          if (!p.images || !Array.isArray(p.images) || p.images.length === 0) {
+          if (!p.images || !Array.isArray(p.images)) {
             p.images = [...defP.images];
             updated = true;
           }
-          if (!p.weights || !Array.isArray(p.weights) || p.weights.length === 0) {
+          if (!p.weights || !Array.isArray(p.weights)) {
             p.weights = [...defP.weights];
             p.price = defP.weights[0].price;
             updated = true;
