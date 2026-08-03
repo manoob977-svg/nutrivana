@@ -9,7 +9,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="css/style.css?v=2.0" />
+  <link rel="stylesheet" href="css/style.css?v=3.7" />
 </head>
 <body>
 
@@ -97,8 +97,12 @@
               <span id="summarySubtotal">Rs. 0</span>
             </div>
             <div class="summary-row discount">
-              <span>Discount</span>
-              <span>— Rs. 0</span>
+              <span>You Save</span>
+              <span id="summaryDiscount">— Rs. 0</span>
+            </div>
+            <div class="summary-row" id="couponRow" style="display:none;">
+              <span id="couponLabel" style="color: var(--green-dark); font-weight:600;">Coupon Discount</span>
+              <span id="summaryCoupon" style="color: var(--green-dark); font-weight:700;">— Rs. 0</span>
             </div>
             <div class="summary-row">
               <span>Delivery</span>
@@ -109,15 +113,18 @@
               <span id="summaryTotal">Rs. 0</span>
             </div>
 
-            <!-- Promo Code -->
-            <div class="promo-form">
-              <input type="text" id="promoInput" class="promo-input" placeholder="Promo code (NUTRI10)" />
+            <!-- Promo / Coupon Code Box -->
+            <div class="promo-form" style="margin-bottom: 12px;">
+              <input type="text" id="promoInput" class="promo-input" placeholder="Enter coupon code e.g. NUTRIVANA10" />
               <button class="btn btn-outline btn-sm" onclick="applyPromo()">Apply</button>
             </div>
 
-            <!-- Free delivery notice -->
-            <div style="background: rgba(45,106,79,0.07); border-radius: var(--radius-sm); padding: 12px 16px; font-size: 13px; color: var(--green); font-weight: 500; margin-bottom: 4px;">
-              🚚 Free delivery on orders above Rs. 2,000!
+            <!-- Free Delivery Progress Bar -->
+            <div id="freeDeliveryBar" style="margin: 0 0 12px; padding: 12px 14px; background: rgba(45,106,79,0.07); border-radius: 10px; border: 1px solid rgba(45,106,79,0.15);">
+              <div class="free-bar-text" style="font-size:12px; font-weight:600; color: var(--green); margin-bottom:8px;">Add Rs. 2,000 more for FREE Delivery! 🚚</div>
+              <div style="background: rgba(45,106,79,0.12); border-radius:50px; height:6px; overflow:hidden;">
+                <div class="free-bar-fill" style="height:100%; background: var(--green-dark); border-radius:50px; width:0%; transition: width 0.4s ease;"></div>
+              </div>
             </div>
 
             <!-- Checkout -->
@@ -160,63 +167,8 @@
           <span class="section-tag">Complete Your Order</span>
           <h2 class="section-title">You May Also Like</h2>
         </div>
-        <div class="products-grid">
-          <div class="product-card" style="cursor:pointer;" onclick="window.location='product-detail.html?id=talbina'">
-            <div class="product-image-wrap">
-              <span class="sale-tag">BESTSELLER</span>
-              <img src="Image/Talbina/Talbina02.png" alt="Talbina" class="product-img" loading="lazy" />
-              <div class="product-overlay">
-                <button class="btn btn-primary btn-sm" onclick="event.stopPropagation();addToCart('Premium Talbina', 1800, 'Image/Talbina/Talbina02.png')">Add to Cart</button>
-              </div>
-            </div>
-            <div class="product-info">
-              <div class="product-rating"><span class="stars">★★★★★</span><span class="rating-count">(128)</span></div>
-              <h3 class="product-name">Premium Talbina</h3>
-              <div class="product-price"><span class="price-sale">Rs. 1,800</span><span class="price-original">Rs. 2,200</span></div>
-            </div>
-          </div>
-          <div class="product-card" style="cursor:pointer;" onclick="window.location='product-detail.html?id=honey'">
-            <div class="product-image-wrap">
-              <span class="sale-tag">SALE</span>
-              <img src="Image/Honey/Honey01.png" alt="Pure Honey" class="product-img" loading="lazy" />
-              <div class="product-overlay">
-                <button class="btn btn-primary btn-sm" onclick="event.stopPropagation();addToCart('Pure Wild Honey', 2500, 'Image/Honey/Honey01.png')">Add to Cart</button>
-              </div>
-            </div>
-            <div class="product-info">
-              <div class="product-rating"><span class="stars">★★★★★</span><span class="rating-count">(95)</span></div>
-              <h3 class="product-name">Pure Wild Honey</h3>
-              <div class="product-price"><span class="price-sale">Rs. 2,500</span><span class="price-original">Rs. 3,000</span></div>
-            </div>
-          </div>
-          <div class="product-card" style="cursor:pointer;" onclick="window.location='product-detail.html?id=ghee'">
-            <div class="product-image-wrap">
-              <span class="sale-tag">NEW</span>
-              <img src="Image/DesiGhee/Desighi01.png" alt="Desi Ghee" class="product-img" loading="lazy" />
-              <div class="product-overlay">
-                <button class="btn btn-primary btn-sm" onclick="event.stopPropagation();addToCart('Bilona Desi Ghee', 3200, 'Image/DesiGhee/Desighi01.png')">Add to Cart</button>
-              </div>
-            </div>
-            <div class="product-info">
-              <div class="product-rating"><span class="stars">★★★★☆</span><span class="rating-count">(72)</span></div>
-              <h3 class="product-name">Bilona Desi Ghee</h3>
-              <div class="product-price"><span class="price-sale">Rs. 3,200</span><span class="price-original">Rs. 3,800</span></div>
-            </div>
-          </div>
-          <div class="product-card" style="cursor:pointer;" onclick="window.location='product-detail.html?id=oatmeal'">
-            <div class="product-image-wrap">
-              <span class="sale-tag">POPULAR</span>
-              <img src="Image/Oatmeal/Oatmeal01.png" alt="Oatmeal" class="product-img" loading="lazy" />
-              <div class="product-overlay">
-                <button class="btn btn-primary btn-sm" onclick="event.stopPropagation();addToCart('Organic Oatmeal', 1200, 'Image/Oatmeal/Oatmeal01.png')">Add to Cart</button>
-              </div>
-            </div>
-            <div class="product-info">
-              <div class="product-rating"><span class="stars">★★★★★</span><span class="rating-count">(54)</span></div>
-              <h3 class="product-name">Organic Oatmeal</h3>
-              <div class="product-price"><span class="price-sale">Rs. 1,200</span><span class="price-original">Rs. 1,500</span></div>
-            </div>
-          </div>
+        <div class="products-grid" id="cartRelatedProducts">
+          <!-- Dynamically populated from CMS -->
         </div>
       </div>
     </section>
@@ -343,6 +295,6 @@
     </div>
   </div>
 
-  <script src="js/main.js?v=2.0"></script>
+  <script src="js/main.js?v=3.7"></script>
 </body>
 </html>

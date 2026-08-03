@@ -9,11 +9,11 @@ const DEFAULT_SITE_DATA = {
       name: "Premium Talbina",
       tag: "BESTSELLER",
       badgeItems: ["🌾 Organic Barley", "☀️ Sunnah Superfood", "💚 Gut Health", "⚡ Energy Boost"],
-      image: "Image/Talbina/Talbina02.png",
+      image: "Image/Talbina/Front Talbina.png",
       images: [
+        "Image/Talbina/Front Talbina.png",
+        "Image/Talbina/Back Talbina.png",
         "Image/Talbina/Talbina02.png",
-        "Image/Talbina/Talbina03.jpeg",
-        "Image/Talbina/Talbina04.png",
         "Image/Talbina/Talbina03.jpeg"
       ],
       rating: 5,
@@ -41,9 +41,7 @@ const DEFAULT_SITE_DATA = {
       image: "Image/Honey/Honey01.png",
       images: [
         "Image/Honey/Honey01.png",
-        "Image/Banner-Honey.png",
-        "Image/Gemini_Generated_Image_n8363mn8363mn836.png",
-        "Image/Honey/Honey01.png"
+        "Image/Honey/Honey02.jpeg"
       ],
       rating: 5,
       reviewsCount: 96,
@@ -70,9 +68,7 @@ const DEFAULT_SITE_DATA = {
       image: "Image/DesiGhee/Desighi01.png",
       images: [
         "Image/DesiGhee/Desighi01.png",
-        "Image/Banner -Desi-Ghee.png",
-        "Image/Brackfast.png",
-        "Image/DesiGhee/Desighi01.png"
+        "Image/DesiGhee/Desighee03.png"
       ],
       rating: 5,
       reviewsCount: 142,
@@ -96,13 +92,12 @@ const DEFAULT_SITE_DATA = {
       name: "Whole Grain Oatmeal",
       tag: "HIGH FIBER",
       badgeItems: ["🥣 Rolled Whole Oats", "❤️ Heart Healthy", "🌱 100% Natural", "⏱️ Quick 5-Min Meal"],
-      image: "Image/Oatmeal/Oatmeal01.png",
+      image: "Image/1.jpg",
       images: [
-        "Image/Oatmeal/Oatmeal01.png",
-        "Image/Oatmeal/Oatmeal02.png",
-        "Image/Oatmeal/Oatmeal3.jpeg",
-        "Image/Oatmeal/Oatmeal4.jpeg",
-        "Image/Banner-Oatmeal.png"
+        "Image/1.jpg",
+        "Image/2.jpg",
+        "Image/3.jpg",
+        "Image/4.jpg"
       ],
       rating: 5,
       reviewsCount: 84,
@@ -175,6 +170,31 @@ const DEFAULT_SITE_DATA = {
     deliveryFee: 200,
     currency: "Rs."
   },
+  homepage: {
+    howToSteps: [
+      { icon: "🥣", title: "Measure Your Serving", desc: "Take 2-3 tablespoons of Talbina or ½ cup Oatmeal for one healthy portion." },
+      { icon: "🔥", title: "Cook with Care", desc: "Simmer in milk or water on low flame for 10-12 minutes, stirring gently." },
+      { icon: "🍯", title: "Sweeten Naturally", desc: "Drizzle Nutrivana Pure Honey for natural sweetness and added immunity." },
+      { icon: "💚", title: "Enjoy Daily", desc: "Consume warm every morning for sustained energy, gut health, and calm focus." }
+    ],
+    benefits: [
+      { icon: "🌾", title: "Sunnah Superfood", desc: "Rooted in Prophetic tradition — Talbina is a time-honored healing food for body and mind." },
+      { icon: "💚", title: "Gut & Digestive Health", desc: "Beta-glucan fiber supports healthy digestion, bowel regularity, and gut microbiome balance." },
+      { icon: "⚡", title: "Sustained Energy", desc: "Complex carbohydrates release energy slowly — keeping you focused and active all day." },
+      { icon: "🛡️", title: "Immune Defense", desc: "Packed with zinc, selenium, and antioxidants to strengthen your body's natural defenses." }
+    ],
+    testimonials: [
+      { name: "Fatima A.", location: "Lahore", rating: 5, text: "Nutrivana Talbina has completely transformed my mornings. I feel so much lighter and energized — pure quality you can taste!", product: "Talbina" },
+      { name: "Ahmed K.", location: "Karachi", rating: 5, text: "The Bilona Desi Ghee is absolutely authentic. Golden, aromatic, and exactly what my family needed. Highly recommended!", product: "Desi Ghee" },
+      { name: "Sarah M.", location: "Islamabad", rating: 5, text: "I've tried many honey brands but Nutrivana's raw honey is incomparable — thick, dark, and incredibly pure. Worth every rupee.", product: "Pure Honey" }
+    ],
+    faqs: [
+      { q: "Are all Nutrivana products 100% organic and natural?", a: "Yes! Every Nutrivana product is 100% raw, pure, and free from artificial preservatives, colors, or additives. We source directly from trusted farms and beekeepers." },
+      { q: "What is the shelf life of your products?", a: "Talbina: 12 months. Honey: 24 months. Desi Ghee: 12 months. Oatmeal: 18 months. Store in a cool dry place away from direct sunlight." },
+      { q: "Do you offer Cash on Delivery (COD)?", a: "Yes! We offer COD across all major cities in Pakistan along with JazzCash, EasyPaisa, and Raast transfer options." },
+      { q: "How long does delivery take?", a: "Standard delivery takes 3-5 working days across Pakistan. Orders above Rs. 2000 qualify for FREE delivery." }
+    ]
+  },
   orders: [
     {
       orderId: "NV-10842",
@@ -235,18 +255,22 @@ function getSiteData() {
     if (parsed.products && Array.isArray(parsed.products)) {
       parsed.products.forEach(p => {
         const defP = DEFAULT_SITE_DATA.products.find(dp => dp.id === p.id);
+        // Detect stale/broken image paths (banner paths, old root-level paths that no longer exist)
+        const isStaleImg = (img) => typeof img === 'string' && (
+          img.includes('Banner') || img.includes('Brackfast') || img.includes('Gemini') ||
+          img === 'Image/Front Talbina.png' || img === 'Image/Back Talbina.png' ||
+          img === 'Image/Front Oatmeal.png' || img === 'Image/Back Oatmeal.png'
+        );
         if (defP) {
-          if (!p.images || !Array.isArray(p.images)) {
+          // Only reset images if they are stale paths AND not using split-storage placeholder
+          const hasStoredPlaceholder = p.images && p.images[0] === '__nv_stored__';
+          if (!hasStoredPlaceholder && (!p.images || !Array.isArray(p.images) || p.images.some(isStaleImg))) {
             p.images = [...defP.images];
             updated = true;
           }
-          // Ensure p.image is always synced with p.images[0] or clean placeholder
-          if (Array.isArray(p.images)) {
-            const targetImg = p.images.length > 0 ? p.images[0] : 'Image/Favicon.png';
-            if (p.image !== targetImg) {
-              p.image = targetImg;
-              updated = true;
-            }
+          if (!p.image || isStaleImg(p.image)) {
+            p.image = (p.images && p.images[0] !== '__nv_stored__' ? p.images[0] : null) || defP.image;
+            updated = true;
           }
           if (!p.weights || !Array.isArray(p.weights)) {
             p.weights = [...defP.weights];
@@ -265,6 +289,19 @@ function getSiteData() {
               updated = true;
             }
           });
+        } else {
+          if (!p.images || !Array.isArray(p.images)) {
+            p.images = [p.image || 'Image/Favicon.png'];
+            updated = true;
+          }
+          if (!p.image) {
+            p.image = p.images[0] || 'Image/Favicon.png';
+            updated = true;
+          }
+          if (!p.weights || !Array.isArray(p.weights)) {
+            p.weights = [{ label: "Standard", price: p.price || 1000, originalPrice: Math.round((p.price || 1000) * 1.22) }];
+            updated = true;
+          }
         }
       });
     }
@@ -273,25 +310,149 @@ function getSiteData() {
       try { localStorage.setItem('nutrivanaSiteData', JSON.stringify(parsed)); } catch (e) {}
     }
 
+    // Reintegrate split-stored media (images + video stored separately due to size)
+    if (parsed.products && Array.isArray(parsed.products)) {
+      parsed.products.forEach(p => {
+        // Restore images from separate key if placeholder present
+        if (p.images && p.images[0] === '__nv_stored__') {
+          const storedImgs = localStorage.getItem('nv_imgs_' + p.id);
+          if (storedImgs) {
+            try {
+              const parsedImgs = JSON.parse(storedImgs);
+              if (Array.isArray(parsedImgs) && parsedImgs.length) {
+                p.images = parsedImgs;
+                p.image = parsedImgs[0];
+              }
+            } catch(e) {}
+          }
+        }
+        // Restore video from separate key if placeholder present
+        if (p.videoUrl === '__nv_vid_stored__') {
+          const storedVid = localStorage.getItem('nv_vid_' + p.id);
+          p.videoUrl = storedVid || '';
+        }
+      });
+    }
+
     return {
-      products: parsed.products || DEFAULT_SITE_DATA.products || [],
-      banners: parsed.banners || DEFAULT_SITE_DATA.banners || [],
+      products: (parsed.products && parsed.products.length) ? parsed.products : JSON.parse(JSON.stringify(DEFAULT_SITE_DATA.products)),
+      banners: (parsed.banners && parsed.banners.length) ? parsed.banners : JSON.parse(JSON.stringify(DEFAULT_SITE_DATA.banners)),
       settings: { ...DEFAULT_SITE_DATA.settings, ...(parsed.settings || {}) },
-      orders: parsed.orders || DEFAULT_SITE_DATA.orders || []
+      orders: parsed.orders || DEFAULT_SITE_DATA.orders || [],
+      homepage: { ...DEFAULT_SITE_DATA.homepage, ...(parsed.homepage || {}) },
+      coupons: parsed.coupons || null
     };
   } catch (e) {
-    return DEFAULT_SITE_DATA;
+    console.error("Error loading site data:", e);
+    return JSON.parse(JSON.stringify(DEFAULT_SITE_DATA));
   }
+}
+
+// ---- INDEXEDDB UNLIMITED MEDIA STORAGE (Images & Video) ----
+const NV_DB_NAME = 'NutrivanaMediaDB_v1';
+
+function getNVDB() {
+  return new Promise((resolve) => {
+    if (!window.indexedDB) return resolve(null);
+    try {
+      const req = indexedDB.open(NV_DB_NAME, 1);
+      req.onupgradeneeded = (e) => {
+        const db = e.target.result;
+        if (!db.objectStoreNames.contains('media')) {
+          db.createObjectStore('media', { keyPath: 'id' });
+        }
+      };
+      req.onsuccess = (e) => resolve(e.target.result);
+      req.onerror = () => resolve(null);
+    } catch(err) {
+      resolve(null);
+    }
+  });
+}
+
+function saveMediaToDB(productId, images, videoUrl) {
+  try {
+    getNVDB().then(db => {
+      if (!db) return;
+      const tx = db.transaction('media', 'readwrite');
+      const store = tx.objectStore('media');
+      store.put({ id: productId, images: images || [], videoUrl: videoUrl || '', updatedAt: Date.now() });
+    });
+  } catch (e) {
+    console.warn('IndexedDB save media exception:', e);
+  }
+}
+
+function loadMediaFromDB(productId) {
+  return new Promise((resolve) => {
+    try {
+      getNVDB().then(db => {
+        if (!db) return resolve(null);
+        const tx = db.transaction('media', 'readonly');
+        const store = tx.objectStore('media');
+        const req = store.get(productId);
+        req.onsuccess = () => resolve(req.result || null);
+        req.onerror = () => resolve(null);
+      });
+    } catch (e) {
+      resolve(null);
+    }
+  });
 }
 
 function saveSiteData(data) {
   try {
-    localStorage.setItem('nutrivanaSiteData', JSON.stringify(data));
+    // Also save media arrays to IndexedDB for unlimited capacity
+    if (data.products && Array.isArray(data.products)) {
+      data.products.forEach(p => {
+        if ((Array.isArray(p.images) && p.images.length) || p.videoUrl) {
+          saveMediaToDB(p.id, p.images, p.videoUrl);
+        }
+      });
+    }
+
+    // Build a lightweight version: extract large base64 images/video into separate keys
+    const toStore = {
+      ...data,
+      products: (data.products || []).map(p => {
+        const slim = { ...p };
+
+        // --- IMAGES: store separately if any image is a large base64 ---
+        const hasLargeImg = Array.isArray(p.images) && p.images.some(img =>
+          typeof img === 'string' && img.startsWith('data:')
+        );
+        if (hasLargeImg) {
+          try {
+            localStorage.setItem('nv_imgs_' + p.id, JSON.stringify(p.images));
+          } catch(imgErr) {}
+          slim.images = ['__nv_stored__'];
+          slim.image = p.images[0];
+        }
+
+        // --- VIDEO: store separately if it's a large base64 ---
+        const isLargeVideo = typeof p.videoUrl === 'string' && p.videoUrl.startsWith('data:');
+        if (isLargeVideo) {
+          try {
+            localStorage.setItem('nv_vid_' + p.id, p.videoUrl);
+            slim.videoUrl = '__nv_vid_stored__';
+          } catch(vidErr) {
+            // Keep placeholder so IndexedDB can restore it
+            slim.videoUrl = '__nv_vid_stored__';
+          }
+        } else if (!p.videoUrl || p.videoUrl === '__nv_vid_stored__') {
+          if (!p.videoUrl) localStorage.removeItem('nv_vid_' + p.id);
+        }
+
+        return slim;
+      })
+    };
+
+    localStorage.setItem('nutrivanaSiteData', JSON.stringify(toStore));
     return true;
   } catch (e) {
     console.error("localStorage save failed:", e);
     if (typeof showToast === 'function') {
-      showToast('⚠️ Storage full! For banner images, use "Browse Image" then click OK to link as local path instead of embedding.');
+      showToast('⚠️ Save failed: Storage full. Try using fewer/smaller images or a YouTube video URL.');
     }
     return false;
   }
@@ -332,8 +493,10 @@ function syncDynamicContent() {
   const productsGrid = document.getElementById('productsGrid');
   if (productsGrid && data.products && data.products.length) {
     productsGrid.innerHTML = data.products.map(p => {
-      const img1 = (p.images && p.images[0]) || p.image || 'Image/Favicon.png';
-      const img2 = (p.images && p.images[1]) || img1;
+      let rawImgs = Array.isArray(p.images) ? p.images.filter(img => typeof img === 'string' && img !== '__nv_stored__') : [];
+      if (!rawImgs.length && p.image && p.image !== '__nv_stored__') rawImgs = [p.image];
+      const img1 = rawImgs[0] || 'Image/Favicon.png';
+      const img2 = rawImgs[1] || img1;
       const w0 = (p.weights && p.weights[0]) ? p.weights[0] : { price: p.price || 0 };
       const salePrice = w0.price || p.price || 0;
       const origPrice = (w0.originalPrice && w0.originalPrice > salePrice) ? w0.originalPrice : Math.round(salePrice * 1.22);
@@ -359,8 +522,8 @@ function syncDynamicContent() {
             <h3 class="product-name">${escapeHtml(p.name)}</h3>
             <p class="product-desc">${escapeHtml(p.description || '')}</p>
             <div class="product-price" style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
-              <span class="price-original" style="text-decoration: line-through; color: #d90429; font-size: 13px; font-weight: 500;">Rs. ${origPrice.toLocaleString()}</span>
-              <span class="price-sale" style="font-weight: 700; color: var(--green-dark); font-size: 17px;">Rs. ${salePrice.toLocaleString()}</span>
+              <span class="price-sale" style="font-family: var(--font-heading); font-weight: 700; color: var(--green-dark); font-size: 20px;">Rs ${salePrice.toLocaleString()}</span>
+              <span class="price-original" style="font-family: var(--font-heading); text-decoration: line-through; color: #d90429; font-size: 14px; font-weight: 400;">Rs ${origPrice.toLocaleString()}</span>
             </div>
           </div>
         </div>
@@ -373,8 +536,10 @@ function syncDynamicContent() {
   if (dynamicContainer && data.products && data.products.length) {
     dynamicContainer.innerHTML = data.products.map((p, index) => {
       const isEven = index % 2 === 0;
-      const img1 = (p.images && p.images[0]) || p.image || 'Image/Favicon.png';
-      const img2 = (p.images && p.images[1]) || img1;
+      let rawImgs = Array.isArray(p.images) ? p.images.filter(img => typeof img === 'string' && img !== '__nv_stored__') : [];
+      if (!rawImgs.length && p.image && p.image !== '__nv_stored__') rawImgs = [p.image];
+      const img1 = rawImgs[0] || 'Image/Favicon.png';
+      const img2 = rawImgs[1] || img1;
 
       // Initialize state for this product
       window.productStates[p.id] = window.productStates[p.id] || { weightIdx: 0, qty: 1 };
@@ -438,9 +603,9 @@ function syncDynamicContent() {
               </div>
             </div>
           ` : ''}
-          <div class="product-price" style="margin-bottom: 20px;" id="price-box-${p.id}">
-            <span class="price-original" style="text-decoration: line-through; color: #d90429; font-weight: 500; font-size: 18px; margin-right: 10px;">Rs. ${origPrice.toLocaleString()}</span>
-            <span class="price-sale" style="font-size: 26px; font-weight: 700; color: var(--green-dark);">Rs. ${totalPrice.toLocaleString()}</span>
+          <div class="product-price" style="margin-bottom: 20px; display: flex; align-items: center; gap: 12px;" id="price-box-${p.id}">
+            <span class="price-sale" style="font-family: var(--font-heading); font-size: 28px; font-weight: 700; color: var(--green-dark);">Rs ${totalPrice.toLocaleString()}</span>
+            <span class="price-original" style="font-family: var(--font-heading); text-decoration: line-through; color: #d90429; font-weight: 400; font-size: 18px;">Rs ${origPrice.toLocaleString()}</span>
           </div>
           <div style="display: flex; align-items: center; gap: 16px; margin-bottom: 24px;">
             <div class="quantity-selector">
@@ -465,7 +630,79 @@ function syncDynamicContent() {
       `;
     }).join('');
   }
+
+  // 5. Homepage Testimonials (index.html — dynamic from Admin CMS)
+  const testimonialsGrid = document.getElementById('homepageTestimonialsGrid');
+  if (testimonialsGrid && data.homepage && data.homepage.testimonials && data.homepage.testimonials.length) {
+    testimonialsGrid.innerHTML = data.homepage.testimonials.map(t => {
+      const stars = '★'.repeat(Math.min(5, Math.round(t.rating || 5))) + '☆'.repeat(Math.max(0, 5 - Math.round(t.rating || 5)));
+      const initial = (t.name || 'C').charAt(0).toUpperCase();
+      return `
+        <div class="testimonial-card reveal">
+          <div class="testimonial-stars">${stars}</div>
+          <p>"${escapeHtml(t.text || '')}"</p>
+          <div class="testimonial-author">
+            <div class="author-avatar">${initial}</div>
+            <div>
+              <strong>${escapeHtml(t.name || '')}</strong>
+              <span>${escapeHtml(t.location || '')}</span>
+            </div>
+          </div>
+          ${t.product ? `<div style="margin-top:8px; font-size:11px; color:var(--green); font-weight:600; text-transform:uppercase; letter-spacing:0.05em;">Verified Purchase • ${escapeHtml(t.product)}</div>` : ''}
+        </div>
+      `;
+    }).join('');
+  }
+
+  // 6. Footer Social Links & Contact (from CMS settings)
+  if (data.settings) {
+    const s = data.settings;
+    // WhatsApp floating button
+    document.querySelectorAll('.whatsapp-float-btn').forEach(el => {
+      if (s.whatsapp) el.href = s.whatsapp;
+    });
+    // Update footer phone/email anchor tags if they exist
+    document.querySelectorAll('a[href^="tel:"]').forEach(el => {
+      if (s.phone) { el.href = `tel:${s.phone.replace(/\s/g,'')}`; el.textContent = s.phone; }
+    });
+    document.querySelectorAll('a[href^="mailto:"]').forEach(el => {
+      if (s.email) { el.href = `mailto:${s.email}`; el.textContent = s.email; }
+    });
+  }
+
+  // 7. Cart Page "You May Also Like" (cart.html — dynamic)
+  const cartRelated = document.getElementById('cartRelatedProducts');
+  if (cartRelated && data.products && data.products.length) {
+    const maxShow = Math.min(4, data.products.length);
+    cartRelated.innerHTML = data.products.slice(0, maxShow).map(p => {
+      const img = (p.images && p.images[0]) || p.image || 'Image/Favicon.png';
+      const w0 = (p.weights && p.weights[0]) || { price: p.price || 0, originalPrice: null };
+      const salePrice = w0.price || 0;
+      const origPrice = (w0.originalPrice && w0.originalPrice > salePrice) ? w0.originalPrice : Math.round(salePrice * 1.2);
+      const stars = '★'.repeat(Math.round(p.rating || 5)) + '☆'.repeat(5 - Math.round(p.rating || 5));
+      return `
+        <div class="product-card" style="cursor:pointer;" onclick="window.location='product-detail.html?id=${p.id}'">
+          <div class="product-image-wrap">
+            <span class="sale-tag">${escapeHtml(p.tag || 'NEW')}</span>
+            <img src="${img}" alt="${escapeHtml(p.name)}" class="product-img" loading="lazy" />
+            <div class="product-overlay">
+              <button class="btn btn-primary btn-sm" onclick="event.stopPropagation();addToCart('${escapeHtml(p.name)}', ${salePrice}, '${img}', 1, ${origPrice})">Add to Cart</button>
+            </div>
+          </div>
+          <div class="product-info">
+            <div class="product-rating"><span class="stars">${stars}</span><span class="rating-count">(${p.reviewsCount || 100})</span></div>
+            <h3 class="product-name">${escapeHtml(p.name)}</h3>
+            <div class="product-price">
+              <span class="price-sale">Rs. ${salePrice.toLocaleString()}</span>
+              <span class="price-original">Rs. ${origPrice.toLocaleString()}</span>
+            </div>
+          </div>
+        </div>
+      `;
+    }).join('');
+  }
 }
+
 
 // Global product card state store for products.html
 window.productStates = window.productStates || {};
@@ -767,35 +1004,54 @@ function renderCartPage() {
 
 function updateSummary() {
   const subtotal = cart.reduce((s, i) => s + i.price * i.qty, 0);
-  const totalSavings = cart.reduce((s, i) => {
-    if (i.originalPrice && i.originalPrice > i.price) {
-      return s + ((i.originalPrice - i.price) * i.qty);
-    }
+  const productSavings = cart.reduce((s, i) => {
+    if (i.originalPrice && i.originalPrice > i.price) return s + ((i.originalPrice - i.price) * i.qty);
     return s;
   }, 0);
 
-  const delivery = subtotal >= 2000 ? 0 : (subtotal > 0 ? 200 : 0);
-  const total = subtotal + delivery;
+  // Factor in active coupon
+  const activeCouponStr = sessionStorage.getItem('nutrivanaActiveCoupon');
+  const activeCoupon = activeCouponStr ? JSON.parse(activeCouponStr) : null;
+  const couponDiscount = activeCoupon ? (activeCoupon.discount || 0) : 0;
+  const totalSavings = productSavings + couponDiscount;
+  const subtotalAfterCoupon = Math.max(0, subtotal - couponDiscount);
+
+  const delivery = subtotalAfterCoupon >= 2000 ? 0 : (subtotal > 0 ? 200 : 0);
+  const total = subtotalAfterCoupon + delivery;
 
   const subEl = document.getElementById('summarySubtotal');
   const discEl = document.getElementById('summaryDiscount');
+  const couponEl = document.getElementById('summaryCoupon');
   const delEl = document.getElementById('summaryDelivery');
   const totEl = document.getElementById('summaryTotal');
+  const freeBarEl = document.getElementById('freeDeliveryBar');
 
   if (subEl) subEl.textContent = `Rs. ${subtotal.toLocaleString()}`;
-  if (discEl) discEl.textContent = totalSavings > 0 ? `— Rs. ${totalSavings.toLocaleString()}` : `— Rs. 0`;
-  if (delEl) delEl.textContent = delivery === 0 ? 'FREE' : `Rs. ${delivery.toLocaleString()}`;
-  if (totEl) totEl.textContent = `Rs. ${total.toLocaleString()}`;
-}
+  if (discEl) discEl.textContent = productSavings > 0 ? `— Rs. ${productSavings.toLocaleString()}` : `— Rs. 0`;
+  
+  // Update coupon discount row dynamically
+  if (couponEl) {
+    couponEl.parentElement.style.display = couponDiscount > 0 ? '' : 'none';
+    couponEl.textContent = `— Rs. ${couponDiscount.toLocaleString()}`;
+  }
 
-function applyPromo() {
-  const input = document.getElementById('promoInput');
-  if (!input) return;
-  const code = input.value.trim().toUpperCase();
-  if (code === 'NUTRI10') {
-    showToast('🎉 Promo code applied! 10% off');
-  } else {
-    showToast('❌ Invalid promo code');
+  if (delEl) delEl.textContent = delivery === 0 ? 'FREE 🚚' : `Rs. ${delivery.toLocaleString()}`;
+  if (totEl) totEl.textContent = `Rs. ${total.toLocaleString()}`;
+
+  // Free delivery progress bar
+  if (freeBarEl) {
+    const threshold = 2000;
+    const remaining = Math.max(0, threshold - subtotalAfterCoupon);
+    const pct = Math.min(100, Math.round((subtotalAfterCoupon / threshold) * 100));
+    const barFill = freeBarEl.querySelector('.free-bar-fill');
+    const barText = freeBarEl.querySelector('.free-bar-text');
+    if (barFill) barFill.style.width = pct + '%';
+    if (barText) {
+      barText.textContent = remaining > 0
+        ? `Add Rs. ${remaining.toLocaleString()} more for FREE Delivery! 🚚`
+        : '🎉 You qualify for FREE Delivery!';
+      barText.style.color = remaining === 0 ? 'var(--green-dark)' : '';
+    }
   }
 }
 
@@ -938,8 +1194,12 @@ function openCheckoutModal() {
   }
 
   const subtotal = cart.reduce((sum, item) => sum + (item.price * item.qty), 0);
-  const deliveryFee = subtotal >= 2000 ? 0 : 200;
-  const grandTotal = subtotal + deliveryFee;
+  const activeCouponStr = sessionStorage.getItem('nutrivanaActiveCoupon');
+  const activeCoupon = activeCouponStr ? JSON.parse(activeCouponStr) : null;
+  const couponDiscount = activeCoupon ? (activeCoupon.discount || 0) : 0;
+  const subtotalAfterDiscount = Math.max(0, subtotal - couponDiscount);
+  const deliveryFee = subtotalAfterDiscount >= 2000 ? 0 : 200;
+  const grandTotal = subtotalAfterDiscount + deliveryFee;
 
   const savedDragX = checkoutModal.dataset.dragX || '0';
   const savedDragY = checkoutModal.dataset.dragY || '0';
@@ -1027,13 +1287,18 @@ function openCheckoutModal() {
 
         <!-- Order Summary Box -->
         <div style="background: rgba(27,67,50,0.05); padding: 14px 18px; border-radius: 10px; margin-bottom: 20px; font-size: 14px; color: var(--green-dark);">
-          <div style="display:flex; justify-space-between; margin-bottom: 4px;">
+          <div style="display:flex; justify-content:space-between; margin-bottom: 4px;">
             <span>Subtotal:</span><strong>Rs. ${subtotal.toLocaleString()}</strong>
           </div>
-          <div style="display:flex; justify-space-between; margin-bottom: 6px;">
+          ${couponDiscount > 0 ? `
+            <div style="display:flex; justify-content:space-between; margin-bottom: 4px; color: #d90429;">
+              <span>Coupon Discount (${escapeHtml(activeCoupon.code)}):</span><strong>− Rs. ${couponDiscount.toLocaleString()}</strong>
+            </div>
+          ` : ''}
+          <div style="display:flex; justify-content:space-between; margin-bottom: 6px;">
             <span>Shipping:</span><strong>${deliveryFee === 0 ? 'FREE 🚚' : 'Rs. ' + deliveryFee}</strong>
           </div>
-          <div style="display:flex; justify-space-between; font-size: 17px; font-weight: 700; border-top: 1px solid rgba(27,67,50,0.15); padding-top: 6px;">
+          <div style="display:flex; justify-content:space-between; font-size: 17px; font-weight: 700; border-top: 1px solid rgba(27,67,50,0.15); padding-top: 6px;">
             <span>Total Payable:</span><span>Rs. ${grandTotal.toLocaleString()}</span>
           </div>
         </div>
@@ -1659,8 +1924,143 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Contact form
   const contactForm = document.getElementById('contactForm');
-  contactForm?.addEventListener('submit', handleContactForm);
+  if (contactForm && typeof handleContactForm === 'function') {
+    contactForm.addEventListener('submit', handleContactForm);
+  }
 });
+
+// ---- CONTACT FORM HANDLER ----
+function handleContactForm(e) {
+  e.preventDefault();
+  const firstName = (document.getElementById('firstName')?.value || '').trim();
+  const lastName  = (document.getElementById('lastName')?.value  || '').trim();
+  const email     = (document.getElementById('email')?.value     || '').trim();
+  const phone     = (document.getElementById('phone')?.value     || '').trim();
+  const subject   = (document.getElementById('subject')?.value   || '').trim();
+  const message   = (document.getElementById('message')?.value   || '').trim();
+
+  if (!firstName || !email || !phone || !subject || !message) {
+    showToast('⚠️ Please fill in all required fields.');
+    return;
+  }
+
+  // Build WhatsApp message
+  const waText = encodeURIComponent(
+    `*New Contact Form Message* 🌿\n\n` +
+    `*Name:* ${firstName} ${lastName}\n` +
+    `*Email:* ${email}\n` +
+    `*Phone:* ${phone}\n` +
+    `*Subject:* ${subject}\n\n` +
+    `*Message:*\n${message}`
+  );
+
+  const siteData = getSiteData();
+  const waNumber = (siteData.settings && siteData.settings.whatsapp)
+    ? siteData.settings.whatsapp.replace(/\D/g, '')
+    : '923347000322';
+
+  showToast('✅ Message sent! Redirecting to WhatsApp...');
+
+  setTimeout(function() {
+    window.open('https://wa.me/' + waNumber + '?text=' + waText, '_blank');
+  }, 1200);
+
+  // Reset form
+  e.target.reset();
+}
+
+// ---- DATA BACKUP EXPORT & IMPORT UTILITIES ----
+function exportStoreData() {
+  const data = getSiteData();
+  const jsonStr = JSON.stringify(data, null, 2);
+  const blob = new Blob([jsonStr], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `nutrivana-store-backup-${new Date().toISOString().slice(0, 10)}.json`;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+  if (typeof showToast === 'function') {
+    showToast('📦 Store Data Backup Exported Successfully!');
+  }
+}
+
+function importStoreData(fileInput) {
+  if (!fileInput.files || !fileInput.files[0]) return;
+  const file = fileInput.files[0];
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    try {
+      const parsed = JSON.parse(e.target.result);
+      if (parsed && typeof parsed === 'object' && (parsed.products || parsed.settings)) {
+        saveSiteData(parsed);
+        syncDynamicContent();
+        if (typeof showToast === 'function') {
+          showToast('🎉 Store Data Imported Successfully!');
+        }
+        setTimeout(() => location.reload(), 1200);
+      } else {
+        alert('Invalid JSON file format!');
+      }
+    } catch (err) {
+      alert('Failed to parse backup JSON file: ' + err.message);
+    }
+  };
+  reader.readAsText(file);
+}
+
+// ---- COUPON & DISCOUNT ENGINE ----
+function applyCouponCode(codeStr) {
+  const code = (codeStr || '').trim().toUpperCase();
+  if (!code) {
+    showToast('⚠️ Please enter a coupon code.');
+    return false;
+  }
+  const data = getSiteData();
+  const coupons = data.coupons || [
+    { code: 'NUTRIVANA10', type: 'percent', amount: 10, minSpend: 1000, description: '10% OFF on orders over Rs. 1000' },
+    { code: 'WELCOME500', type: 'fixed', amount: 500, minSpend: 2500, description: 'Rs. 500 OFF on orders over Rs. 2500' }
+  ];
+
+  const found = coupons.find(c => c.code === code);
+  if (!found) {
+    showToast('❌ Invalid or expired coupon code.');
+    return false;
+  }
+
+  const cart = getCart();
+  const subtotal = cart.reduce((acc, item) => acc + (item.price * item.qty), 0);
+  if (found.minSpend && subtotal < found.minSpend) {
+    showToast(`⚠️ Minimum cart value of Rs. ${found.minSpend} required for code ${found.code}.`);
+    return false;
+  }
+
+  let discountAmt = 0;
+  if (found.type === 'percent') {
+    discountAmt = Math.round((subtotal * found.amount) / 100);
+  } else {
+    discountAmt = found.amount;
+  }
+
+  sessionStorage.setItem('nutrivanaActiveCoupon', JSON.stringify({
+    code: found.code,
+    discount: discountAmt,
+    description: found.description || `${found.amount}${found.type === 'percent' ? '%' : ' Rs.'} Discount`
+  }));
+
+  showToast(`🎉 Coupon ${found.code} Applied! You save Rs. ${discountAmt.toLocaleString()}`);
+  renderCartPage();
+  return true;
+}
+
+function applyPromo() {
+  const input = document.getElementById('promoInput');
+  if (input) {
+    applyCouponCode(input.value);
+  }
+}
 
 // Run floating widgets immediately if script executes after DOMReady
 if (document.readyState !== 'loading') {

@@ -9,7 +9,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="css/style.css?v=3.0" />
+  <link rel="stylesheet" href="css/style.css?v=3.7" />
   <!-- High Priority Image Preload for Instant First-Paint -->
   <link rel="preload" as="image" href="Image/Banner_Oatmeal.png" fetchpriority="high" />
 </head>
@@ -136,105 +136,8 @@
         </div>
 
         <div class="products-grid" id="productsGrid">
-
-          <div class="product-card" data-product="talbina" style="cursor:pointer;" onclick="window.location='product-detail.html?id=talbina'">
-            <div class="product-img-wrap">
-              <span class="sale-tag">BESTSELLER</span>
-              <img src="Image/Talbina/Talbina02.png" alt="Talbina" class="product-img primary-img" loading="lazy" />
-              <img src="Image/Brackfast.png" alt="Talbina Hover" class="product-img hover-img" loading="lazy" />
-              <div class="product-overlay">
-                <button class="btn btn-primary btn-sm" onclick="event.stopPropagation();addToCart('Talbina', 850, 'Image/Talbina/Talbina02.png')">Add to Cart</button>
-                <a href="product-detail.html?id=talbina" class="btn btn-outline btn-sm" onclick="event.stopPropagation()">View Details</a>
-              </div>
-            </div>
-            <div class="product-info">
-              <div class="product-rating">
-                <span class="stars">★★★★★</span>
-                <span class="rating-count">(128)</span>
-              </div>
-              <h3 class="product-name">Premium Talbina</h3>
-              <p class="product-desc">Organic barley powder — Sunnah superfood for energy &amp; wellbeing</p>
-              <div class="product-price">
-                <span class="price-original">Rs. 1,000</span>
-                <span class="price-sale">Rs. 850</span>
-              </div>
-            </div>
-          </div>
-
-          <div class="product-card" data-product="honey" style="cursor:pointer;" onclick="window.location='product-detail.html?id=honey'">
-            <div class="product-img-wrap">
-              <span class="sale-tag">100% RAW</span>
-              <img src="Image/Honey/Honey01.png" alt="Pure Honey" class="product-img primary-img" loading="lazy" />
-              <img src="Image/Banner_Honey.png" alt="Pure Honey Hover" class="product-img hover-img" loading="lazy" />
-              <div class="product-overlay">
-                <button class="btn btn-primary btn-sm" onclick="event.stopPropagation();addToCart('Pure Honey', 1250, 'Image/Honey/Honey01.png')">Add to Cart</button>
-                <a href="product-detail.html?id=honey" class="btn btn-outline btn-sm" onclick="event.stopPropagation()">View Details</a>
-              </div>
-            </div>
-            <div class="product-info">
-              <div class="product-rating">
-                <span class="stars">★★★★★</span>
-                <span class="rating-count">(95)</span>
-              </div>
-              <h3 class="product-name">Pure Wild Honey</h3>
-              <p class="product-desc">Raw, unfiltered honey — straight from the mountains of Pakistan</p>
-              <div class="product-price">
-                <span class="price-original">Rs. 1,450</span>
-                <span class="price-sale">Rs. 1,250</span>
-              </div>
-            </div>
-          </div>
-
-          <div class="product-card" data-product="ghee" style="cursor:pointer;" onclick="window.location='product-detail.html?id=ghee'">
-            <div class="product-img-wrap">
-              <span class="sale-tag">HANDCHURNED</span>
-              <img src="Image/DesiGhee/Desighi01.png" alt="Desi Ghee" class="product-img primary-img" loading="lazy" />
-              <img src="Image/Banner_Collection.png" alt="Desi Ghee Hover" class="product-img hover-img" loading="lazy" />
-              <div class="product-overlay">
-                <button class="btn btn-primary btn-sm" onclick="event.stopPropagation();addToCart('Desi Ghee', 1800, 'Image/DesiGhee/Desighi01.png')">Add to Cart</button>
-                <a href="product-detail.html?id=ghee" class="btn btn-outline btn-sm" onclick="event.stopPropagation()">View Details</a>
-              </div>
-            </div>
-            <div class="product-info">
-              <div class="product-rating">
-                <span class="stars">★★★★★</span>
-                <span class="rating-count">(142)</span>
-              </div>
-              <h3 class="product-name">Bilona Desi Ghee</h3>
-              <p class="product-desc">Hand-churned A2 cow ghee — rich in nutrients &amp; traditional flavor</p>
-              <div class="product-price">
-                <span class="price-original">Rs. 2,100</span>
-                <span class="price-sale">Rs. 1,800</span>
-              </div>
-            </div>
-          </div>
-
-          <div class="product-card" data-product="oatmeal" style="cursor:pointer;" onclick="window.location='product-detail.html?id=oatmeal'">
-            <div class="product-img-wrap">
-              <span class="sale-tag">HIGH FIBER</span>
-              <img src="Image/Oatmeal/Oatmeal01.png" alt="Oatmeal" class="product-img primary-img" loading="lazy" />
-              <img src="Image/Oatmeal/Oatmeal02.png" alt="Oatmeal Hover" class="product-img hover-img" loading="lazy" />
-              <div class="product-overlay">
-                <button class="btn btn-primary btn-sm" onclick="event.stopPropagation();addToCart('Organic Oatmeal', 650, 'Image/Oatmeal/Oatmeal01.png')">Add to Cart</button>
-                <a href="product-detail.html?id=oatmeal" class="btn btn-outline btn-sm" onclick="event.stopPropagation()">View Details</a>
-              </div>
-            </div>
-            <div class="product-info">
-              <div class="product-rating">
-                <span class="stars">★★★★★</span>
-                <span class="rating-count">(84)</span>
-              </div>
-              <h3 class="product-name">Organic Oatmeal</h3>
-              <p class="product-desc">Whole grain oats — the perfect start to every healthy morning</p>
-              <div class="product-price">
-                <span class="price-original">Rs. 800</span>
-                <span class="price-sale">Rs. 650</span>
-              </div>
-            </div>
-          </div>
-            </div>
-          </div>
-
+          <!-- 🔄 Products are loaded dynamically from the Admin CMS (localStorage). -->
+          <!-- If JavaScript is disabled, please enable it to view products.    -->
         </div>
 
         <div class="section-cta">
@@ -248,7 +151,7 @@
       <div class="container">
         <div class="benefit-row">
           <div class="benefit-image reveal">
-            <img src="Image/Brackfast.png" alt="Healthy Breakfast" />
+            <img src="Image/Talbina/Talbina02.png" alt="Healthy Breakfast" />
           </div>
           <div class="benefit-content reveal">
             <span class="section-tag">Why Nutrivana?</span>
@@ -341,7 +244,7 @@
             </ul>
           </div>
           <div class="ingredients-image reveal">
-            <img src="Image/Gemini_Generated_Image_n8363mn8363mn836.png" alt="Natural Ingredients" />
+            <img src="Image/Talbina/Talbina03.png" alt="Natural Ingredients" />
           </div>
         </div>
       </div>
@@ -358,40 +261,9 @@
             <span class="rating-text">4.9 out of 5 — 500+ Verified Reviews</span>
           </div>
         </div>
-        <div class="testimonials-grid">
-          <div class="testimonial-card reveal">
-            <div class="testimonial-stars">★★★★★</div>
-            <p>"The Talbina is absolutely amazing! My whole family has been eating it every morning for 3 months. Energy levels are up and digestion is so much better!"</p>
-            <div class="testimonial-author">
-              <div class="author-avatar">S</div>
-              <div>
-                <strong>Sara Ahmed</strong>
-                <span>Lahore</span>
-              </div>
-            </div>
-          </div>
-          <div class="testimonial-card reveal">
-            <div class="testimonial-stars">★★★★★</div>
-            <p>"I've tried many honeys but Nutrivana's pure honey is on a different level. You can actually taste the difference. Will order again!"</p>
-            <div class="testimonial-author">
-              <div class="author-avatar">M</div>
-              <div>
-                <strong>Muhammad Ali</strong>
-                <span>Karachi</span>
-              </div>
-            </div>
-          </div>
-          <div class="testimonial-card reveal">
-            <div class="testimonial-stars">★★★★★</div>
-            <p>"The desi ghee is exactly how my grandmother used to make it. Delivery was fast and the packaging was very professional. Highly recommend!"</p>
-            <div class="testimonial-author">
-              <div class="author-avatar">F</div>
-              <div>
-                <strong>Fatima Khan</strong>
-                <span>Islamabad</span>
-              </div>
-            </div>
-          </div>
+        <!-- Dynamic testimonials from Admin CMS -->
+        <div class="testimonials-grid" id="homepageTestimonialsGrid">
+          <!-- Populated by syncDynamicContent() from localStorage CMS data -->
         </div>
       </div>
     </section>
@@ -542,6 +414,6 @@
     </div>
   </div>
 
-  <script src="js/main.js?v=3.0" defer></script>
+  <script src="js/main.js?v=3.7" defer></script>
 </body>
 </html>

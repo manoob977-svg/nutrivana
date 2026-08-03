@@ -8,7 +8,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="css/style.css?v=2.0" />
+  <link rel="stylesheet" href="css/style.css?v=3.7" />
 </head>
 <body style="background: var(--cream);">
 
@@ -47,9 +47,11 @@
         <a href="index.html" class="logo-link">
           <img src="Image/Logo.svg" alt="Nutrivana Logo" class="site-logo" />
         </a>
-        <div style="display: flex; align-items: center; gap: 16px;">
+        <div style="display: flex; align-items: center; gap: 12px; flex-wrap: wrap;">
           <span class="theme-lock-badge">🔒 Theme Locked</span>
-          <span style="font-size: 14px; font-weight: 600; color: var(--green-dark);">👤 Admin</span>
+          <button onclick="exportStoreData()" class="btn btn-outline btn-sm" style="border-color: var(--gold); color: var(--gold-dark); background: rgba(201,168,76,0.1);" title="Download Store Backup JSON">📦 Export Backup</button>
+          <input type="file" id="adminImportFileInput" accept=".json" style="display:none;" onchange="importStoreData(this)" />
+          <button onclick="document.getElementById('adminImportFileInput').click()" class="btn btn-outline btn-sm" style="border-color: var(--green); color: var(--green-dark); background: rgba(45,106,79,0.1);" title="Restore Store Data from JSON">📥 Import Backup</button>
           <a href="index.html" target="_blank" class="btn btn-outline btn-sm">👁️ View Live Site</a>
           <button onclick="handleAdminLogout()" class="btn btn-sm" style="background: rgba(0,0,0,0.06); color: var(--dark);">Logout</button>
         </div>
@@ -71,6 +73,9 @@
           </button>
           <button class="admin-nav-item" onclick="switchTab('bannersTab', this)">
             🖼️ Hero Banners
+          </button>
+          <button class="admin-nav-item" onclick="switchTab('homepageTab', this)">
+            🏠 Homepage CMS
           </button>
           <button class="admin-nav-item" onclick="switchTab('settingsTab', this)">
             ⚙️ Site Settings
@@ -217,8 +222,26 @@
                 <textarea id="editProductDetails" class="form-textarea" rows="4" placeholder="100% Organic Barley&#10;Zero preservatives..."></textarea>
               </div>
 
+              <!-- Badge Feature Items -->
+              <div class="form-group">
+                <label class="form-label">Feature Badge Tags (One per line — shown on product cards)</label>
+                <textarea id="editProductBadgeItems" class="form-textarea" rows="3" placeholder="🌾 Organic Barley&#10;☀️ Sunnah Superfood&#10;💥 Energy Boost"></textarea>
+              </div>
+
+              <!-- Rating & Reviews -->
+              <div class="admin-grid-2">
+                <div class="form-group">
+                  <label class="form-label">Product Rating (1–5 stars)</label>
+                  <input type="number" id="editProductRating" class="form-input" min="1" max="5" step="0.1" value="5" />
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Total Reviews Count</label>
+                  <input type="number" id="editProductReviewsCount" class="form-input" min="0" value="100" />
+                </div>
+              </div>
+
               <div style="display: flex; gap: 12px; justify-content: flex-end; margin-top: 24px;">
-                <button type="submit" class="btn btn-primary" style="background: var(--green); border-color: var(--green); box-shadow: 0 4px 12px rgba(45,106,79,0.3);">💾 Save Changes</button>
+                <button type="submit" class="btn btn-primary" style="background: var(--green); border-color: var(--green); box-shadow: 0 4px 12px rgba(45,106,79,0.3);">💾 Save Product Changes</button>
               </div>
             </form>
           </div>
@@ -336,7 +359,58 @@
           </div>
         </section>
 
-        <!-- TAB 4: DATA ACTIONS -->
+        <!-- TAB: HOMEPAGE CMS -->
+        <section id="homepageTab" class="admin-tab-content" style="display: none;">
+          <div class="admin-page-header">
+            <div class="admin-page-title">
+              <h1>🏠 Homepage Content Manager</h1>
+              <p>Edit Testimonials, FAQs, How-to-Use steps, and Benefits directly from here. Changes save instantly to all pages.</p>
+            </div>
+            <button onclick="saveHomepageCMS()" class="btn btn-primary">💾 Save Homepage Content</button>
+          </div>
+
+          <!-- Testimonials Editor -->
+          <div class="admin-card" style="margin-bottom: 24px;">
+            <div class="admin-card-header">
+              <div class="admin-card-title">⭐ Customer Testimonials</div>
+              <button type="button" onclick="addTestimonial()" class="btn btn-outline btn-sm">+ Add Testimonial</button>
+            </div>
+            <p style="font-size: 13px; color: var(--gray); margin-bottom: 16px;">These reviews appear on the homepage. Edit name, location, rating (1–5), and testimonial text.</p>
+            <div id="testimonialsContainer"></div>
+          </div>
+
+          <!-- FAQs Editor -->
+          <div class="admin-card" style="margin-bottom: 24px;">
+            <div class="admin-card-header">
+              <div class="admin-card-title">❓ Frequently Asked Questions</div>
+              <button type="button" onclick="addFaq()" class="btn btn-outline btn-sm">+ Add FAQ</button>
+            </div>
+            <p style="font-size: 13px; color: var(--gray); margin-bottom: 16px;">These FAQs appear on the homepage accordion section.</p>
+            <div id="faqsContainer"></div>
+          </div>
+
+          <!-- How-To-Use Steps Editor -->
+          <div class="admin-card" style="margin-bottom: 24px;">
+            <div class="admin-card-header">
+              <div class="admin-card-title">📝 How-To-Use Preparation Steps</div>
+              <button type="button" onclick="addHowToStep()" class="btn btn-outline btn-sm">+ Add Step</button>
+            </div>
+            <p style="font-size: 13px; color: var(--gray); margin-bottom: 16px;">These steps appear in the homepage preparation guide section.</p>
+            <div id="howToContainer"></div>
+          </div>
+
+          <!-- Benefits Editor -->
+          <div class="admin-card" style="margin-bottom: 24px;">
+            <div class="admin-card-header">
+              <div class="admin-card-title">💪 Benefits Section</div>
+              <button type="button" onclick="addBenefit()" class="btn btn-outline btn-sm">+ Add Benefit</button>
+            </div>
+            <p style="font-size: 13px; color: var(--gray); margin-bottom: 16px;">These benefit cards appear in the homepage benefits row.</p>
+            <div id="benefitsContainer"></div>
+          </div>
+        </section>
+
+        <!-- TAB: DATA ACTIONS -->
         <section id="actionsTab" class="admin-tab-content" style="display: none;">
           <div class="admin-page-header">
             <div class="admin-page-title">
@@ -363,6 +437,19 @@
 
           <div class="admin-card">
             <div class="admin-card-header">
+              <div class="admin-card-title">📦 One-Click Data Backup &amp; Deployment Sync</div>
+            </div>
+            <p style="font-size: 14px; color: var(--gray); margin-bottom: 20px;">
+              Export your entire store setup (Products, Prices, Images, Orders, Banners, Settings) to a <code>.json</code> file to backup your site or deploy to Vercel/GitHub.
+            </p>
+            <div style="display: flex; gap: 16px; flex-wrap: wrap;">
+              <button onclick="exportStoreData()" class="btn btn-gold">📦 Export Store Data (.json)</button>
+              <button onclick="document.getElementById('adminImportFileInput').click()" class="btn btn-primary">📥 Import Store Data (.json)</button>
+            </div>
+          </div>
+
+          <div class="admin-card">
+            <div class="admin-card-header">
               <div class="admin-card-title">💾 Save &amp; Reset Options</div>
             </div>
             <p style="font-size: 14px; color: var(--gray); margin-bottom: 20px;">
@@ -382,7 +469,7 @@
 
   <div class="toast" id="toast"></div>
 
-  <script src="js/main.js"></script>
+  <script src="js/main.js?v=3.7"></script>
   <script>
     // ---- AUTHENTICATION LOGIC ----
     function checkAuth() {
@@ -418,33 +505,30 @@
       showToast('🔒 Logged out successfully.');
     }
 
-    // ---- TAB SWITCHING ----
-    function switchTab(tabId, btnEl) {
-      document.querySelectorAll('.admin-tab-content').forEach(el => el.style.display = 'none');
-      document.querySelectorAll('.admin-nav-item').forEach(el => el.classList.remove('active'));
-      const targetTab = document.getElementById(tabId);
-      if (targetTab) targetTab.style.display = 'block';
-      if (btnEl) btnEl.classList.add('active');
-
-      if (tabId === 'bannersTab') {
-        renderBannersEditor();
-      }
-    }
-
     // ---- INITIALIZE ADMIN DATA ----
     let currentSiteData = null;
 
     function initAdminData() {
       currentSiteData = getSiteData();
+
+      // Ensure banners exist
       if (!currentSiteData.banners || !currentSiteData.banners.length) {
         currentSiteData.banners = JSON.parse(JSON.stringify(DEFAULT_SITE_DATA.banners));
         saveSiteData(currentSiteData);
       }
+
+      // Ensure homepage CMS data exists
+      if (!currentSiteData.homepage) {
+        currentSiteData.homepage = JSON.parse(JSON.stringify(DEFAULT_SITE_DATA.homepage));
+        saveSiteData(currentSiteData);
+      }
+
       renderProductSelector();
       loadProductForm(currentSiteData.products[0] ? currentSiteData.products[0].id : 'talbina');
       renderAdminOrders();
       renderBannersEditor();
       renderSettingsEditor();
+      // Homepage CMS is rendered on tab switch (lazy), but pre-load data anyway
     }
 
     // ---- ADMIN CUSTOMER ORDERS MANAGER ----
@@ -573,9 +657,10 @@
       if (!container) return;
 
       const activeId = document.getElementById('editProductId') ? document.getElementById('editProductId').value : '';
+      const products = (currentSiteData && currentSiteData.products && currentSiteData.products.length) ? currentSiteData.products : DEFAULT_SITE_DATA.products;
 
-      container.innerHTML = (currentSiteData.products || []).map(p => `
-        <button type="button" class="btn ${p.id === activeId ? 'btn-primary' : 'btn-outline'}" onclick="loadProductForm('${p.id}', this)">${p.name}</button>
+      container.innerHTML = products.map(p => `
+        <button type="button" class="btn ${p.id === activeId ? 'btn-primary' : 'btn-outline'}" onclick="loadProductForm('${p.id}', this)">${escapeHtml(p.name)}</button>
       `).join('');
     }
 
@@ -878,12 +963,40 @@
       renderAdminVideoPreview();
       document.getElementById('editProductDesc').value = p.description || '';
       document.getElementById('editProductInstructions').value = p.instructions || '';
+
+      // Badge Items
+      const badgeEl = document.getElementById('editProductBadgeItems');
+      if (badgeEl) badgeEl.value = (p.badgeItems || []).join('\n');
+
+      // Rating & Reviews
+      const ratingEl = document.getElementById('editProductRating');
+      const reviewsEl = document.getElementById('editProductReviewsCount');
+      if (ratingEl) ratingEl.value = p.rating || 5;
+      if (reviewsEl) reviewsEl.value = p.reviewsCount || 100;
       
-      // Load product images into the persistent image system
+      // Load product images
       currentProductImages = (p.images && p.images.length) ? [...p.images] : [p.image || 'Image/Favicon.png'];
       renderAdminThumbs();
 
-      // Render Weight & Rate rows
+      // Asynchronously hydrate images & video from IndexedDB if stored
+      if (typeof loadMediaFromDB === 'function') {
+        loadMediaFromDB(p.id).then(media => {
+          if (media) {
+            if (media.images && media.images.length) {
+              p.images = media.images;
+              currentProductImages = [...media.images];
+              renderAdminThumbs();
+            }
+            if (media.videoUrl && media.videoUrl !== '__nv_vid_stored__') {
+              p.videoUrl = media.videoUrl;
+              document.getElementById('editProductVideo').value = media.videoUrl;
+              renderAdminVideoPreview();
+            }
+          }
+        });
+      }
+
+      // Weight & Rate rows
       renderWeightRows(p.weights || []);
 
       // Details format
@@ -902,7 +1015,6 @@
       const idx = currentSiteData.products.findIndex(p => p.id === id);
       if (idx === -1) return;
 
-      // Use currentProductImages array (managed by the persistent upload zone)
       const imgUrls = [...currentProductImages];
 
       const weightRows = document.querySelectorAll('#weightsListRows .weight-row-item');
@@ -916,9 +1028,8 @@
         if (label) {
           const hasDiscount = discPrice !== null && discPrice > 0 && discPrice < origPrice;
           const activePrice = hasDiscount ? discPrice : origPrice;
-
           parsedWeights.push({
-            label: label,
+            label,
             price: activePrice,
             originalPrice: origPrice,
             discountPrice: hasDiscount ? discPrice : null
@@ -929,6 +1040,12 @@
       const detailsText = document.getElementById('editProductDetails').value.trim();
       const parsedDetails = detailsText ? detailsText.split('\n').map(l => l.trim()).filter(Boolean) : [];
 
+      const badgeText = document.getElementById('editProductBadgeItems')?.value.trim() || '';
+      const parsedBadgeItems = badgeText ? badgeText.split('\n').map(l => l.trim()).filter(Boolean) : (currentSiteData.products[idx].badgeItems || []);
+
+      const rating = parseFloat(document.getElementById('editProductRating')?.value) || currentSiteData.products[idx].rating || 5;
+      const reviewsCount = parseInt(document.getElementById('editProductReviewsCount')?.value) || currentSiteData.products[idx].reviewsCount || 100;
+
       const basePrice = parsedWeights.length ? parsedWeights[0].price : (currentSiteData.products[idx].price || 0);
 
       currentSiteData.products[idx] = {
@@ -938,7 +1055,9 @@
         image: imgUrls[0] || 'Image/Favicon.png',
         images: imgUrls,
         price: basePrice,
-        rating: currentSiteData.products[idx].rating || 5,
+        rating,
+        reviewsCount,
+        badgeItems: parsedBadgeItems,
         videoUrl: document.getElementById('editProductVideo').value.trim(),
         description: document.getElementById('editProductDesc').value.trim(),
         instructions: document.getElementById('editProductInstructions').value.trim(),
@@ -946,9 +1065,12 @@
         details: parsedDetails
       };
 
+      if (typeof saveMediaToDB === 'function') {
+        saveMediaToDB(currentSiteData.products[idx].id, imgUrls, document.getElementById('editProductVideo').value.trim());
+      }
       saveSiteData(currentSiteData);
       renderProductSelector();
-      showToast(`✅ Saved ${currentSiteData.products[idx].name}!`);
+      showToast(`✅ Product "${currentSiteData.products[idx].name}" saved successfully!`);
     }
 
     // ---- HERO BANNERS EDITOR ----
@@ -1183,14 +1305,244 @@
       };
     }
 
-    // ---- SAVE ALL CHANGES ----
-    function saveAllChanges() {
-      saveActiveProduct();
-      saveBannersData();
-      saveSettingsData();
-      saveSiteData(currentSiteData);
-      showToast('🎉 All site changes saved live successfully!');
+    // ---- SAVE ALL CHANGES (Tab-Aware) ----
+    let activeAdminTab = 'productsTab';
+    function switchTab(tabId, btnEl) {
+      // Save current tab data before switching
+      if (activeAdminTab === 'bannersTab') saveBannersData();
+      if (activeAdminTab === 'settingsTab') saveSettingsData();
+
+      document.querySelectorAll('.admin-tab-content').forEach(el => el.style.display = 'none');
+      document.querySelectorAll('.admin-nav-item').forEach(el => el.classList.remove('active'));
+      const targetTab = document.getElementById(tabId);
+      if (targetTab) targetTab.style.display = 'block';
+      if (btnEl) btnEl.classList.add('active');
+      activeAdminTab = tabId;
+
+      if (tabId === 'bannersTab') renderBannersEditor();
+      if (tabId === 'homepageTab') renderHomepageCMSEditor();
     }
+
+    function saveAllChanges() {
+      if (activeAdminTab === 'productsTab') saveActiveProduct();
+      if (activeAdminTab === 'bannersTab') saveBannersData();
+      if (activeAdminTab === 'settingsTab') saveSettingsData();
+      if (activeAdminTab === 'homepageTab') saveHomepageCMS();
+      // Always persist to localStorage
+      saveSiteData(currentSiteData);
+      showToast('🎉 All changes saved successfully!');
+    }
+
+    // ---- HOMEPAGE CMS EDITOR ----
+    function renderHomepageCMSEditor() {
+      const hp = currentSiteData.homepage || DEFAULT_SITE_DATA.homepage;
+      renderTestimonials(hp.testimonials || []);
+      renderFaqs(hp.faqs || []);
+      renderHowToSteps(hp.howToSteps || []);
+      renderBenefits(hp.benefits || []);
+    }
+
+    function renderTestimonials(list) {
+      const c = document.getElementById('testimonialsContainer');
+      if (!c) return;
+      c.innerHTML = list.map((t, i) => `
+        <div class="weight-row-item" style="background: var(--cream); border: 1px solid var(--cream-dark); padding: 16px; border-radius: 10px; margin-bottom: 12px;">
+          <div class="admin-grid-2" style="margin-bottom: 10px;">
+            <div class="form-group" style="margin:0;">
+              <label class="form-label" style="font-size:11px;">Customer Name</label>
+              <input type="text" class="form-input t-name" value="${escapeHtml(t.name || '')}" placeholder="e.g. Fatima A." />
+            </div>
+            <div class="form-group" style="margin:0;">
+              <label class="form-label" style="font-size:11px;">Location</label>
+              <input type="text" class="form-input t-location" value="${escapeHtml(t.location || '')}" placeholder="e.g. Lahore" />
+            </div>
+          </div>
+          <div class="admin-grid-2" style="margin-bottom: 10px;">
+            <div class="form-group" style="margin:0;">
+              <label class="form-label" style="font-size:11px;">Rating (1–5)</label>
+              <input type="number" class="form-input t-rating" value="${t.rating || 5}" min="1" max="5" step="0.5" />
+            </div>
+            <div class="form-group" style="margin:0;">
+              <label class="form-label" style="font-size:11px;">Product (Optional)</label>
+              <input type="text" class="form-input t-product" value="${escapeHtml(t.product || '')}" placeholder="e.g. Talbina" />
+            </div>
+          </div>
+          <div class="form-group" style="margin-bottom: 8px;">
+            <label class="form-label" style="font-size:11px;">Testimonial Text</label>
+            <textarea class="form-textarea t-text" rows="2" placeholder="Customer review text...">${escapeHtml(t.text || '')}</textarea>
+          </div>
+          <div style="display:flex; justify-content:flex-end;">
+            <button type="button" onclick="removeTestimonial(${i})" style="background: rgba(217,4,41,0.1); color: #d90429; border: none; border-radius: 6px; padding: 6px 12px; font-size: 12px; cursor: pointer;">🗑️ Remove</button>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function addTestimonial() {
+      if (!currentSiteData.homepage) currentSiteData.homepage = JSON.parse(JSON.stringify(DEFAULT_SITE_DATA.homepage));
+      currentSiteData.homepage.testimonials = currentSiteData.homepage.testimonials || [];
+      currentSiteData.homepage.testimonials.push({ name: 'New Customer', location: 'Pakistan', rating: 5, text: 'Great product!', product: '' });
+      renderTestimonials(currentSiteData.homepage.testimonials);
+    }
+
+    function removeTestimonial(idx) {
+      if (!currentSiteData.homepage || !currentSiteData.homepage.testimonials) return;
+      currentSiteData.homepage.testimonials.splice(idx, 1);
+      renderTestimonials(currentSiteData.homepage.testimonials);
+    }
+
+    function renderFaqs(list) {
+      const c = document.getElementById('faqsContainer');
+      if (!c) return;
+      c.innerHTML = list.map((f, i) => `
+        <div style="background: var(--cream); border: 1px solid var(--cream-dark); padding: 16px; border-radius: 10px; margin-bottom: 12px;">
+          <div class="form-group" style="margin-bottom: 10px;">
+            <label class="form-label" style="font-size:11px;">Question</label>
+            <input type="text" class="form-input faq-q" value="${escapeHtml(f.q || '')}" placeholder="e.g. Are products 100% organic?" />
+          </div>
+          <div class="form-group" style="margin-bottom: 8px;">
+            <label class="form-label" style="font-size:11px;">Answer</label>
+            <textarea class="form-textarea faq-a" rows="2" placeholder="Answer text...">${escapeHtml(f.a || '')}</textarea>
+          </div>
+          <div style="display:flex; justify-content:flex-end;">
+            <button type="button" onclick="removeFaq(${i})" style="background: rgba(217,4,41,0.1); color: #d90429; border: none; border-radius: 6px; padding: 6px 12px; font-size: 12px; cursor: pointer;">🗑️ Remove</button>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function addFaq() {
+      if (!currentSiteData.homepage) currentSiteData.homepage = JSON.parse(JSON.stringify(DEFAULT_SITE_DATA.homepage));
+      currentSiteData.homepage.faqs = currentSiteData.homepage.faqs || [];
+      currentSiteData.homepage.faqs.push({ q: 'New Question?', a: 'Answer here.' });
+      renderFaqs(currentSiteData.homepage.faqs);
+    }
+
+    function removeFaq(idx) {
+      if (!currentSiteData.homepage || !currentSiteData.homepage.faqs) return;
+      currentSiteData.homepage.faqs.splice(idx, 1);
+      renderFaqs(currentSiteData.homepage.faqs);
+    }
+
+    function renderHowToSteps(list) {
+      const c = document.getElementById('howToContainer');
+      if (!c) return;
+      c.innerHTML = list.map((s, i) => `
+        <div style="background: var(--cream); border: 1px solid var(--cream-dark); padding: 16px; border-radius: 10px; margin-bottom: 12px;">
+          <div class="admin-grid-2" style="margin-bottom: 10px;">
+            <div class="form-group" style="margin:0;">
+              <label class="form-label" style="font-size:11px;">Icon (Emoji)</label>
+              <input type="text" class="form-input step-icon" value="${escapeHtml(s.icon || '')}" placeholder="e.g. 🥣" />
+            </div>
+            <div class="form-group" style="margin:0;">
+              <label class="form-label" style="font-size:11px;">Step Title</label>
+              <input type="text" class="form-input step-title" value="${escapeHtml(s.title || '')}" placeholder="e.g. Measure Your Serving" />
+            </div>
+          </div>
+          <div class="form-group" style="margin-bottom: 8px;">
+            <label class="form-label" style="font-size:11px;">Description</label>
+            <textarea class="form-textarea step-desc" rows="2" placeholder="Step description...">${escapeHtml(s.desc || '')}</textarea>
+          </div>
+          <div style="display:flex; justify-content:flex-end;">
+            <button type="button" onclick="removeHowToStep(${i})" style="background: rgba(217,4,41,0.1); color: #d90429; border: none; border-radius: 6px; padding: 6px 12px; font-size: 12px; cursor: pointer;">🗑️ Remove</button>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function addHowToStep() {
+      if (!currentSiteData.homepage) currentSiteData.homepage = JSON.parse(JSON.stringify(DEFAULT_SITE_DATA.homepage));
+      currentSiteData.homepage.howToSteps = currentSiteData.homepage.howToSteps || [];
+      currentSiteData.homepage.howToSteps.push({ icon: '💡', title: 'New Step', desc: 'Step description here.' });
+      renderHowToSteps(currentSiteData.homepage.howToSteps);
+    }
+
+    function removeHowToStep(idx) {
+      if (!currentSiteData.homepage || !currentSiteData.homepage.howToSteps) return;
+      currentSiteData.homepage.howToSteps.splice(idx, 1);
+      renderHowToSteps(currentSiteData.homepage.howToSteps);
+    }
+
+    function renderBenefits(list) {
+      const c = document.getElementById('benefitsContainer');
+      if (!c) return;
+      c.innerHTML = list.map((b, i) => `
+        <div style="background: var(--cream); border: 1px solid var(--cream-dark); padding: 16px; border-radius: 10px; margin-bottom: 12px;">
+          <div class="admin-grid-2" style="margin-bottom: 10px;">
+            <div class="form-group" style="margin:0;">
+              <label class="form-label" style="font-size:11px;">Icon (Emoji)</label>
+              <input type="text" class="form-input ben-icon" value="${escapeHtml(b.icon || '')}" placeholder="e.g. 🌾" />
+            </div>
+            <div class="form-group" style="margin:0;">
+              <label class="form-label" style="font-size:11px;">Benefit Title</label>
+              <input type="text" class="form-input ben-title" value="${escapeHtml(b.title || '')}" placeholder="e.g. Gut Health" />
+            </div>
+          </div>
+          <div class="form-group" style="margin-bottom: 8px;">
+            <label class="form-label" style="font-size:11px;">Description</label>
+            <textarea class="form-textarea ben-desc" rows="2" placeholder="Benefit description...">${escapeHtml(b.desc || '')}</textarea>
+          </div>
+          <div style="display:flex; justify-content:flex-end;">
+            <button type="button" onclick="removeBenefit(${i})" style="background: rgba(217,4,41,0.1); color: #d90429; border: none; border-radius: 6px; padding: 6px 12px; font-size: 12px; cursor: pointer;">🗑️ Remove</button>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function addBenefit() {
+      if (!currentSiteData.homepage) currentSiteData.homepage = JSON.parse(JSON.stringify(DEFAULT_SITE_DATA.homepage));
+      currentSiteData.homepage.benefits = currentSiteData.homepage.benefits || [];
+      currentSiteData.homepage.benefits.push({ icon: '✨', title: 'New Benefit', desc: 'Benefit description here.' });
+      renderBenefits(currentSiteData.homepage.benefits);
+    }
+
+    function removeBenefit(idx) {
+      if (!currentSiteData.homepage || !currentSiteData.homepage.benefits) return;
+      currentSiteData.homepage.benefits.splice(idx, 1);
+      renderBenefits(currentSiteData.homepage.benefits);
+    }
+
+    function saveHomepageCMS() {
+      if (!currentSiteData.homepage) currentSiteData.homepage = {};
+
+      // Testimonials
+      const tRows = document.querySelectorAll('#testimonialsContainer .weight-row-item, #testimonialsContainer > div');
+      currentSiteData.homepage.testimonials = Array.from(tRows).map(row => ({
+        name: row.querySelector('.t-name')?.value.trim() || '',
+        location: row.querySelector('.t-location')?.value.trim() || '',
+        rating: parseFloat(row.querySelector('.t-rating')?.value) || 5,
+        product: row.querySelector('.t-product')?.value.trim() || '',
+        text: row.querySelector('.t-text')?.value.trim() || ''
+      })).filter(t => t.name);
+
+      // FAQs
+      const fRows = document.querySelectorAll('#faqsContainer > div');
+      currentSiteData.homepage.faqs = Array.from(fRows).map(row => ({
+        q: row.querySelector('.faq-q')?.value.trim() || '',
+        a: row.querySelector('.faq-a')?.value.trim() || ''
+      })).filter(f => f.q);
+
+      // How-to Steps
+      const sRows = document.querySelectorAll('#howToContainer > div');
+      currentSiteData.homepage.howToSteps = Array.from(sRows).map(row => ({
+        icon: row.querySelector('.step-icon')?.value.trim() || '',
+        title: row.querySelector('.step-title')?.value.trim() || '',
+        desc: row.querySelector('.step-desc')?.value.trim() || ''
+      })).filter(s => s.title);
+
+      // Benefits
+      const bRows = document.querySelectorAll('#benefitsContainer > div');
+      currentSiteData.homepage.benefits = Array.from(bRows).map(row => ({
+        icon: row.querySelector('.ben-icon')?.value.trim() || '',
+        title: row.querySelector('.ben-title')?.value.trim() || '',
+        desc: row.querySelector('.ben-desc')?.value.trim() || ''
+      })).filter(b => b.title);
+
+      saveSiteData(currentSiteData);
+      showToast('🎉 Homepage content saved! Visible on live site.');
+    }
+
+    // ---- SAVE ALL CHANGES (old global, now replaced by tab-aware version above) ----
 
     // ---- FIX PRODUCT IMAGES ONLY ----
     function fixProductImages(productId) {

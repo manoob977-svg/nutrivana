@@ -697,18 +697,20 @@ button { cursor: pointer; border: none; background: none; }
 
 .product-price { display: flex; align-items: center; gap: 10px; }
 
-.price-sale {
-  font-size: 18px;
-  font-weight: 700;
-  color: var(--green);
+.price-sale, .pd-price-sale {
+  font-family: 'Playfair Display', Georgia, serif !important;
+  font-size: 28px !important;
+  font-weight: 700 !important;
+  color: var(--green-dark) !important;
 }
 
-.price-original {
-  font-size: 14px;
-  color: #d90429;
-  text-decoration: line-through;
-  font-weight: 500;
-  opacity: 0.85;
+.price-original, .pd-price-orig {
+  font-family: 'Playfair Display', Georgia, serif !important;
+  font-size: 18px !important;
+  color: #d90429 !important;
+  text-decoration: line-through !important;
+  font-weight: 400 !important;
+  opacity: 0.75;
 }
 
 .section-cta {
